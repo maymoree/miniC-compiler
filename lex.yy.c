@@ -475,9 +475,13 @@ int yy_flex_debug = 0;
 char *yytext;
 #line 1 "part1.l"
 #line 2 "part1.l"
+#include "./ast/ast.h"
+#include "y.tab.h"
 #include <stdio.h>
-#line 480 "lex.yy.c"
-#line 481 "lex.yy.c"
+#include <string.h>
+extern int yylex();
+#line 484 "lex.yy.c"
+#line 485 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -694,9 +698,9 @@ YY_DECL
 		}
 
 	{
-#line 6 "part1.l"
+#line 10 "part1.l"
 
-#line 700 "lex.yy.c"
+#line 704 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -755,112 +759,114 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 7 "part1.l"
-{printf("function: %s\n", yytext);}               //functions; are orders correct??!!!
+#line 11 "part1.l"
+{printf("function: %s\n", yytext); return PRINT;}               //functions
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 8 "part1.l"
-{printf("function: %s\n", yytext);}
+#line 12 "part1.l"
+{printf("function: %s\n", yytext); return READ;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 9 "part1.l"
-{printf("function: %s\n", yytext);}
+#line 13 "part1.l"
+{printf("function: %s\n", yytext); return RETURN;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 10 "part1.l"
-{printf("condition: %s\n", yytext);}                 //conditions
+#line 14 "part1.l"
+{printf("condition: %s\n", yytext); return IF;}                 //conditions
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 11 "part1.l"
-{printf("condition: %s\n", yytext);}
+#line 15 "part1.l"
+{printf("condition: %s\n", yytext); return ELSE;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 12 "part1.l"
-{printf("loop: %s\n", yytext);}
+#line 16 "part1.l"
+{printf("loop: %s\n", yytext); return WHILE;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 13 "part1.l"
-{printf("type: %s\n", yytext);}                     //types
+#line 17 "part1.l"
+{printf("type: %s\n", yytext); return INT;}                     //types
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 14 "part1.l"
-{printf("type: %s\n", yytext);}
+#line 18 "part1.l"
+{printf("type: %s\n", yytext); return VOID;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 15 "part1.l"
-{printf("type: %s\n", yytext);}
+#line 19 "part1.l"
+{printf("type: %s\n", yytext); return EXTERN;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 16 "part1.l"
+#line 20 "part1.l"
 {                                                       //integers
                         printf("num: %s\n", yytext);
-                        // yylval.ival = atoi(yytext);
+                        yylval.ival = atoi(yytext);
+						return NUM;
                     }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 20 "part1.l"
+#line 25 "part1.l"
 {                                                   //variable names
-                        printf("var: %s\n", yytext);
-                        // yylval.sname = strdup(yytext);
+                        printf("name: %s\n", yytext);
+                        yylval.sname = strdup(yytext);
+						return NAME;
                         }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 24 "part1.l"
-{printf("opr: %s\n", yytext);}        //operators
+#line 30 "part1.l"
+{printf("opr: %s\n", yytext); return yytext[0];}        //operators
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 25 "part1.l"
-{printf("opr: %s\n", yytext);}                     // greater equal to
+#line 31 "part1.l"
+{printf("opr: %s\n", yytext); return GE;}                     // greater equal to
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 26 "part1.l"
-{printf("opr: %s\n", yytext);}                     // lesser equal to
+#line 32 "part1.l"
+{printf("opr: %s\n", yytext); return LE;}                     // lesser equal to
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 27 "part1.l"
-{printf("opr: %s\n", yytext);}                     // equal to
+#line 33 "part1.l"
+{printf("opr: %s\n", yytext); return EQ;}                     // equal to
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 28 "part1.l"
-{printf("opr: %s\n", yytext);}                     // not equal to
+#line 34 "part1.l"
+{printf("opr: %s\n", yytext); return NEQ;}                     // not equal to
 	YY_BREAK
 case 17:
 /* rule 17 can match eol */
 YY_RULE_SETUP
-#line 29 "part1.l"
+#line 35 "part1.l"
 
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 30 "part1.l"
+#line 36 "part1.l"
 
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 31 "part1.l"
+#line 37 "part1.l"
 
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 32 "part1.l"
+#line 38 "part1.l"
 ECHO;
 	YY_BREAK
-#line 864 "lex.yy.c"
+#line 870 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1865,24 +1871,9 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 32 "part1.l"
-
+#line 38 "part1.l"
 
 
 int yywrap(){
-    return 0;
+    return 1;
 }
-
-int main(int argc, char* argv[]){
-	if (argc == 2){
-		yyin = fopen(argv[1], "r");
-		if (yyin == NULL){
-			printf("Error\n");
-			return(1);
-		}
-	}
-	
-	yylex();
-	return(0);
-}
-
