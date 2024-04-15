@@ -1,7 +1,8 @@
 filename = part1
-$(filename).out: $(filename).l
+(filename).out: $(filename).l
+	yacc -d -t -v $(filename).y
 	lex $(filename).l
-	gcc lex.yy.c -o $(filename).out
+	g++ -g lex.yy.c y.tab.c ./ast/ast.c -o $(filename).out
 
 clean:
-	rm -rf $(filename).out lex.yy.c
+	rm -rf $(filename).out lex.yy.c y.tab.c y.tab.h y.output
