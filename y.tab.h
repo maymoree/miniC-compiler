@@ -97,7 +97,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 11 "part1.y"
+#line 12 "part1.y"
 
 	int ival;
 	char * idname;

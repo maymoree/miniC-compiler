@@ -480,8 +480,9 @@ char *yytext;
 #include <stdio.h>
 #include <string.h>
 extern int yylex();
-#line 484 "lex.yy.c"
+
 #line 485 "lex.yy.c"
+#line 486 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -698,9 +699,9 @@ YY_DECL
 		}
 
 	{
-#line 10 "part1.l"
+#line 11 "part1.l"
 
-#line 704 "lex.yy.c"
+#line 705 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -759,54 +760,53 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 11 "part1.l"
-{printf("function: %s\n", yytext); return PRINT;}               //functions
+#line 12 "part1.l"
+{return PRINT;}               //functions
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 12 "part1.l"
-{printf("function: %s\n", yytext); return READ;}
+#line 13 "part1.l"
+{return READ;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 13 "part1.l"
-{printf("function: %s\n", yytext); return RETURN;}
+#line 14 "part1.l"
+{return RETURN;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 14 "part1.l"
-{printf("condition: %s\n", yytext); return IF;}                 //conditions
+#line 15 "part1.l"
+{return IF;}                 //conditions
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 15 "part1.l"
-{printf("condition: %s\n", yytext); return ELSE;}
+#line 16 "part1.l"
+{return ELSE;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 16 "part1.l"
-{printf("loop: %s\n", yytext); return WHILE;}
+#line 17 "part1.l"
+{return WHILE;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 17 "part1.l"
-{printf("type: %s\n", yytext); return INT;}                     //types
+#line 18 "part1.l"
+{return INT;}                     //types
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 18 "part1.l"
-{printf("type: %s\n", yytext); return VOID;}
+#line 19 "part1.l"
+{return VOID;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 19 "part1.l"
-{printf("type: %s\n", yytext); return EXTERN;}
+#line 20 "part1.l"
+{return EXTERN;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 20 "part1.l"
+#line 21 "part1.l"
 {                                                       //integers
-                        printf("num: %s\n", yytext);
                         yylval.ival = atoi(yytext);
 						return NUM;
                     }
@@ -815,58 +815,57 @@ case 11:
 YY_RULE_SETUP
 #line 25 "part1.l"
 {                                                   //variable names
-                        printf("name: %s\n", yytext);
                         yylval.idname = strdup(yytext);
-						return NAME;
+						return NAME; // free in yacc file
                         }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 30 "part1.l"
-{printf("opr: %s\n", yytext); return yytext[0];}        //operators
+#line 29 "part1.l"
+{return yytext[0];}        //operators
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 31 "part1.l"
-{printf("opr: %s\n", yytext); return GE;}                     // greater equal to
+#line 30 "part1.l"
+{return GE;}                     // greater equal to
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 32 "part1.l"
-{printf("opr: %s\n", yytext); return LE;}                     // lesser equal to
+#line 31 "part1.l"
+{return LE;}                     // lesser equal to
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 33 "part1.l"
-{printf("opr: %s\n", yytext); return EQ;}                     // equal to
+#line 32 "part1.l"
+{return EQ;}                     // equal to
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 34 "part1.l"
-{printf("opr: %s\n", yytext); return NEQ;}                     // not equal to
+#line 33 "part1.l"
+{return NEQ;}                     // not equal to
 	YY_BREAK
 case 17:
 /* rule 17 can match eol */
 YY_RULE_SETUP
-#line 35 "part1.l"
-
+#line 34 "part1.l"
+{yylineno++;}                                   
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 36 "part1.l"
+#line 35 "part1.l"
 
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 37 "part1.l"
+#line 36 "part1.l"
 
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 38 "part1.l"
+#line 37 "part1.l"
 ECHO;
 	YY_BREAK
-#line 870 "lex.yy.c"
+#line 869 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1871,7 +1870,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 38 "part1.l"
+#line 37 "part1.l"
 
 
 int yywrap(){

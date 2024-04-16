@@ -1,0 +1,1168 @@
+Extern: print
+Extern: read
+Stmt: 
+ Decl: a
+Stmt: 
+ Decl: b
+Const: 5
+Const: 5
+Stmt: 
+ Asgn: lhs
+  Var: a
+ Asgn: rhs
+  Const: 5
+Stmt: 
+ Asgn: lhs
+  Var: a
+ Asgn: rhs
+  Const: 5
+Const: 2
+Const: 2
+Stmt: 
+ Asgn: lhs
+  Var: b
+ Asgn: rhs
+  Const: 2
+Stmt: 
+ Asgn: lhs
+  Var: b
+ Asgn: rhs
+  Const: 2
+Var: a
+Var: i
+RExpr: 
+ Var: a
+ Var: i
+RExpr: 
+ Var: a
+ Var: i
+Var: b
+Var: i
+RExpr: 
+ Var: b
+ Var: i
+RExpr: 
+ Var: b
+ Var: i
+Extern: print
+Extern: read
+Stmt: 
+ Decl: a
+Stmt: 
+ Decl: b
+Const: 5
+Const: 5
+Stmt: 
+ Asgn: lhs
+  Var: a
+ Asgn: rhs
+  Const: 5
+Stmt: 
+ Asgn: lhs
+  Var: a
+ Asgn: rhs
+  Const: 5
+Const: 2
+Const: 2
+Stmt: 
+ Asgn: lhs
+  Var: b
+ Asgn: rhs
+  Const: 2
+Stmt: 
+ Asgn: lhs
+  Var: b
+ Asgn: rhs
+  Const: 2
+Var: a
+Var: i
+RExpr: 
+ Var: a
+ Var: i
+RExpr: 
+ Var: a
+ Var: i
+Var: b
+Var: i
+RExpr: 
+ Var: b
+ Var: i
+RExpr: 
+ Var: b
+ Var: i
+RExpr: 
+ Var: b
+ Var: i
+Extern: print
+Extern: read
+Stmt: 
+ Decl: a
+Stmt: 
+ Decl: b
+Const: 5
+Const: 5
+Stmt: 
+ Asgn: lhs
+  Var: a
+ Asgn: rhs
+  Const: 5
+Stmt: 
+ Asgn: lhs
+  Var: a
+ Asgn: rhs
+  Const: 5
+Const: 2
+Const: 2
+Stmt: 
+ Asgn: lhs
+  Var: b
+ Asgn: rhs
+  Const: 2
+Stmt: 
+ Asgn: lhs
+  Var: b
+ Asgn: rhs
+  Const: 2
+Var: a
+Var: i
+RExpr: 
+ Var: a
+ Var: i
+RExpr: 
+ Var: a
+ Var: i
+Var: b
+Var: i
+RExpr: 
+ Var: b
+ Var: i
+RExpr: 
+ Var: b
+ Var: i
+RExpr: 
+ Var: b
+ Var: i
+Extern: print
+Extern: read
+Stmt: 
+ Decl: a
+Stmt: 
+ Decl: b
+Const: 5
+Const: 5
+Stmt: 
+ Asgn: lhs
+  Var: a
+ Asgn: rhs
+  Const: 5
+Stmt: 
+ Asgn: lhs
+  Var: a
+ Asgn: rhs
+  Const: 5
+Const: 2
+Const: 2
+Stmt: 
+ Asgn: lhs
+  Var: b
+ Asgn: rhs
+  Const: 2
+Stmt: 
+ Asgn: lhs
+  Var: b
+ Asgn: rhs
+  Const: 2
+Var: a
+Var: i
+RExpr: 
+ Var: a
+ Var: i
+RExpr: 
+ Var: a
+ Var: i
+Var: b
+Var: i
+RExpr: 
+ Var: b
+ Var: i
+Var: b
+Const: 20
+BExpr: 
+ Var: b
+ Const: 20
+Stmt: 
+ Asgn: lhs
+  Var: b
+ Asgn: rhs
+  BExpr: 
+   Var: b
+   Const: 20
+Stmt: 
+ Asgn: lhs
+  Var: b
+ Asgn: rhs
+  BExpr: 
+   Var: b
+   Const: 20
+Stmt: 
+ Block:
+  Stmt: 
+   Asgn: lhs
+    Var: b
+   Asgn: rhs
+    BExpr: 
+     Var: b
+     Const: 20
+Stmt: 
+ While: cond 
+  RExpr: 
+   Var: b
+   Var: i
+ While: body 
+  Stmt: 
+   Block:
+    Stmt: 
+     Asgn: lhs
+      Var: b
+     Asgn: rhs
+      BExpr: 
+       Var: b
+       Const: 20
+Const: 10
+Var: b
+BExpr: 
+ Const: 10
+ Var: b
+Stmt: 
+ Asgn: lhs
+  Var: a
+ Asgn: rhs
+  BExpr: 
+   Const: 10
+   Var: b
+Stmt: 
+ Asgn: lhs
+  Var: a
+ Asgn: rhs
+  BExpr: 
+   Const: 10
+   Var: b
+Stmt: 
+ Block:
+  Stmt: 
+   While: cond 
+    RExpr: 
+     Var: b
+     Var: i
+   While: body 
+    Stmt: 
+     Block:
+      Stmt: 
+       Asgn: lhs
+        Var: b
+       Asgn: rhs
+        BExpr: 
+         Var: b
+         Const: 20
+  Stmt: 
+   Asgn: lhs
+    Var: a
+   Asgn: rhs
+    BExpr: 
+     Const: 10
+     Var: b
+Var: b
+Var: i
+RExpr: 
+ Var: b
+ Var: i
+RExpr: 
+ Var: b
+ Var: i
+Var: a
+Var: a
+Stmt: 
+ Asgn: lhs
+  Var: b
+ Asgn: rhs
+  Var: a
+Stmt: 
+ Asgn: lhs
+  Var: b
+ Asgn: rhs
+  Var: a
+Stmt: 
+ Block:
+  Stmt: 
+   Asgn: lhs
+    Var: b
+   Asgn: rhs
+    Var: a
+Stmt: 
+ If: cond
+  RExpr: 
+   Var: b
+   Var: i
+ If: body
+  Stmt: 
+   Block:
+    Stmt: 
+     Asgn: lhs
+      Var: b
+     Asgn: rhs
+      Var: a
+Stmt: 
+ If: cond
+  RExpr: 
+   Var: b
+   Var: i
+ If: body
+  Stmt: 
+   Block:
+    Stmt: 
+     Asgn: lhs
+      Var: b
+     Asgn: rhs
+      Var: a
+Stmt: 
+ Block:
+  Stmt: 
+   If: cond
+    RExpr: 
+     Var: b
+     Var: i
+   If: body
+    Stmt: 
+     Block:
+      Stmt: 
+       Asgn: lhs
+        Var: b
+       Asgn: rhs
+        Var: a
+Stmt: 
+ Block:
+  Stmt: 
+   If: cond
+    RExpr: 
+     Var: b
+     Var: i
+   If: body
+    Stmt: 
+     Block:
+      Stmt: 
+       Asgn: lhs
+        Var: b
+       Asgn: rhs
+        Var: a
+Stmt: 
+ If: cond
+  RExpr: 
+   Var: a
+   Var: i
+ If: body
+  Stmt: 
+   Block:
+    Stmt: 
+     While: cond 
+      RExpr: 
+       Var: b
+       Var: i
+     While: body 
+      Stmt: 
+       Block:
+        Stmt: 
+         Asgn: lhs
+          Var: b
+         Asgn: rhs
+          BExpr: 
+           Var: b
+           Const: 20
+    Stmt: 
+     Asgn: lhs
+      Var: a
+     Asgn: rhs
+      BExpr: 
+       Const: 10
+       Var: b
+ Else: body
+  Stmt: 
+   Block:
+    Stmt: 
+     If: cond
+      RExpr: 
+       Var: b
+       Var: i
+     If: body
+      Stmt: 
+       Block:
+        Stmt: 
+         Asgn: lhs
+          Var: b
+         Asgn: rhs
+          Var: a
+Stmt: 
+ If: cond
+  RExpr: 
+   Var: a
+   Var: i
+ If: body
+  Stmt: 
+   Block:
+    Stmt: 
+     While: cond 
+      RExpr: 
+       Var: b
+       Var: i
+     While: body 
+      Stmt: 
+       Block:
+        Stmt: 
+         Asgn: lhs
+          Var: b
+         Asgn: rhs
+          BExpr: 
+           Var: b
+           Const: 20
+    Stmt: 
+     Asgn: lhs
+      Var: a
+     Asgn: rhs
+      BExpr: 
+       Const: 10
+       Var: b
+ Else: body
+  Stmt: 
+   Block:
+    Stmt: 
+     If: cond
+      RExpr: 
+       Var: b
+       Var: i
+     If: body
+      Stmt: 
+       Block:
+        Stmt: 
+         Asgn: lhs
+          Var: b
+         Asgn: rhs
+          Var: a
+Const: 1
+Const: 1
+Stmt: 
+ Ret:
+  Const: 1
+Stmt: 
+ Ret:
+  Const: 1
+Stmt: 
+ Block:
+  Stmt: 
+   Decl: a
+  Stmt: 
+   Decl: b
+  Stmt: 
+   Asgn: lhs
+    Var: a
+   Asgn: rhs
+    Const: 5
+  Stmt: 
+   Asgn: lhs
+    Var: b
+   Asgn: rhs
+    Const: 2
+  Stmt: 
+   If: cond
+    RExpr: 
+     Var: a
+     Var: i
+   If: body
+    Stmt: 
+     Block:
+      Stmt: 
+       While: cond 
+        RExpr: 
+         Var: b
+         Var: i
+       While: body 
+        Stmt: 
+         Block:
+          Stmt: 
+           Asgn: lhs
+            Var: b
+           Asgn: rhs
+            BExpr: 
+             Var: b
+             Const: 20
+      Stmt: 
+       Asgn: lhs
+        Var: a
+       Asgn: rhs
+        BExpr: 
+         Const: 10
+         Var: b
+   Else: body
+    Stmt: 
+     Block:
+      Stmt: 
+       If: cond
+        RExpr: 
+         Var: b
+         Var: i
+       If: body
+        Stmt: 
+         Block:
+          Stmt: 
+           Asgn: lhs
+            Var: b
+           Asgn: rhs
+            Var: a
+  Stmt: 
+   Ret:
+    Const: 1
+Func: func
+ Var: i
+ Stmt: 
+  Block:
+   Stmt: 
+    Decl: a
+   Stmt: 
+    Decl: b
+   Stmt: 
+    Asgn: lhs
+     Var: a
+    Asgn: rhs
+     Const: 5
+   Stmt: 
+    Asgn: lhs
+     Var: b
+    Asgn: rhs
+     Const: 2
+   Stmt: 
+    If: cond
+     RExpr: 
+      Var: a
+      Var: i
+    If: body
+     Stmt: 
+      Block:
+       Stmt: 
+        While: cond 
+         RExpr: 
+          Var: b
+          Var: i
+        While: body 
+         Stmt: 
+          Block:
+           Stmt: 
+            Asgn: lhs
+             Var: b
+            Asgn: rhs
+             BExpr: 
+              Var: b
+              Const: 20
+       Stmt: 
+        Asgn: lhs
+         Var: a
+        Asgn: rhs
+         BExpr: 
+          Const: 10
+          Var: b
+    Else: body
+     Stmt: 
+      Block:
+       Stmt: 
+        If: cond
+         RExpr: 
+          Var: b
+          Var: i
+        If: body
+         Stmt: 
+          Block:
+           Stmt: 
+            Asgn: lhs
+             Var: b
+            Asgn: rhs
+             Var: a
+   Stmt: 
+    Ret:
+     Const: 1
+Prog:
+ Func: func
+  Var: i
+  Stmt: 
+   Block:
+    Stmt: 
+     Decl: a
+    Stmt: 
+     Decl: b
+    Stmt: 
+     Asgn: lhs
+      Var: a
+     Asgn: rhs
+      Const: 5
+    Stmt: 
+     Asgn: lhs
+      Var: b
+     Asgn: rhs
+      Const: 2
+    Stmt: 
+     If: cond
+      RExpr: 
+       Var: a
+       Var: i
+     If: body
+      Stmt: 
+       Block:
+        Stmt: 
+         While: cond 
+          RExpr: 
+           Var: b
+           Var: i
+         While: body 
+          Stmt: 
+           Block:
+            Stmt: 
+             Asgn: lhs
+              Var: b
+             Asgn: rhs
+              BExpr: 
+               Var: b
+               Const: 20
+        Stmt: 
+         Asgn: lhs
+          Var: a
+         Asgn: rhs
+          BExpr: 
+           Const: 10
+           Var: b
+     Else: body
+      Stmt: 
+       Block:
+        Stmt: 
+         If: cond
+          RExpr: 
+           Var: b
+           Var: i
+         If: body
+          Stmt: 
+           Block:
+            Stmt: 
+             Asgn: lhs
+              Var: b
+             Asgn: rhs
+              Var: a
+    Stmt: 
+     Ret:
+      Const: 1
+Extern: print
+Extern: read
+Stmt: 
+ Decl: a
+Stmt: 
+ Decl: b
+Const: 5
+Const: 5
+Stmt: 
+ Asgn: lhs
+  Var: a
+ Asgn: rhs
+  Const: 5
+Stmt: 
+ Asgn: lhs
+  Var: a
+ Asgn: rhs
+  Const: 5
+Const: 2
+Const: 2
+Stmt: 
+ Asgn: lhs
+  Var: b
+ Asgn: rhs
+  Const: 2
+Stmt: 
+ Asgn: lhs
+  Var: b
+ Asgn: rhs
+  Const: 2
+Var: a
+Var: i
+RExpr: 
+ Var: a
+ Var: i
+RExpr: 
+ Var: a
+ Var: i
+Var: b
+Var: i
+RExpr: 
+ Var: b
+ Var: i
+Var: b
+Const: 20
+BExpr: 
+ Var: b
+ Const: 20
+Stmt: 
+ Asgn: lhs
+  Var: b
+ Asgn: rhs
+  BExpr: 
+   Var: b
+   Const: 20
+Stmt: 
+ Asgn: lhs
+  Var: b
+ Asgn: rhs
+  BExpr: 
+   Var: b
+   Const: 20
+Stmt: 
+ Block:
+  Stmt: 
+   Asgn: lhs
+    Var: b
+   Asgn: rhs
+    BExpr: 
+     Var: b
+     Const: 20
+Stmt: 
+ While: cond 
+  RExpr: 
+   Var: b
+   Var: i
+ While: body 
+  Stmt: 
+   Block:
+    Stmt: 
+     Asgn: lhs
+      Var: b
+     Asgn: rhs
+      BExpr: 
+       Var: b
+       Const: 20
+Const: 10
+Var: b
+BExpr: 
+ Const: 10
+ Var: b
+Stmt: 
+ Asgn: lhs
+  Var: a
+ Asgn: rhs
+  BExpr: 
+   Const: 10
+   Var: b
+Stmt: 
+ Asgn: lhs
+  Var: a
+ Asgn: rhs
+  BExpr: 
+   Const: 10
+   Var: b
+Stmt: 
+ Block:
+  Stmt: 
+   While: cond 
+    RExpr: 
+     Var: b
+     Var: i
+   While: body 
+    Stmt: 
+     Block:
+      Stmt: 
+       Asgn: lhs
+        Var: b
+       Asgn: rhs
+        BExpr: 
+         Var: b
+         Const: 20
+  Stmt: 
+   Asgn: lhs
+    Var: a
+   Asgn: rhs
+    BExpr: 
+     Const: 10
+     Var: b
+Var: b
+Var: i
+RExpr: 
+ Var: b
+ Var: i
+RExpr: 
+ Var: b
+ Var: i
+Var: a
+Var: a
+Stmt: 
+ Asgn: lhs
+  Var: b
+ Asgn: rhs
+  Var: a
+Stmt: 
+ Asgn: lhs
+  Var: b
+ Asgn: rhs
+  Var: a
+Stmt: 
+ Block:
+  Stmt: 
+   Asgn: lhs
+    Var: b
+   Asgn: rhs
+    Var: a
+Stmt: 
+ If: cond
+  RExpr: 
+   Var: b
+   Var: i
+ If: body
+  Stmt: 
+   Block:
+    Stmt: 
+     Asgn: lhs
+      Var: b
+     Asgn: rhs
+      Var: a
+Stmt: 
+ If: cond
+  RExpr: 
+   Var: b
+   Var: i
+ If: body
+  Stmt: 
+   Block:
+    Stmt: 
+     Asgn: lhs
+      Var: b
+     Asgn: rhs
+      Var: a
+Stmt: 
+ Block:
+  Stmt: 
+   If: cond
+    RExpr: 
+     Var: b
+     Var: i
+   If: body
+    Stmt: 
+     Block:
+      Stmt: 
+       Asgn: lhs
+        Var: b
+       Asgn: rhs
+        Var: a
+Stmt: 
+ Block:
+  Stmt: 
+   If: cond
+    RExpr: 
+     Var: b
+     Var: i
+   If: body
+    Stmt: 
+     Block:
+      Stmt: 
+       Asgn: lhs
+        Var: b
+       Asgn: rhs
+        Var: a
+Stmt: 
+ If: cond
+  RExpr: 
+   Var: a
+   Var: i
+ If: body
+  Stmt: 
+   Block:
+    Stmt: 
+     While: cond 
+      RExpr: 
+       Var: b
+       Var: i
+     While: body 
+      Stmt: 
+       Block:
+        Stmt: 
+         Asgn: lhs
+          Var: b
+         Asgn: rhs
+          BExpr: 
+           Var: b
+           Const: 20
+    Stmt: 
+     Asgn: lhs
+      Var: a
+     Asgn: rhs
+      BExpr: 
+       Const: 10
+       Var: b
+ Else: body
+  Stmt: 
+   Block:
+    Stmt: 
+     If: cond
+      RExpr: 
+       Var: b
+       Var: i
+     If: body
+      Stmt: 
+       Block:
+        Stmt: 
+         Asgn: lhs
+          Var: b
+         Asgn: rhs
+          Var: a
+Stmt: 
+ If: cond
+  RExpr: 
+   Var: a
+   Var: i
+ If: body
+  Stmt: 
+   Block:
+    Stmt: 
+     While: cond 
+      RExpr: 
+       Var: b
+       Var: i
+     While: body 
+      Stmt: 
+       Block:
+        Stmt: 
+         Asgn: lhs
+          Var: b
+         Asgn: rhs
+          BExpr: 
+           Var: b
+           Const: 20
+    Stmt: 
+     Asgn: lhs
+      Var: a
+     Asgn: rhs
+      BExpr: 
+       Const: 10
+       Var: b
+ Else: body
+  Stmt: 
+   Block:
+    Stmt: 
+     If: cond
+      RExpr: 
+       Var: b
+       Var: i
+     If: body
+      Stmt: 
+       Block:
+        Stmt: 
+         Asgn: lhs
+          Var: b
+         Asgn: rhs
+          Var: a
+Const: 1
+Const: 1
+Stmt: 
+ Ret:
+  Const: 1
+Stmt: 
+ Ret:
+  Const: 1
+Stmt: 
+ Block:
+  Stmt: 
+   Decl: a
+  Stmt: 
+   Decl: b
+  Stmt: 
+   Asgn: lhs
+    Var: a
+   Asgn: rhs
+    Const: 5
+  Stmt: 
+   Asgn: lhs
+    Var: b
+   Asgn: rhs
+    Const: 2
+  Stmt: 
+   If: cond
+    RExpr: 
+     Var: a
+     Var: i
+   If: body
+    Stmt: 
+     Block:
+      Stmt: 
+       While: cond 
+        RExpr: 
+         Var: b
+         Var: i
+       While: body 
+        Stmt: 
+         Block:
+          Stmt: 
+           Asgn: lhs
+            Var: b
+           Asgn: rhs
+            BExpr: 
+             Var: b
+             Const: 20
+      Stmt: 
+       Asgn: lhs
+        Var: a
+       Asgn: rhs
+        BExpr: 
+         Const: 10
+         Var: b
+   Else: body
+    Stmt: 
+     Block:
+      Stmt: 
+       If: cond
+        RExpr: 
+         Var: b
+         Var: i
+       If: body
+        Stmt: 
+         Block:
+          Stmt: 
+           Asgn: lhs
+            Var: b
+           Asgn: rhs
+            Var: a
+  Stmt: 
+   Ret:
+    Const: 1
+Func: func
+ Var: i
+ Stmt: 
+  Block:
+   Stmt: 
+    Decl: a
+   Stmt: 
+    Decl: b
+   Stmt: 
+    Asgn: lhs
+     Var: a
+    Asgn: rhs
+     Const: 5
+   Stmt: 
+    Asgn: lhs
+     Var: b
+    Asgn: rhs
+     Const: 2
+   Stmt: 
+    If: cond
+     RExpr: 
+      Var: a
+      Var: i
+    If: body
+     Stmt: 
+      Block:
+       Stmt: 
+        While: cond 
+         RExpr: 
+          Var: b
+          Var: i
+        While: body 
+         Stmt: 
+          Block:
+           Stmt: 
+            Asgn: lhs
+             Var: b
+            Asgn: rhs
+             BExpr: 
+              Var: b
+              Const: 20
+       Stmt: 
+        Asgn: lhs
+         Var: a
+        Asgn: rhs
+         BExpr: 
+          Const: 10
+          Var: b
+    Else: body
+     Stmt: 
+      Block:
+       Stmt: 
+        If: cond
+         RExpr: 
+          Var: b
+          Var: i
+        If: body
+         Stmt: 
+          Block:
+           Stmt: 
+            Asgn: lhs
+             Var: b
+            Asgn: rhs
+             Var: a
+   Stmt: 
+    Ret:
+     Const: 1
+Prog:
+ Func: func
+  Var: i
+  Stmt: 
+   Block:
+    Stmt: 
+     Decl: a
+    Stmt: 
+     Decl: b
+    Stmt: 
+     Asgn: lhs
+      Var: a
+     Asgn: rhs
+      Const: 5
+    Stmt: 
+     Asgn: lhs
+      Var: b
+     Asgn: rhs
+      Const: 2
+    Stmt: 
+     If: cond
+      RExpr: 
+       Var: a
+       Var: i
+     If: body
+      Stmt: 
+       Block:
+        Stmt: 
+         While: cond 
+          RExpr: 
+           Var: b
+           Var: i
+         While: body 
+          Stmt: 
+           Block:
+            Stmt: 
+             Asgn: lhs
+              Var: b
+             Asgn: rhs
+              BExpr: 
+               Var: b
+               Const: 20
+        Stmt: 
+         Asgn: lhs
+          Var: a
+         Asgn: rhs
+          BExpr: 
+           Const: 10
+           Var: b
+     Else: body
+      Stmt: 
+       Block:
+        Stmt: 
+         If: cond
+          RExpr: 
+           Var: b
+           Var: i
+         If: body
+          Stmt: 
+           Block:
+            Stmt: 
+             Asgn: lhs
+              Var: b
+             Asgn: rhs
+              Var: a
+    Stmt: 
+     Ret:
+      Const: 1
