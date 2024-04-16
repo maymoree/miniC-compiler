@@ -24,7 +24,7 @@ extern		{printf("type: %s\n", yytext); return EXTERN;}
                     }
 [a-zA-Z][a-zA-Z0-9]*    {                                                   //variable names
                         printf("name: %s\n", yytext);
-                        yylval.sname = strdup(yytext);
+                        yylval.idname = strdup(yytext);
 						return NAME;
                         }
 [-=+*/><(){};]      {printf("opr: %s\n", yytext); return yytext[0];}        //operators

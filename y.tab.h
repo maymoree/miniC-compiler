@@ -99,11 +99,12 @@ union YYSTYPE
 {
 #line 11 "part1.y"
 
-    int ival;
-    char* sname;
-    astNode* node_ptr;
+	int ival;
+	char * idname;
+	astNode *nptr;
+	vector<astNode *> *svec_ptr;
 
-#line 107 "y.tab.h"
+#line 108 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

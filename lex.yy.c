@@ -816,7 +816,7 @@ YY_RULE_SETUP
 #line 25 "part1.l"
 {                                                   //variable names
                         printf("name: %s\n", yytext);
-                        yylval.sname = strdup(yytext);
+                        yylval.idname = strdup(yytext);
 						return NAME;
                         }
 	YY_BREAK
