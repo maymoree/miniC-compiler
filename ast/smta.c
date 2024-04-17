@@ -6,22 +6,26 @@
 #include <vector>
 
 int semantic_analysis(astNode* root);
-void traverse(vector<vector<char*>*> *stack_symbol_table, astNode* node);
+int traverse(vector<vector<char*>*> *stack_symbol_table, astNode* node);
 
 int semantic_analysis(astNode* root){
     vector<vector<char*>*>* stack_symbol_table = new vector<vector<char*>*> (); // holds all
 
+    int passed;
+
     if (root != NULL) {
-        traverse(stack_symbol_table, root);
+        passed = traverse(stack_symbol_table, root);
     }
 
     delete(stack_symbol_table);
 
-    return (0);
+    // 0 represents false
+    // 1 represents true meaning it passed
+    return (passed);
 
 }
 
-void traverse(vector<vector<char*>*>* stack_symbol_table, astNode* node){
+int traverse(vector<vector<char*>*>* stack_symbol_table, astNode* node){
     
     node_type type = node->type;
 
@@ -36,6 +40,7 @@ void traverse(vector<vector<char*>*>* stack_symbol_table, astNode* node){
         }
 
         delete curr_sym_table;
+
     }
     
     // BLOCK TYPE
@@ -50,6 +55,7 @@ void traverse(vector<vector<char*>*>* stack_symbol_table, astNode* node){
 
         stack_symbol_table->pop_back();
         delete curr_sym_table;
+
     } 
     
     // FUNCTION TYPE
@@ -65,6 +71,7 @@ void traverse(vector<vector<char*>*>* stack_symbol_table, astNode* node){
 
         stack_symbol_table->pop_back();
         delete curr_sym_table;
+
     } 
     
     // DECLARATION TYPE
@@ -76,14 +83,15 @@ void traverse(vector<vector<char*>*>* stack_symbol_table, astNode* node){
         for (const char* var : *curr_sym_table) {
             // variable exists in top symbol table
             if (strcmp(var, var_name) == 0) {
-                fprintf(stderr, "Error: Variable already declared in this code block.\n");
-                exit(1);
+                printf("Error: Variable already declared in this code block.\n");
+                return (0);
             } else {
                 curr_sym_table->push_back(strdup(var_name));
             }
         }
 
         delete curr_sym_table;
+
     } 
     
     // VARIABLE TYPE
@@ -104,14 +112,14 @@ void traverse(vector<vector<char*>*>* stack_symbol_table, astNode* node){
         
         // variable is not found, print error
         if (!found) {
-            fprintf(stderr, "Error: Variable '%s' is used but not declared.\n", var_name);
-            exit(1);
+            printf("Error: Variable '%s' is used but not declared.\n", var_name);
+            return (0);
         }
     } 
     
     // EXTERN TYPE
     else if (type == ast_extern) {
-        
+
     }
 
     // OTHER TYPES
@@ -123,31 +131,37 @@ void traverse(vector<vector<char*>*>* stack_symbol_table, astNode* node){
         // traverse left then right child
         traverse(stack_symbol_table, node->rexpr.lhs);
         traverse(stack_symbol_table, node->rexpr.rhs);
+
     }
 
     else if (type == ast_bexpr) {
         traverse(stack_symbol_table, node->bexpr.lhs);
         traverse(stack_symbol_table, node->bexpr.rhs);
+
     }
 
     else if (type == ast_uexpr) {
         traverse(stack_symbol_table, node->uexpr.expr);
+
     }
 
     else if (type == ast_stmt && node->stmt.type == ast_call){
         if (node->stmt.call.param != NULL) {
             traverse(stack_symbol_table, node->stmt.call.param);
         }
+
     }
 
     else if (type == ast_stmt && node->stmt.type == ast_ret){
         traverse(stack_symbol_table, node->stmt.ret.expr);
+
     }
 
     else if (type == ast_stmt && node->stmt.type == ast_while){
         // two children
         traverse(stack_symbol_table, node->stmt.whilen.cond);
         traverse(stack_symbol_table, node->stmt.whilen.body);
+
     }
 
     else if (type == ast_stmt && node->stmt.type == ast_if){
@@ -159,14 +173,21 @@ void traverse(vector<vector<char*>*>* stack_symbol_table, astNode* node){
         if (node->stmt.ifn.else_body != NULL) {
             traverse(stack_symbol_table, node->stmt.ifn.else_body);
         }
+
     }
 
     else if (type == ast_stmt && node->stmt.type == ast_asgn){
         // two children
         traverse(stack_symbol_table, node->stmt.asgn.lhs);
         traverse(stack_symbol_table, node->stmt.asgn.rhs);
+
     }
 
-    else {}
+    else {
+        // failed
+        return (0);
+    }
+
+    return 1;
 
 }

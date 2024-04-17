@@ -150,8 +150,11 @@ int main(int argc, char* argv[]){
 		}
 		yyparse();
 
-		int a = semantic_analysis(root);
-		printf("%d\n", a);
+		if (semantic_analysis(root)){
+			printf("Passed semantic analysis.\n");
+		} else {
+			printf("Failed semantic analysis.\n");
+		}
 
 		freeNode(root);
 		
