@@ -1,6 +1,6 @@
-State 43 conflicts: 6 shift/reduce
-State 71 conflicts: 1 shift/reduce
-State 72 conflicts: 6 shift/reduce
+State 39 conflicts: 6 shift/reduce
+State 67 conflicts: 1 shift/reduce
+State 68 conflicts: 6 shift/reduce
 
 
 Grammar
@@ -8,103 +8,102 @@ Grammar
     0 $accept: program $end
 
     1 program: print_line read_line func
-    2        | read_line print_line func
 
-    3 print_line: EXTERN VOID PRINT '(' INT ')' ';'
+    2 print_line: EXTERN VOID PRINT '(' INT ')' ';'
 
-    4 read_line: EXTERN INT READ '(' ')' ';'
+    3 read_line: EXTERN INT READ '(' ')' ';'
 
-    5 func: INT NAME '(' INT NAME ')' code_block
-    6     | VOID NAME '(' INT NAME ')' code_block
-    7     | INT NAME '(' ')' code_block
-    8     | VOID NAME '(' ')' code_block
+    4 func: INT NAME '(' INT NAME ')' code_block
+    5     | VOID NAME '(' INT NAME ')' code_block
+    6     | INT NAME '(' ')' code_block
+    7     | VOID NAME '(' ')' code_block
 
-    9 code_block: '{' var_decls stmts '}'
-   10           | var_decls stmts
-   11           | '{' stmts '}'
-   12           | stmts
+    8 code_block: '{' var_decls stmts '}'
+    9           | var_decls stmts
+   10           | '{' stmts '}'
+   11           | stmts
 
-   13 stmts: stmts stmt
-   14      | stmt
+   12 stmts: stmts stmt
+   13      | stmt
 
-   15 stmt: assign_stmt
-   16     | call_func_stmt
-   17     | return_stmt
-   18     | condition_block
-   19     | while_block
+   14 stmt: assign_stmt
+   15     | call_func_stmt
+   16     | return_stmt
+   17     | condition_block
+   18     | while_block
 
-   20 condition_block: if_condition code_block else_condition
-   21                | if_condition code_block
+   19 condition_block: if_condition code_block else_condition
+   20                | if_condition code_block
 
-   22 if_condition: IF '(' bool_condition ')'
+   21 if_condition: IF '(' bool_condition ')'
 
-   23 else_condition: ELSE code_block
+   22 else_condition: ELSE code_block
 
-   24 while_block: WHILE '(' bool_condition ')' code_block
+   23 while_block: WHILE '(' bool_condition ')' code_block
 
-   25 bool_condition: term '<' term
-   26               | term '>' term
-   27               | term LE term
-   28               | term GE term
-   29               | term EQ term
-   30               | term NEQ term
+   24 bool_condition: term '<' term
+   25               | term '>' term
+   26               | term LE term
+   27               | term GE term
+   28               | term EQ term
+   29               | term NEQ term
 
-   31 assign_stmt: NAME '=' expr ';'
-   32            | NAME '=' call_func_stmt
+   30 assign_stmt: NAME '=' expr ';'
+   31            | NAME '=' call_func_stmt
 
-   33 expr: term '+' term
-   34     | term '-' term
-   35     | term '*' term
-   36     | term '/' term
-   37     | term
+   32 expr: term '+' term
+   33     | term '-' term
+   34     | term '*' term
+   35     | term '/' term
+   36     | term
 
-   38 term: NUM
-   39     | NAME
-   40     | '-' term
+   37 term: NUM
+   38     | NAME
+   39     | '-' term
 
-   41 var_decls: var_decls decl
-   42          | decl
+   40 var_decls: var_decls decl
+   41          | decl
 
-   43 decl: INT NAME ';'
+   42 decl: INT NAME ';'
 
-   44 call_func_stmt: PRINT '(' term ')' ';'
-   45               | READ '(' ')' ';'
+   43 call_func_stmt: PRINT '(' term ')' ';'
+   44               | READ '(' ')' ';'
 
-   46 return_stmt: RETURN '(' expr ')' ';'
-   47            | RETURN expr ';'
+   45 return_stmt: RETURN '(' expr ')' ';'
+   46            | RETURN expr ';'
 
 
 Terminals, with rules where they appear
 
     $end (0) 0
-    '(' (40) 3 4 5 6 7 8 22 24 44 45 46
-    ')' (41) 3 4 5 6 7 8 22 24 44 45 46
-    '*' (42) 35
-    '+' (43) 33
-    '-' (45) 34 40
-    '/' (47) 36
-    ';' (59) 3 4 31 43 44 45 46 47
-    '<' (60) 25
-    '=' (61) 31 32
-    '>' (62) 26
-    '{' (123) 9 11
-    '}' (125) 9 11
+    '(' (40) 2 3 4 5 6 7 21 23 43 44 45
+    ')' (41) 2 3 4 5 6 7 21 23 43 44 45
+    '*' (42) 34
+    '+' (43) 32
+    '-' (45) 33 39
+    '/' (47) 35
+    ';' (59) 2 3 30 42 43 44 45 46
+    '<' (60) 24
+    '=' (61) 30 31
+    '>' (62) 25
+    '{' (123) 8 10
+    '}' (125) 8 10
     error (256)
-    NUM <ival> (258) 38
-    NAME <idname> (259) 5 6 7 8 31 32 39 43
-    PRINT (260) 3 44
-    READ (261) 4 45
-    RETURN (262) 46 47
-    IF (263) 22
-    ELSE (264) 23
-    WHILE (265) 24
-    INT (266) 3 4 5 6 7 43
-    VOID (267) 3 6 8
-    EXTERN (268) 3 4
-    LE (269) 27
-    GE (270) 28
-    EQ (271) 29
-    NEQ (272) 30
+    NUM <ival> (258) 37
+    NAME <idname> (259) 4 5 6 7 30 31 38 42
+    PRINT (260) 2 43
+    READ (261) 3 44
+    RETURN (262) 45 46
+    IF (263) 21
+    ELSE (264) 22
+    WHILE (265) 23
+    INT (266) 2 3 4 5 6 42
+    VOID (267) 2 5 7
+    EXTERN (268) 2 3
+    LE (269) 26
+    GE (270) 27
+    EQ (271) 28
+    NEQ (272) 29
 
 
 Nonterminals, with rules where they appear
@@ -112,62 +111,62 @@ Nonterminals, with rules where they appear
     $accept (30)
         on left: 0
     program <nptr> (31)
-        on left: 1 2
+        on left: 1
         on right: 0
     print_line <nptr> (32)
-        on left: 3
-        on right: 1 2
+        on left: 2
+        on right: 1
     read_line <nptr> (33)
-        on left: 4
-        on right: 1 2
+        on left: 3
+        on right: 1
     func <nptr> (34)
-        on left: 5 6 7 8
-        on right: 1 2
+        on left: 4 5 6 7
+        on right: 1
     code_block <nptr> (35)
-        on left: 9 10 11 12
-        on right: 5 6 7 8 20 21 23 24
+        on left: 8 9 10 11
+        on right: 4 5 6 7 19 20 22 23
     stmts <svec_ptr> (36)
-        on left: 13 14
-        on right: 9 10 11 12 13
+        on left: 12 13
+        on right: 8 9 10 11 12
     stmt <nptr> (37)
-        on left: 15 16 17 18 19
-        on right: 13 14
+        on left: 14 15 16 17 18
+        on right: 12 13
     condition_block <nptr> (38)
-        on left: 20 21
-        on right: 18
-    if_condition <nptr> (39)
-        on left: 22
-        on right: 20 21
-    else_condition <nptr> (40)
-        on left: 23
-        on right: 20
-    while_block <nptr> (41)
-        on left: 24
-        on right: 19
-    bool_condition <nptr> (42)
-        on left: 25 26 27 28 29 30
-        on right: 22 24
-    assign_stmt <nptr> (43)
-        on left: 31 32
-        on right: 15
-    expr <nptr> (44)
-        on left: 33 34 35 36 37
-        on right: 31 46 47
-    term <nptr> (45)
-        on left: 38 39 40
-        on right: 25 26 27 28 29 30 33 34 35 36 37 40 44
-    var_decls <svec_ptr> (46)
-        on left: 41 42
-        on right: 9 10 41
-    decl <nptr> (47)
-        on left: 43
-        on right: 41 42
-    call_func_stmt <nptr> (48)
-        on left: 44 45
-        on right: 16 32
-    return_stmt <nptr> (49)
-        on left: 46 47
+        on left: 19 20
         on right: 17
+    if_condition <nptr> (39)
+        on left: 21
+        on right: 19 20
+    else_condition <nptr> (40)
+        on left: 22
+        on right: 19
+    while_block <nptr> (41)
+        on left: 23
+        on right: 18
+    bool_condition <nptr> (42)
+        on left: 24 25 26 27 28 29
+        on right: 21 23
+    assign_stmt <nptr> (43)
+        on left: 30 31
+        on right: 14
+    expr <nptr> (44)
+        on left: 32 33 34 35 36
+        on right: 30 45 46
+    term <nptr> (45)
+        on left: 37 38 39
+        on right: 24 25 26 27 28 29 32 33 34 35 36 39 43
+    var_decls <svec_ptr> (46)
+        on left: 40 41
+        on right: 8 9 40
+    decl <nptr> (47)
+        on left: 42
+        on right: 40 41
+    call_func_stmt <nptr> (48)
+        on left: 43 44
+        on right: 15 31
+    return_stmt <nptr> (49)
+        on left: 45 46
+        on right: 16
 
 
 State 0
@@ -178,1243 +177,1207 @@ State 0
 
     program     go to state 2
     print_line  go to state 3
-    read_line   go to state 4
 
 
 State 1
 
-    3 print_line: EXTERN . VOID PRINT '(' INT ')' ';'
-    4 read_line: EXTERN . INT READ '(' ')' ';'
+    2 print_line: EXTERN . VOID PRINT '(' INT ')' ';'
 
-    INT   shift, and go to state 5
-    VOID  shift, and go to state 6
+    VOID  shift, and go to state 4
 
 
 State 2
 
     0 $accept: program . $end
 
-    $end  shift, and go to state 7
+    $end  shift, and go to state 5
 
 
 State 3
 
     1 program: print_line . read_line func
 
-    EXTERN  shift, and go to state 8
+    EXTERN  shift, and go to state 6
 
-    read_line  go to state 9
+    read_line  go to state 7
 
 
 State 4
 
-    2 program: read_line . print_line func
+    2 print_line: EXTERN VOID . PRINT '(' INT ')' ';'
 
-    EXTERN  shift, and go to state 10
-
-    print_line  go to state 11
+    PRINT  shift, and go to state 8
 
 
 State 5
-
-    4 read_line: EXTERN INT . READ '(' ')' ';'
-
-    READ  shift, and go to state 12
-
-
-State 6
-
-    3 print_line: EXTERN VOID . PRINT '(' INT ')' ';'
-
-    PRINT  shift, and go to state 13
-
-
-State 7
 
     0 $accept: program $end .
 
     $default  accept
 
 
+State 6
+
+    3 read_line: EXTERN . INT READ '(' ')' ';'
+
+    INT  shift, and go to state 9
+
+
+State 7
+
+    1 program: print_line read_line . func
+
+    INT   shift, and go to state 10
+    VOID  shift, and go to state 11
+
+    func  go to state 12
+
+
 State 8
 
-    4 read_line: EXTERN . INT READ '(' ')' ';'
+    2 print_line: EXTERN VOID PRINT . '(' INT ')' ';'
 
-    INT  shift, and go to state 5
+    '('  shift, and go to state 13
 
 
 State 9
 
-    1 program: print_line read_line . func
+    3 read_line: EXTERN INT . READ '(' ')' ';'
 
-    INT   shift, and go to state 14
-    VOID  shift, and go to state 15
-
-    func  go to state 16
+    READ  shift, and go to state 14
 
 
 State 10
 
-    3 print_line: EXTERN . VOID PRINT '(' INT ')' ';'
+    4 func: INT . NAME '(' INT NAME ')' code_block
+    6     | INT . NAME '(' ')' code_block
 
-    VOID  shift, and go to state 6
+    NAME  shift, and go to state 15
 
 
 State 11
 
-    2 program: read_line print_line . func
+    5 func: VOID . NAME '(' INT NAME ')' code_block
+    7     | VOID . NAME '(' ')' code_block
 
-    INT   shift, and go to state 14
-    VOID  shift, and go to state 15
-
-    func  go to state 17
+    NAME  shift, and go to state 16
 
 
 State 12
-
-    4 read_line: EXTERN INT READ . '(' ')' ';'
-
-    '('  shift, and go to state 18
-
-
-State 13
-
-    3 print_line: EXTERN VOID PRINT . '(' INT ')' ';'
-
-    '('  shift, and go to state 19
-
-
-State 14
-
-    5 func: INT . NAME '(' INT NAME ')' code_block
-    7     | INT . NAME '(' ')' code_block
-
-    NAME  shift, and go to state 20
-
-
-State 15
-
-    6 func: VOID . NAME '(' INT NAME ')' code_block
-    8     | VOID . NAME '(' ')' code_block
-
-    NAME  shift, and go to state 21
-
-
-State 16
 
     1 program: print_line read_line func .
 
     $default  reduce using rule 1 (program)
 
 
+State 13
+
+    2 print_line: EXTERN VOID PRINT '(' . INT ')' ';'
+
+    INT  shift, and go to state 17
+
+
+State 14
+
+    3 read_line: EXTERN INT READ . '(' ')' ';'
+
+    '('  shift, and go to state 18
+
+
+State 15
+
+    4 func: INT NAME . '(' INT NAME ')' code_block
+    6     | INT NAME . '(' ')' code_block
+
+    '('  shift, and go to state 19
+
+
+State 16
+
+    5 func: VOID NAME . '(' INT NAME ')' code_block
+    7     | VOID NAME . '(' ')' code_block
+
+    '('  shift, and go to state 20
+
+
 State 17
 
-    2 program: read_line print_line func .
+    2 print_line: EXTERN VOID PRINT '(' INT . ')' ';'
 
-    $default  reduce using rule 2 (program)
+    ')'  shift, and go to state 21
 
 
 State 18
 
-    4 read_line: EXTERN INT READ '(' . ')' ';'
+    3 read_line: EXTERN INT READ '(' . ')' ';'
 
     ')'  shift, and go to state 22
 
 
 State 19
 
-    3 print_line: EXTERN VOID PRINT '(' . INT ')' ';'
+    4 func: INT NAME '(' . INT NAME ')' code_block
+    6     | INT NAME '(' . ')' code_block
 
     INT  shift, and go to state 23
+    ')'  shift, and go to state 24
 
 
 State 20
 
-    5 func: INT NAME . '(' INT NAME ')' code_block
-    7     | INT NAME . '(' ')' code_block
+    5 func: VOID NAME '(' . INT NAME ')' code_block
+    7     | VOID NAME '(' . ')' code_block
 
-    '('  shift, and go to state 24
+    INT  shift, and go to state 25
+    ')'  shift, and go to state 26
 
 
 State 21
 
-    6 func: VOID NAME . '(' INT NAME ')' code_block
-    8     | VOID NAME . '(' ')' code_block
+    2 print_line: EXTERN VOID PRINT '(' INT ')' . ';'
 
-    '('  shift, and go to state 25
+    ';'  shift, and go to state 27
 
 
 State 22
 
-    4 read_line: EXTERN INT READ '(' ')' . ';'
+    3 read_line: EXTERN INT READ '(' ')' . ';'
 
-    ';'  shift, and go to state 26
+    ';'  shift, and go to state 28
 
 
 State 23
 
-    3 print_line: EXTERN VOID PRINT '(' INT . ')' ';'
+    4 func: INT NAME '(' INT . NAME ')' code_block
 
-    ')'  shift, and go to state 27
+    NAME  shift, and go to state 29
 
 
 State 24
 
-    5 func: INT NAME '(' . INT NAME ')' code_block
-    7     | INT NAME '(' . ')' code_block
+    6 func: INT NAME '(' ')' . code_block
 
-    INT  shift, and go to state 28
-    ')'  shift, and go to state 29
+    NAME    shift, and go to state 30
+    PRINT   shift, and go to state 31
+    READ    shift, and go to state 32
+    RETURN  shift, and go to state 33
+    IF      shift, and go to state 34
+    WHILE   shift, and go to state 35
+    INT     shift, and go to state 36
+    '{'     shift, and go to state 37
+
+    code_block       go to state 38
+    stmts            go to state 39
+    stmt             go to state 40
+    condition_block  go to state 41
+    if_condition     go to state 42
+    while_block      go to state 43
+    assign_stmt      go to state 44
+    var_decls        go to state 45
+    decl             go to state 46
+    call_func_stmt   go to state 47
+    return_stmt      go to state 48
 
 
 State 25
 
-    6 func: VOID NAME '(' . INT NAME ')' code_block
-    8     | VOID NAME '(' . ')' code_block
+    5 func: VOID NAME '(' INT . NAME ')' code_block
 
-    INT  shift, and go to state 30
-    ')'  shift, and go to state 31
+    NAME  shift, and go to state 49
 
 
 State 26
 
-    4 read_line: EXTERN INT READ '(' ')' ';' .
+    7 func: VOID NAME '(' ')' . code_block
 
-    $default  reduce using rule 4 (read_line)
+    NAME    shift, and go to state 30
+    PRINT   shift, and go to state 31
+    READ    shift, and go to state 32
+    RETURN  shift, and go to state 33
+    IF      shift, and go to state 34
+    WHILE   shift, and go to state 35
+    INT     shift, and go to state 36
+    '{'     shift, and go to state 37
+
+    code_block       go to state 50
+    stmts            go to state 39
+    stmt             go to state 40
+    condition_block  go to state 41
+    if_condition     go to state 42
+    while_block      go to state 43
+    assign_stmt      go to state 44
+    var_decls        go to state 45
+    decl             go to state 46
+    call_func_stmt   go to state 47
+    return_stmt      go to state 48
 
 
 State 27
 
-    3 print_line: EXTERN VOID PRINT '(' INT ')' . ';'
+    2 print_line: EXTERN VOID PRINT '(' INT ')' ';' .
 
-    ';'  shift, and go to state 32
+    $default  reduce using rule 2 (print_line)
 
 
 State 28
 
-    5 func: INT NAME '(' INT . NAME ')' code_block
+    3 read_line: EXTERN INT READ '(' ')' ';' .
 
-    NAME  shift, and go to state 33
+    $default  reduce using rule 3 (read_line)
 
 
 State 29
 
-    7 func: INT NAME '(' ')' . code_block
+    4 func: INT NAME '(' INT NAME . ')' code_block
 
-    NAME    shift, and go to state 34
-    PRINT   shift, and go to state 35
-    READ    shift, and go to state 36
-    RETURN  shift, and go to state 37
-    IF      shift, and go to state 38
-    WHILE   shift, and go to state 39
-    INT     shift, and go to state 40
-    '{'     shift, and go to state 41
-
-    code_block       go to state 42
-    stmts            go to state 43
-    stmt             go to state 44
-    condition_block  go to state 45
-    if_condition     go to state 46
-    while_block      go to state 47
-    assign_stmt      go to state 48
-    var_decls        go to state 49
-    decl             go to state 50
-    call_func_stmt   go to state 51
-    return_stmt      go to state 52
+    ')'  shift, and go to state 51
 
 
 State 30
 
-    6 func: VOID NAME '(' INT . NAME ')' code_block
+   30 assign_stmt: NAME . '=' expr ';'
+   31            | NAME . '=' call_func_stmt
 
-    NAME  shift, and go to state 53
+    '='  shift, and go to state 52
 
 
 State 31
 
-    8 func: VOID NAME '(' ')' . code_block
+   43 call_func_stmt: PRINT . '(' term ')' ';'
 
-    NAME    shift, and go to state 34
-    PRINT   shift, and go to state 35
-    READ    shift, and go to state 36
-    RETURN  shift, and go to state 37
-    IF      shift, and go to state 38
-    WHILE   shift, and go to state 39
-    INT     shift, and go to state 40
-    '{'     shift, and go to state 41
-
-    code_block       go to state 54
-    stmts            go to state 43
-    stmt             go to state 44
-    condition_block  go to state 45
-    if_condition     go to state 46
-    while_block      go to state 47
-    assign_stmt      go to state 48
-    var_decls        go to state 49
-    decl             go to state 50
-    call_func_stmt   go to state 51
-    return_stmt      go to state 52
+    '('  shift, and go to state 53
 
 
 State 32
 
-    3 print_line: EXTERN VOID PRINT '(' INT ')' ';' .
+   44 call_func_stmt: READ . '(' ')' ';'
 
-    $default  reduce using rule 3 (print_line)
+    '('  shift, and go to state 54
 
 
 State 33
 
-    5 func: INT NAME '(' INT NAME . ')' code_block
+   45 return_stmt: RETURN . '(' expr ')' ';'
+   46            | RETURN . expr ';'
 
-    ')'  shift, and go to state 55
+    NUM   shift, and go to state 55
+    NAME  shift, and go to state 56
+    '('   shift, and go to state 57
+    '-'   shift, and go to state 58
+
+    expr  go to state 59
+    term  go to state 60
 
 
 State 34
 
-   31 assign_stmt: NAME . '=' expr ';'
-   32            | NAME . '=' call_func_stmt
+   21 if_condition: IF . '(' bool_condition ')'
 
-    '='  shift, and go to state 56
+    '('  shift, and go to state 61
 
 
 State 35
 
-   44 call_func_stmt: PRINT . '(' term ')' ';'
+   23 while_block: WHILE . '(' bool_condition ')' code_block
 
-    '('  shift, and go to state 57
+    '('  shift, and go to state 62
 
 
 State 36
 
-   45 call_func_stmt: READ . '(' ')' ';'
+   42 decl: INT . NAME ';'
 
-    '('  shift, and go to state 58
+    NAME  shift, and go to state 63
 
 
 State 37
 
-   46 return_stmt: RETURN . '(' expr ')' ';'
-   47            | RETURN . expr ';'
+    8 code_block: '{' . var_decls stmts '}'
+   10           | '{' . stmts '}'
 
-    NUM   shift, and go to state 59
-    NAME  shift, and go to state 60
-    '('   shift, and go to state 61
-    '-'   shift, and go to state 62
+    NAME    shift, and go to state 30
+    PRINT   shift, and go to state 31
+    READ    shift, and go to state 32
+    RETURN  shift, and go to state 33
+    IF      shift, and go to state 34
+    WHILE   shift, and go to state 35
+    INT     shift, and go to state 36
 
-    expr  go to state 63
-    term  go to state 64
+    stmts            go to state 64
+    stmt             go to state 40
+    condition_block  go to state 41
+    if_condition     go to state 42
+    while_block      go to state 43
+    assign_stmt      go to state 44
+    var_decls        go to state 65
+    decl             go to state 46
+    call_func_stmt   go to state 47
+    return_stmt      go to state 48
 
 
 State 38
 
-   22 if_condition: IF . '(' bool_condition ')'
-
-    '('  shift, and go to state 65
-
-
-State 39
-
-   24 while_block: WHILE . '(' bool_condition ')' code_block
-
-    '('  shift, and go to state 66
-
-
-State 40
-
-   43 decl: INT . NAME ';'
-
-    NAME  shift, and go to state 67
-
-
-State 41
-
-    9 code_block: '{' . var_decls stmts '}'
-   11           | '{' . stmts '}'
-
-    NAME    shift, and go to state 34
-    PRINT   shift, and go to state 35
-    READ    shift, and go to state 36
-    RETURN  shift, and go to state 37
-    IF      shift, and go to state 38
-    WHILE   shift, and go to state 39
-    INT     shift, and go to state 40
-
-    stmts            go to state 68
-    stmt             go to state 44
-    condition_block  go to state 45
-    if_condition     go to state 46
-    while_block      go to state 47
-    assign_stmt      go to state 48
-    var_decls        go to state 69
-    decl             go to state 50
-    call_func_stmt   go to state 51
-    return_stmt      go to state 52
-
-
-State 42
-
-    7 func: INT NAME '(' ')' code_block .
-
-    $default  reduce using rule 7 (func)
-
-
-State 43
-
-   12 code_block: stmts .
-   13 stmts: stmts . stmt
-
-    NAME    shift, and go to state 34
-    PRINT   shift, and go to state 35
-    READ    shift, and go to state 36
-    RETURN  shift, and go to state 37
-    IF      shift, and go to state 38
-    WHILE   shift, and go to state 39
-
-    NAME      [reduce using rule 12 (code_block)]
-    PRINT     [reduce using rule 12 (code_block)]
-    READ      [reduce using rule 12 (code_block)]
-    RETURN    [reduce using rule 12 (code_block)]
-    IF        [reduce using rule 12 (code_block)]
-    WHILE     [reduce using rule 12 (code_block)]
-    $default  reduce using rule 12 (code_block)
-
-    stmt             go to state 70
-    condition_block  go to state 45
-    if_condition     go to state 46
-    while_block      go to state 47
-    assign_stmt      go to state 48
-    call_func_stmt   go to state 51
-    return_stmt      go to state 52
-
-
-State 44
-
-   14 stmts: stmt .
-
-    $default  reduce using rule 14 (stmts)
-
-
-State 45
-
-   18 stmt: condition_block .
-
-    $default  reduce using rule 18 (stmt)
-
-
-State 46
-
-   20 condition_block: if_condition . code_block else_condition
-   21                | if_condition . code_block
-
-    NAME    shift, and go to state 34
-    PRINT   shift, and go to state 35
-    READ    shift, and go to state 36
-    RETURN  shift, and go to state 37
-    IF      shift, and go to state 38
-    WHILE   shift, and go to state 39
-    INT     shift, and go to state 40
-    '{'     shift, and go to state 41
-
-    code_block       go to state 71
-    stmts            go to state 43
-    stmt             go to state 44
-    condition_block  go to state 45
-    if_condition     go to state 46
-    while_block      go to state 47
-    assign_stmt      go to state 48
-    var_decls        go to state 49
-    decl             go to state 50
-    call_func_stmt   go to state 51
-    return_stmt      go to state 52
-
-
-State 47
-
-   19 stmt: while_block .
-
-    $default  reduce using rule 19 (stmt)
-
-
-State 48
-
-   15 stmt: assign_stmt .
-
-    $default  reduce using rule 15 (stmt)
-
-
-State 49
-
-   10 code_block: var_decls . stmts
-   41 var_decls: var_decls . decl
-
-    NAME    shift, and go to state 34
-    PRINT   shift, and go to state 35
-    READ    shift, and go to state 36
-    RETURN  shift, and go to state 37
-    IF      shift, and go to state 38
-    WHILE   shift, and go to state 39
-    INT     shift, and go to state 40
-
-    stmts            go to state 72
-    stmt             go to state 44
-    condition_block  go to state 45
-    if_condition     go to state 46
-    while_block      go to state 47
-    assign_stmt      go to state 48
-    decl             go to state 73
-    call_func_stmt   go to state 51
-    return_stmt      go to state 52
-
-
-State 50
-
-   42 var_decls: decl .
-
-    $default  reduce using rule 42 (var_decls)
-
-
-State 51
-
-   16 stmt: call_func_stmt .
-
-    $default  reduce using rule 16 (stmt)
-
-
-State 52
-
-   17 stmt: return_stmt .
-
-    $default  reduce using rule 17 (stmt)
-
-
-State 53
-
-    6 func: VOID NAME '(' INT NAME . ')' code_block
-
-    ')'  shift, and go to state 74
-
-
-State 54
-
-    8 func: VOID NAME '(' ')' code_block .
-
-    $default  reduce using rule 8 (func)
-
-
-State 55
-
-    5 func: INT NAME '(' INT NAME ')' . code_block
-
-    NAME    shift, and go to state 34
-    PRINT   shift, and go to state 35
-    READ    shift, and go to state 36
-    RETURN  shift, and go to state 37
-    IF      shift, and go to state 38
-    WHILE   shift, and go to state 39
-    INT     shift, and go to state 40
-    '{'     shift, and go to state 41
-
-    code_block       go to state 75
-    stmts            go to state 43
-    stmt             go to state 44
-    condition_block  go to state 45
-    if_condition     go to state 46
-    while_block      go to state 47
-    assign_stmt      go to state 48
-    var_decls        go to state 49
-    decl             go to state 50
-    call_func_stmt   go to state 51
-    return_stmt      go to state 52
-
-
-State 56
-
-   31 assign_stmt: NAME '=' . expr ';'
-   32            | NAME '=' . call_func_stmt
-
-    NUM    shift, and go to state 59
-    NAME   shift, and go to state 60
-    PRINT  shift, and go to state 35
-    READ   shift, and go to state 36
-    '-'    shift, and go to state 62
-
-    expr            go to state 76
-    term            go to state 64
-    call_func_stmt  go to state 77
-
-
-State 57
-
-   44 call_func_stmt: PRINT '(' . term ')' ';'
-
-    NUM   shift, and go to state 59
-    NAME  shift, and go to state 60
-    '-'   shift, and go to state 62
-
-    term  go to state 78
-
-
-State 58
-
-   45 call_func_stmt: READ '(' . ')' ';'
-
-    ')'  shift, and go to state 79
-
-
-State 59
-
-   38 term: NUM .
-
-    $default  reduce using rule 38 (term)
-
-
-State 60
-
-   39 term: NAME .
-
-    $default  reduce using rule 39 (term)
-
-
-State 61
-
-   46 return_stmt: RETURN '(' . expr ')' ';'
-
-    NUM   shift, and go to state 59
-    NAME  shift, and go to state 60
-    '-'   shift, and go to state 62
-
-    expr  go to state 80
-    term  go to state 64
-
-
-State 62
-
-   40 term: '-' . term
-
-    NUM   shift, and go to state 59
-    NAME  shift, and go to state 60
-    '-'   shift, and go to state 62
-
-    term  go to state 81
-
-
-State 63
-
-   47 return_stmt: RETURN expr . ';'
-
-    ';'  shift, and go to state 82
-
-
-State 64
-
-   33 expr: term . '+' term
-   34     | term . '-' term
-   35     | term . '*' term
-   36     | term . '/' term
-   37     | term .
-
-    '+'  shift, and go to state 83
-    '-'  shift, and go to state 84
-    '*'  shift, and go to state 85
-    '/'  shift, and go to state 86
-
-    $default  reduce using rule 37 (expr)
-
-
-State 65
-
-   22 if_condition: IF '(' . bool_condition ')'
-
-    NUM   shift, and go to state 59
-    NAME  shift, and go to state 60
-    '-'   shift, and go to state 62
-
-    bool_condition  go to state 87
-    term            go to state 88
-
-
-State 66
-
-   24 while_block: WHILE '(' . bool_condition ')' code_block
-
-    NUM   shift, and go to state 59
-    NAME  shift, and go to state 60
-    '-'   shift, and go to state 62
-
-    bool_condition  go to state 89
-    term            go to state 88
-
-
-State 67
-
-   43 decl: INT NAME . ';'
-
-    ';'  shift, and go to state 90
-
-
-State 68
-
-   11 code_block: '{' stmts . '}'
-   13 stmts: stmts . stmt
-
-    NAME    shift, and go to state 34
-    PRINT   shift, and go to state 35
-    READ    shift, and go to state 36
-    RETURN  shift, and go to state 37
-    IF      shift, and go to state 38
-    WHILE   shift, and go to state 39
-    '}'     shift, and go to state 91
-
-    stmt             go to state 70
-    condition_block  go to state 45
-    if_condition     go to state 46
-    while_block      go to state 47
-    assign_stmt      go to state 48
-    call_func_stmt   go to state 51
-    return_stmt      go to state 52
-
-
-State 69
-
-    9 code_block: '{' var_decls . stmts '}'
-   41 var_decls: var_decls . decl
-
-    NAME    shift, and go to state 34
-    PRINT   shift, and go to state 35
-    READ    shift, and go to state 36
-    RETURN  shift, and go to state 37
-    IF      shift, and go to state 38
-    WHILE   shift, and go to state 39
-    INT     shift, and go to state 40
-
-    stmts            go to state 92
-    stmt             go to state 44
-    condition_block  go to state 45
-    if_condition     go to state 46
-    while_block      go to state 47
-    assign_stmt      go to state 48
-    decl             go to state 73
-    call_func_stmt   go to state 51
-    return_stmt      go to state 52
-
-
-State 70
-
-   13 stmts: stmts stmt .
-
-    $default  reduce using rule 13 (stmts)
-
-
-State 71
-
-   20 condition_block: if_condition code_block . else_condition
-   21                | if_condition code_block .
-
-    ELSE  shift, and go to state 93
-
-    ELSE      [reduce using rule 21 (condition_block)]
-    $default  reduce using rule 21 (condition_block)
-
-    else_condition  go to state 94
-
-
-State 72
-
-   10 code_block: var_decls stmts .
-   13 stmts: stmts . stmt
-
-    NAME    shift, and go to state 34
-    PRINT   shift, and go to state 35
-    READ    shift, and go to state 36
-    RETURN  shift, and go to state 37
-    IF      shift, and go to state 38
-    WHILE   shift, and go to state 39
-
-    NAME      [reduce using rule 10 (code_block)]
-    PRINT     [reduce using rule 10 (code_block)]
-    READ      [reduce using rule 10 (code_block)]
-    RETURN    [reduce using rule 10 (code_block)]
-    IF        [reduce using rule 10 (code_block)]
-    WHILE     [reduce using rule 10 (code_block)]
-    $default  reduce using rule 10 (code_block)
-
-    stmt             go to state 70
-    condition_block  go to state 45
-    if_condition     go to state 46
-    while_block      go to state 47
-    assign_stmt      go to state 48
-    call_func_stmt   go to state 51
-    return_stmt      go to state 52
-
-
-State 73
-
-   41 var_decls: var_decls decl .
-
-    $default  reduce using rule 41 (var_decls)
-
-
-State 74
-
-    6 func: VOID NAME '(' INT NAME ')' . code_block
-
-    NAME    shift, and go to state 34
-    PRINT   shift, and go to state 35
-    READ    shift, and go to state 36
-    RETURN  shift, and go to state 37
-    IF      shift, and go to state 38
-    WHILE   shift, and go to state 39
-    INT     shift, and go to state 40
-    '{'     shift, and go to state 41
-
-    code_block       go to state 95
-    stmts            go to state 43
-    stmt             go to state 44
-    condition_block  go to state 45
-    if_condition     go to state 46
-    while_block      go to state 47
-    assign_stmt      go to state 48
-    var_decls        go to state 49
-    decl             go to state 50
-    call_func_stmt   go to state 51
-    return_stmt      go to state 52
-
-
-State 75
-
-    5 func: INT NAME '(' INT NAME ')' code_block .
-
-    $default  reduce using rule 5 (func)
-
-
-State 76
-
-   31 assign_stmt: NAME '=' expr . ';'
-
-    ';'  shift, and go to state 96
-
-
-State 77
-
-   32 assign_stmt: NAME '=' call_func_stmt .
-
-    $default  reduce using rule 32 (assign_stmt)
-
-
-State 78
-
-   44 call_func_stmt: PRINT '(' term . ')' ';'
-
-    ')'  shift, and go to state 97
-
-
-State 79
-
-   45 call_func_stmt: READ '(' ')' . ';'
-
-    ';'  shift, and go to state 98
-
-
-State 80
-
-   46 return_stmt: RETURN '(' expr . ')' ';'
-
-    ')'  shift, and go to state 99
-
-
-State 81
-
-   40 term: '-' term .
-
-    $default  reduce using rule 40 (term)
-
-
-State 82
-
-   47 return_stmt: RETURN expr ';' .
-
-    $default  reduce using rule 47 (return_stmt)
-
-
-State 83
-
-   33 expr: term '+' . term
-
-    NUM   shift, and go to state 59
-    NAME  shift, and go to state 60
-    '-'   shift, and go to state 62
-
-    term  go to state 100
-
-
-State 84
-
-   34 expr: term '-' . term
-
-    NUM   shift, and go to state 59
-    NAME  shift, and go to state 60
-    '-'   shift, and go to state 62
-
-    term  go to state 101
-
-
-State 85
-
-   35 expr: term '*' . term
-
-    NUM   shift, and go to state 59
-    NAME  shift, and go to state 60
-    '-'   shift, and go to state 62
-
-    term  go to state 102
-
-
-State 86
-
-   36 expr: term '/' . term
-
-    NUM   shift, and go to state 59
-    NAME  shift, and go to state 60
-    '-'   shift, and go to state 62
-
-    term  go to state 103
-
-
-State 87
-
-   22 if_condition: IF '(' bool_condition . ')'
-
-    ')'  shift, and go to state 104
-
-
-State 88
-
-   25 bool_condition: term . '<' term
-   26               | term . '>' term
-   27               | term . LE term
-   28               | term . GE term
-   29               | term . EQ term
-   30               | term . NEQ term
-
-    LE   shift, and go to state 105
-    GE   shift, and go to state 106
-    EQ   shift, and go to state 107
-    NEQ  shift, and go to state 108
-    '<'  shift, and go to state 109
-    '>'  shift, and go to state 110
-
-
-State 89
-
-   24 while_block: WHILE '(' bool_condition . ')' code_block
-
-    ')'  shift, and go to state 111
-
-
-State 90
-
-   43 decl: INT NAME ';' .
-
-    $default  reduce using rule 43 (decl)
-
-
-State 91
-
-   11 code_block: '{' stmts '}' .
-
-    $default  reduce using rule 11 (code_block)
-
-
-State 92
-
-    9 code_block: '{' var_decls stmts . '}'
-   13 stmts: stmts . stmt
-
-    NAME    shift, and go to state 34
-    PRINT   shift, and go to state 35
-    READ    shift, and go to state 36
-    RETURN  shift, and go to state 37
-    IF      shift, and go to state 38
-    WHILE   shift, and go to state 39
-    '}'     shift, and go to state 112
-
-    stmt             go to state 70
-    condition_block  go to state 45
-    if_condition     go to state 46
-    while_block      go to state 47
-    assign_stmt      go to state 48
-    call_func_stmt   go to state 51
-    return_stmt      go to state 52
-
-
-State 93
-
-   23 else_condition: ELSE . code_block
-
-    NAME    shift, and go to state 34
-    PRINT   shift, and go to state 35
-    READ    shift, and go to state 36
-    RETURN  shift, and go to state 37
-    IF      shift, and go to state 38
-    WHILE   shift, and go to state 39
-    INT     shift, and go to state 40
-    '{'     shift, and go to state 41
-
-    code_block       go to state 113
-    stmts            go to state 43
-    stmt             go to state 44
-    condition_block  go to state 45
-    if_condition     go to state 46
-    while_block      go to state 47
-    assign_stmt      go to state 48
-    var_decls        go to state 49
-    decl             go to state 50
-    call_func_stmt   go to state 51
-    return_stmt      go to state 52
-
-
-State 94
-
-   20 condition_block: if_condition code_block else_condition .
-
-    $default  reduce using rule 20 (condition_block)
-
-
-State 95
-
-    6 func: VOID NAME '(' INT NAME ')' code_block .
+    6 func: INT NAME '(' ')' code_block .
 
     $default  reduce using rule 6 (func)
 
 
-State 96
+State 39
 
-   31 assign_stmt: NAME '=' expr ';' .
+   11 code_block: stmts .
+   12 stmts: stmts . stmt
 
-    $default  reduce using rule 31 (assign_stmt)
+    NAME    shift, and go to state 30
+    PRINT   shift, and go to state 31
+    READ    shift, and go to state 32
+    RETURN  shift, and go to state 33
+    IF      shift, and go to state 34
+    WHILE   shift, and go to state 35
 
+    NAME      [reduce using rule 11 (code_block)]
+    PRINT     [reduce using rule 11 (code_block)]
+    READ      [reduce using rule 11 (code_block)]
+    RETURN    [reduce using rule 11 (code_block)]
+    IF        [reduce using rule 11 (code_block)]
+    WHILE     [reduce using rule 11 (code_block)]
+    $default  reduce using rule 11 (code_block)
 
-State 97
-
-   44 call_func_stmt: PRINT '(' term ')' . ';'
-
-    ';'  shift, and go to state 114
-
-
-State 98
-
-   45 call_func_stmt: READ '(' ')' ';' .
-
-    $default  reduce using rule 45 (call_func_stmt)
-
-
-State 99
-
-   46 return_stmt: RETURN '(' expr ')' . ';'
-
-    ';'  shift, and go to state 115
-
-
-State 100
-
-   33 expr: term '+' term .
-
-    $default  reduce using rule 33 (expr)
+    stmt             go to state 66
+    condition_block  go to state 41
+    if_condition     go to state 42
+    while_block      go to state 43
+    assign_stmt      go to state 44
+    call_func_stmt   go to state 47
+    return_stmt      go to state 48
 
 
-State 101
+State 40
 
-   34 expr: term '-' term .
+   13 stmts: stmt .
 
-    $default  reduce using rule 34 (expr)
-
-
-State 102
-
-   35 expr: term '*' term .
-
-    $default  reduce using rule 35 (expr)
+    $default  reduce using rule 13 (stmts)
 
 
-State 103
+State 41
 
-   36 expr: term '/' term .
+   17 stmt: condition_block .
+
+    $default  reduce using rule 17 (stmt)
+
+
+State 42
+
+   19 condition_block: if_condition . code_block else_condition
+   20                | if_condition . code_block
+
+    NAME    shift, and go to state 30
+    PRINT   shift, and go to state 31
+    READ    shift, and go to state 32
+    RETURN  shift, and go to state 33
+    IF      shift, and go to state 34
+    WHILE   shift, and go to state 35
+    INT     shift, and go to state 36
+    '{'     shift, and go to state 37
+
+    code_block       go to state 67
+    stmts            go to state 39
+    stmt             go to state 40
+    condition_block  go to state 41
+    if_condition     go to state 42
+    while_block      go to state 43
+    assign_stmt      go to state 44
+    var_decls        go to state 45
+    decl             go to state 46
+    call_func_stmt   go to state 47
+    return_stmt      go to state 48
+
+
+State 43
+
+   18 stmt: while_block .
+
+    $default  reduce using rule 18 (stmt)
+
+
+State 44
+
+   14 stmt: assign_stmt .
+
+    $default  reduce using rule 14 (stmt)
+
+
+State 45
+
+    9 code_block: var_decls . stmts
+   40 var_decls: var_decls . decl
+
+    NAME    shift, and go to state 30
+    PRINT   shift, and go to state 31
+    READ    shift, and go to state 32
+    RETURN  shift, and go to state 33
+    IF      shift, and go to state 34
+    WHILE   shift, and go to state 35
+    INT     shift, and go to state 36
+
+    stmts            go to state 68
+    stmt             go to state 40
+    condition_block  go to state 41
+    if_condition     go to state 42
+    while_block      go to state 43
+    assign_stmt      go to state 44
+    decl             go to state 69
+    call_func_stmt   go to state 47
+    return_stmt      go to state 48
+
+
+State 46
+
+   41 var_decls: decl .
+
+    $default  reduce using rule 41 (var_decls)
+
+
+State 47
+
+   15 stmt: call_func_stmt .
+
+    $default  reduce using rule 15 (stmt)
+
+
+State 48
+
+   16 stmt: return_stmt .
+
+    $default  reduce using rule 16 (stmt)
+
+
+State 49
+
+    5 func: VOID NAME '(' INT NAME . ')' code_block
+
+    ')'  shift, and go to state 70
+
+
+State 50
+
+    7 func: VOID NAME '(' ')' code_block .
+
+    $default  reduce using rule 7 (func)
+
+
+State 51
+
+    4 func: INT NAME '(' INT NAME ')' . code_block
+
+    NAME    shift, and go to state 30
+    PRINT   shift, and go to state 31
+    READ    shift, and go to state 32
+    RETURN  shift, and go to state 33
+    IF      shift, and go to state 34
+    WHILE   shift, and go to state 35
+    INT     shift, and go to state 36
+    '{'     shift, and go to state 37
+
+    code_block       go to state 71
+    stmts            go to state 39
+    stmt             go to state 40
+    condition_block  go to state 41
+    if_condition     go to state 42
+    while_block      go to state 43
+    assign_stmt      go to state 44
+    var_decls        go to state 45
+    decl             go to state 46
+    call_func_stmt   go to state 47
+    return_stmt      go to state 48
+
+
+State 52
+
+   30 assign_stmt: NAME '=' . expr ';'
+   31            | NAME '=' . call_func_stmt
+
+    NUM    shift, and go to state 55
+    NAME   shift, and go to state 56
+    PRINT  shift, and go to state 31
+    READ   shift, and go to state 32
+    '-'    shift, and go to state 58
+
+    expr            go to state 72
+    term            go to state 60
+    call_func_stmt  go to state 73
+
+
+State 53
+
+   43 call_func_stmt: PRINT '(' . term ')' ';'
+
+    NUM   shift, and go to state 55
+    NAME  shift, and go to state 56
+    '-'   shift, and go to state 58
+
+    term  go to state 74
+
+
+State 54
+
+   44 call_func_stmt: READ '(' . ')' ';'
+
+    ')'  shift, and go to state 75
+
+
+State 55
+
+   37 term: NUM .
+
+    $default  reduce using rule 37 (term)
+
+
+State 56
+
+   38 term: NAME .
+
+    $default  reduce using rule 38 (term)
+
+
+State 57
+
+   45 return_stmt: RETURN '(' . expr ')' ';'
+
+    NUM   shift, and go to state 55
+    NAME  shift, and go to state 56
+    '-'   shift, and go to state 58
+
+    expr  go to state 76
+    term  go to state 60
+
+
+State 58
+
+   39 term: '-' . term
+
+    NUM   shift, and go to state 55
+    NAME  shift, and go to state 56
+    '-'   shift, and go to state 58
+
+    term  go to state 77
+
+
+State 59
+
+   46 return_stmt: RETURN expr . ';'
+
+    ';'  shift, and go to state 78
+
+
+State 60
+
+   32 expr: term . '+' term
+   33     | term . '-' term
+   34     | term . '*' term
+   35     | term . '/' term
+   36     | term .
+
+    '+'  shift, and go to state 79
+    '-'  shift, and go to state 80
+    '*'  shift, and go to state 81
+    '/'  shift, and go to state 82
 
     $default  reduce using rule 36 (expr)
 
 
+State 61
+
+   21 if_condition: IF '(' . bool_condition ')'
+
+    NUM   shift, and go to state 55
+    NAME  shift, and go to state 56
+    '-'   shift, and go to state 58
+
+    bool_condition  go to state 83
+    term            go to state 84
+
+
+State 62
+
+   23 while_block: WHILE '(' . bool_condition ')' code_block
+
+    NUM   shift, and go to state 55
+    NAME  shift, and go to state 56
+    '-'   shift, and go to state 58
+
+    bool_condition  go to state 85
+    term            go to state 84
+
+
+State 63
+
+   42 decl: INT NAME . ';'
+
+    ';'  shift, and go to state 86
+
+
+State 64
+
+   10 code_block: '{' stmts . '}'
+   12 stmts: stmts . stmt
+
+    NAME    shift, and go to state 30
+    PRINT   shift, and go to state 31
+    READ    shift, and go to state 32
+    RETURN  shift, and go to state 33
+    IF      shift, and go to state 34
+    WHILE   shift, and go to state 35
+    '}'     shift, and go to state 87
+
+    stmt             go to state 66
+    condition_block  go to state 41
+    if_condition     go to state 42
+    while_block      go to state 43
+    assign_stmt      go to state 44
+    call_func_stmt   go to state 47
+    return_stmt      go to state 48
+
+
+State 65
+
+    8 code_block: '{' var_decls . stmts '}'
+   40 var_decls: var_decls . decl
+
+    NAME    shift, and go to state 30
+    PRINT   shift, and go to state 31
+    READ    shift, and go to state 32
+    RETURN  shift, and go to state 33
+    IF      shift, and go to state 34
+    WHILE   shift, and go to state 35
+    INT     shift, and go to state 36
+
+    stmts            go to state 88
+    stmt             go to state 40
+    condition_block  go to state 41
+    if_condition     go to state 42
+    while_block      go to state 43
+    assign_stmt      go to state 44
+    decl             go to state 69
+    call_func_stmt   go to state 47
+    return_stmt      go to state 48
+
+
+State 66
+
+   12 stmts: stmts stmt .
+
+    $default  reduce using rule 12 (stmts)
+
+
+State 67
+
+   19 condition_block: if_condition code_block . else_condition
+   20                | if_condition code_block .
+
+    ELSE  shift, and go to state 89
+
+    ELSE      [reduce using rule 20 (condition_block)]
+    $default  reduce using rule 20 (condition_block)
+
+    else_condition  go to state 90
+
+
+State 68
+
+    9 code_block: var_decls stmts .
+   12 stmts: stmts . stmt
+
+    NAME    shift, and go to state 30
+    PRINT   shift, and go to state 31
+    READ    shift, and go to state 32
+    RETURN  shift, and go to state 33
+    IF      shift, and go to state 34
+    WHILE   shift, and go to state 35
+
+    NAME      [reduce using rule 9 (code_block)]
+    PRINT     [reduce using rule 9 (code_block)]
+    READ      [reduce using rule 9 (code_block)]
+    RETURN    [reduce using rule 9 (code_block)]
+    IF        [reduce using rule 9 (code_block)]
+    WHILE     [reduce using rule 9 (code_block)]
+    $default  reduce using rule 9 (code_block)
+
+    stmt             go to state 66
+    condition_block  go to state 41
+    if_condition     go to state 42
+    while_block      go to state 43
+    assign_stmt      go to state 44
+    call_func_stmt   go to state 47
+    return_stmt      go to state 48
+
+
+State 69
+
+   40 var_decls: var_decls decl .
+
+    $default  reduce using rule 40 (var_decls)
+
+
+State 70
+
+    5 func: VOID NAME '(' INT NAME ')' . code_block
+
+    NAME    shift, and go to state 30
+    PRINT   shift, and go to state 31
+    READ    shift, and go to state 32
+    RETURN  shift, and go to state 33
+    IF      shift, and go to state 34
+    WHILE   shift, and go to state 35
+    INT     shift, and go to state 36
+    '{'     shift, and go to state 37
+
+    code_block       go to state 91
+    stmts            go to state 39
+    stmt             go to state 40
+    condition_block  go to state 41
+    if_condition     go to state 42
+    while_block      go to state 43
+    assign_stmt      go to state 44
+    var_decls        go to state 45
+    decl             go to state 46
+    call_func_stmt   go to state 47
+    return_stmt      go to state 48
+
+
+State 71
+
+    4 func: INT NAME '(' INT NAME ')' code_block .
+
+    $default  reduce using rule 4 (func)
+
+
+State 72
+
+   30 assign_stmt: NAME '=' expr . ';'
+
+    ';'  shift, and go to state 92
+
+
+State 73
+
+   31 assign_stmt: NAME '=' call_func_stmt .
+
+    $default  reduce using rule 31 (assign_stmt)
+
+
+State 74
+
+   43 call_func_stmt: PRINT '(' term . ')' ';'
+
+    ')'  shift, and go to state 93
+
+
+State 75
+
+   44 call_func_stmt: READ '(' ')' . ';'
+
+    ';'  shift, and go to state 94
+
+
+State 76
+
+   45 return_stmt: RETURN '(' expr . ')' ';'
+
+    ')'  shift, and go to state 95
+
+
+State 77
+
+   39 term: '-' term .
+
+    $default  reduce using rule 39 (term)
+
+
+State 78
+
+   46 return_stmt: RETURN expr ';' .
+
+    $default  reduce using rule 46 (return_stmt)
+
+
+State 79
+
+   32 expr: term '+' . term
+
+    NUM   shift, and go to state 55
+    NAME  shift, and go to state 56
+    '-'   shift, and go to state 58
+
+    term  go to state 96
+
+
+State 80
+
+   33 expr: term '-' . term
+
+    NUM   shift, and go to state 55
+    NAME  shift, and go to state 56
+    '-'   shift, and go to state 58
+
+    term  go to state 97
+
+
+State 81
+
+   34 expr: term '*' . term
+
+    NUM   shift, and go to state 55
+    NAME  shift, and go to state 56
+    '-'   shift, and go to state 58
+
+    term  go to state 98
+
+
+State 82
+
+   35 expr: term '/' . term
+
+    NUM   shift, and go to state 55
+    NAME  shift, and go to state 56
+    '-'   shift, and go to state 58
+
+    term  go to state 99
+
+
+State 83
+
+   21 if_condition: IF '(' bool_condition . ')'
+
+    ')'  shift, and go to state 100
+
+
+State 84
+
+   24 bool_condition: term . '<' term
+   25               | term . '>' term
+   26               | term . LE term
+   27               | term . GE term
+   28               | term . EQ term
+   29               | term . NEQ term
+
+    LE   shift, and go to state 101
+    GE   shift, and go to state 102
+    EQ   shift, and go to state 103
+    NEQ  shift, and go to state 104
+    '<'  shift, and go to state 105
+    '>'  shift, and go to state 106
+
+
+State 85
+
+   23 while_block: WHILE '(' bool_condition . ')' code_block
+
+    ')'  shift, and go to state 107
+
+
+State 86
+
+   42 decl: INT NAME ';' .
+
+    $default  reduce using rule 42 (decl)
+
+
+State 87
+
+   10 code_block: '{' stmts '}' .
+
+    $default  reduce using rule 10 (code_block)
+
+
+State 88
+
+    8 code_block: '{' var_decls stmts . '}'
+   12 stmts: stmts . stmt
+
+    NAME    shift, and go to state 30
+    PRINT   shift, and go to state 31
+    READ    shift, and go to state 32
+    RETURN  shift, and go to state 33
+    IF      shift, and go to state 34
+    WHILE   shift, and go to state 35
+    '}'     shift, and go to state 108
+
+    stmt             go to state 66
+    condition_block  go to state 41
+    if_condition     go to state 42
+    while_block      go to state 43
+    assign_stmt      go to state 44
+    call_func_stmt   go to state 47
+    return_stmt      go to state 48
+
+
+State 89
+
+   22 else_condition: ELSE . code_block
+
+    NAME    shift, and go to state 30
+    PRINT   shift, and go to state 31
+    READ    shift, and go to state 32
+    RETURN  shift, and go to state 33
+    IF      shift, and go to state 34
+    WHILE   shift, and go to state 35
+    INT     shift, and go to state 36
+    '{'     shift, and go to state 37
+
+    code_block       go to state 109
+    stmts            go to state 39
+    stmt             go to state 40
+    condition_block  go to state 41
+    if_condition     go to state 42
+    while_block      go to state 43
+    assign_stmt      go to state 44
+    var_decls        go to state 45
+    decl             go to state 46
+    call_func_stmt   go to state 47
+    return_stmt      go to state 48
+
+
+State 90
+
+   19 condition_block: if_condition code_block else_condition .
+
+    $default  reduce using rule 19 (condition_block)
+
+
+State 91
+
+    5 func: VOID NAME '(' INT NAME ')' code_block .
+
+    $default  reduce using rule 5 (func)
+
+
+State 92
+
+   30 assign_stmt: NAME '=' expr ';' .
+
+    $default  reduce using rule 30 (assign_stmt)
+
+
+State 93
+
+   43 call_func_stmt: PRINT '(' term ')' . ';'
+
+    ';'  shift, and go to state 110
+
+
+State 94
+
+   44 call_func_stmt: READ '(' ')' ';' .
+
+    $default  reduce using rule 44 (call_func_stmt)
+
+
+State 95
+
+   45 return_stmt: RETURN '(' expr ')' . ';'
+
+    ';'  shift, and go to state 111
+
+
+State 96
+
+   32 expr: term '+' term .
+
+    $default  reduce using rule 32 (expr)
+
+
+State 97
+
+   33 expr: term '-' term .
+
+    $default  reduce using rule 33 (expr)
+
+
+State 98
+
+   34 expr: term '*' term .
+
+    $default  reduce using rule 34 (expr)
+
+
+State 99
+
+   35 expr: term '/' term .
+
+    $default  reduce using rule 35 (expr)
+
+
+State 100
+
+   21 if_condition: IF '(' bool_condition ')' .
+
+    $default  reduce using rule 21 (if_condition)
+
+
+State 101
+
+   26 bool_condition: term LE . term
+
+    NUM   shift, and go to state 55
+    NAME  shift, and go to state 56
+    '-'   shift, and go to state 58
+
+    term  go to state 112
+
+
+State 102
+
+   27 bool_condition: term GE . term
+
+    NUM   shift, and go to state 55
+    NAME  shift, and go to state 56
+    '-'   shift, and go to state 58
+
+    term  go to state 113
+
+
+State 103
+
+   28 bool_condition: term EQ . term
+
+    NUM   shift, and go to state 55
+    NAME  shift, and go to state 56
+    '-'   shift, and go to state 58
+
+    term  go to state 114
+
+
 State 104
 
-   22 if_condition: IF '(' bool_condition ')' .
+   29 bool_condition: term NEQ . term
 
-    $default  reduce using rule 22 (if_condition)
+    NUM   shift, and go to state 55
+    NAME  shift, and go to state 56
+    '-'   shift, and go to state 58
+
+    term  go to state 115
 
 
 State 105
 
-   27 bool_condition: term LE . term
+   24 bool_condition: term '<' . term
 
-    NUM   shift, and go to state 59
-    NAME  shift, and go to state 60
-    '-'   shift, and go to state 62
+    NUM   shift, and go to state 55
+    NAME  shift, and go to state 56
+    '-'   shift, and go to state 58
 
     term  go to state 116
 
 
 State 106
 
-   28 bool_condition: term GE . term
+   25 bool_condition: term '>' . term
 
-    NUM   shift, and go to state 59
-    NAME  shift, and go to state 60
-    '-'   shift, and go to state 62
+    NUM   shift, and go to state 55
+    NAME  shift, and go to state 56
+    '-'   shift, and go to state 58
 
     term  go to state 117
 
 
 State 107
 
-   29 bool_condition: term EQ . term
+   23 while_block: WHILE '(' bool_condition ')' . code_block
 
-    NUM   shift, and go to state 59
-    NAME  shift, and go to state 60
-    '-'   shift, and go to state 62
+    NAME    shift, and go to state 30
+    PRINT   shift, and go to state 31
+    READ    shift, and go to state 32
+    RETURN  shift, and go to state 33
+    IF      shift, and go to state 34
+    WHILE   shift, and go to state 35
+    INT     shift, and go to state 36
+    '{'     shift, and go to state 37
 
-    term  go to state 118
+    code_block       go to state 118
+    stmts            go to state 39
+    stmt             go to state 40
+    condition_block  go to state 41
+    if_condition     go to state 42
+    while_block      go to state 43
+    assign_stmt      go to state 44
+    var_decls        go to state 45
+    decl             go to state 46
+    call_func_stmt   go to state 47
+    return_stmt      go to state 48
 
 
 State 108
 
-   30 bool_condition: term NEQ . term
+    8 code_block: '{' var_decls stmts '}' .
 
-    NUM   shift, and go to state 59
-    NAME  shift, and go to state 60
-    '-'   shift, and go to state 62
-
-    term  go to state 119
+    $default  reduce using rule 8 (code_block)
 
 
 State 109
 
-   25 bool_condition: term '<' . term
+   22 else_condition: ELSE code_block .
 
-    NUM   shift, and go to state 59
-    NAME  shift, and go to state 60
-    '-'   shift, and go to state 62
-
-    term  go to state 120
+    $default  reduce using rule 22 (else_condition)
 
 
 State 110
 
-   26 bool_condition: term '>' . term
+   43 call_func_stmt: PRINT '(' term ')' ';' .
 
-    NUM   shift, and go to state 59
-    NAME  shift, and go to state 60
-    '-'   shift, and go to state 62
-
-    term  go to state 121
+    $default  reduce using rule 43 (call_func_stmt)
 
 
 State 111
 
-   24 while_block: WHILE '(' bool_condition ')' . code_block
+   45 return_stmt: RETURN '(' expr ')' ';' .
 
-    NAME    shift, and go to state 34
-    PRINT   shift, and go to state 35
-    READ    shift, and go to state 36
-    RETURN  shift, and go to state 37
-    IF      shift, and go to state 38
-    WHILE   shift, and go to state 39
-    INT     shift, and go to state 40
-    '{'     shift, and go to state 41
-
-    code_block       go to state 122
-    stmts            go to state 43
-    stmt             go to state 44
-    condition_block  go to state 45
-    if_condition     go to state 46
-    while_block      go to state 47
-    assign_stmt      go to state 48
-    var_decls        go to state 49
-    decl             go to state 50
-    call_func_stmt   go to state 51
-    return_stmt      go to state 52
+    $default  reduce using rule 45 (return_stmt)
 
 
 State 112
 
-    9 code_block: '{' var_decls stmts '}' .
-
-    $default  reduce using rule 9 (code_block)
-
-
-State 113
-
-   23 else_condition: ELSE code_block .
-
-    $default  reduce using rule 23 (else_condition)
-
-
-State 114
-
-   44 call_func_stmt: PRINT '(' term ')' ';' .
-
-    $default  reduce using rule 44 (call_func_stmt)
-
-
-State 115
-
-   46 return_stmt: RETURN '(' expr ')' ';' .
-
-    $default  reduce using rule 46 (return_stmt)
-
-
-State 116
-
-   27 bool_condition: term LE term .
-
-    $default  reduce using rule 27 (bool_condition)
-
-
-State 117
-
-   28 bool_condition: term GE term .
-
-    $default  reduce using rule 28 (bool_condition)
-
-
-State 118
-
-   29 bool_condition: term EQ term .
-
-    $default  reduce using rule 29 (bool_condition)
-
-
-State 119
-
-   30 bool_condition: term NEQ term .
-
-    $default  reduce using rule 30 (bool_condition)
-
-
-State 120
-
-   25 bool_condition: term '<' term .
-
-    $default  reduce using rule 25 (bool_condition)
-
-
-State 121
-
-   26 bool_condition: term '>' term .
+   26 bool_condition: term LE term .
 
     $default  reduce using rule 26 (bool_condition)
 
 
-State 122
+State 113
 
-   24 while_block: WHILE '(' bool_condition ')' code_block .
+   27 bool_condition: term GE term .
 
-    $default  reduce using rule 24 (while_block)
+    $default  reduce using rule 27 (bool_condition)
+
+
+State 114
+
+   28 bool_condition: term EQ term .
+
+    $default  reduce using rule 28 (bool_condition)
+
+
+State 115
+
+   29 bool_condition: term NEQ term .
+
+    $default  reduce using rule 29 (bool_condition)
+
+
+State 116
+
+   24 bool_condition: term '<' term .
+
+    $default  reduce using rule 24 (bool_condition)
+
+
+State 117
+
+   25 bool_condition: term '>' term .
+
+    $default  reduce using rule 25 (bool_condition)
+
+
+State 118
+
+   23 while_block: WHILE '(' bool_condition ')' code_block .
+
+    $default  reduce using rule 23 (while_block)

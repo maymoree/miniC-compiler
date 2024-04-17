@@ -70,6 +70,7 @@
 #line 1 "part1.y"
 
 #include "./ast/ast.h"
+#include "./ast/smta.h"
 #include<stdio.h>
 extern int yylex();
 extern int yylex_destroy();
@@ -78,7 +79,9 @@ int yyerror(char *);
 extern FILE * yyin;
 extern int yylineno;
 
-#line 82 "y.tab.c"
+astNode* root;
+
+#line 85 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -165,14 +168,14 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 12 "part1.y"
+#line 15 "part1.y"
 
 	int ival;
 	char * idname;
 	astNode *nptr;
 	vector<astNode *> *svec_ptr;
 
-#line 176 "y.tab.c"
+#line 179 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -567,18 +570,18 @@ union yyalloc
 #endif /* !YYCOPY_NEEDED */
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  7
+#define YYFINAL  5
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   142
+#define YYLAST   136
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  30
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  20
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  48
+#define YYNRULES  47
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  123
+#define YYNSTATES  119
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   272
@@ -629,11 +632,11 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    36,    36,    37,    38,    39,    43,    45,    47,    49,
-      54,    63,    72,    73,    77,    78,    79,    80,    81,    82,
-      83,    86,    87,    88,    89,    92,    95,    96,    97,    98,
-      99,   100,   103,   105,   107,   108,   109,   110,   111,   114,
-     115,   116,   119,   120,   121,   125,   126,   129,   130
+       0,    37,    37,    39,    40,    44,    46,    48,    50,    55,
+      64,    73,    74,    78,    79,    80,    81,    82,    83,    84,
+      87,    88,    89,    90,    93,    96,    97,    98,    99,   100,
+     101,   104,   106,   108,   109,   110,   111,   112,   115,   116,
+     117,   120,   121,   122,   126,   127,   130,   131
 };
 #endif
 
@@ -666,7 +669,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-57)
+#define YYPACT_NINF (-53)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -680,19 +683,18 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      -8,    30,     8,    25,    42,    20,    18,   -57,    58,    61,
-      59,    61,    56,    63,    72,    73,   -57,   -57,    69,    67,
-      80,    81,    71,    77,    -7,    14,   -57,    88,    75,    79,
-      93,    79,   -57,    97,    94,   100,   102,    17,   103,   104,
-     119,    99,   -57,   107,   -57,   -57,    79,   -57,   -57,    99,
-     -57,   -57,   -57,   105,   -57,    79,    13,    10,   106,   -57,
-     -57,    10,    10,   108,    19,    10,    10,   109,    53,    99,
-     -57,   117,   107,   -57,    79,   -57,   110,   -57,   112,   113,
-     115,   -57,   -57,    10,    10,    10,    10,   116,    78,   118,
-     -57,   -57,    60,    79,   -57,   -57,   -57,   120,   -57,   121,
-     -57,   -57,   -57,   -57,   -57,    10,    10,    10,    10,    10,
-      10,    79,   -57,   -57,   -57,   -57,   -57,   -57,   -57,   -57,
-     -57,   -57,   -57
+     -11,    -4,    12,     8,    28,   -53,    34,    31,    21,    41,
+      44,    51,   -53,    59,    39,    60,    62,    58,    63,    -6,
+      15,    69,    72,    75,    80,    93,    80,   -53,   -53,    81,
+      73,    91,    99,    19,   101,   102,    95,   100,   -53,   108,
+     -53,   -53,    80,   -53,   -53,   100,   -53,   -53,   -53,   103,
+     -53,    80,    14,    11,   104,   -53,   -53,    11,    11,   105,
+      46,    11,    11,   106,    54,   100,   -53,   112,   108,   -53,
+      80,   -53,   107,   -53,   109,   110,   113,   -53,   -53,    11,
+      11,    11,    11,   114,    79,   115,   -53,   -53,    61,    80,
+     -53,   -53,   -53,   111,   -53,   116,   -53,   -53,   -53,   -53,
+     -53,    11,    11,    11,    11,    11,    11,    80,   -53,   -53,
+     -53,   -53,   -53,   -53,   -53,   -53,   -53,   -53,   -53
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -700,33 +702,32 @@ static const yytype_int8 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     0,     0,     0,     0,     0,     0,     1,     0,     0,
-       0,     0,     0,     0,     0,     0,     2,     3,     0,     0,
-       0,     0,     0,     0,     0,     0,     5,     0,     0,     0,
-       0,     0,     4,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     8,    13,    15,    19,     0,    20,    16,     0,
-      43,    17,    18,     0,     9,     0,     0,     0,     0,    39,
-      40,     0,     0,     0,    38,     0,     0,     0,     0,     0,
-      14,    22,    11,    42,     0,     6,     0,    33,     0,     0,
-       0,    41,    48,     0,     0,     0,     0,     0,     0,     0,
-      44,    12,     0,     0,    21,     7,    32,     0,    46,     0,
-      34,    35,    36,    37,    23,     0,     0,     0,     0,     0,
-       0,     0,    10,    24,    45,    47,    28,    29,    30,    31,
-      26,    27,    25
+       0,     0,     0,     0,     0,     1,     0,     0,     0,     0,
+       0,     0,     2,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     3,     4,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     7,    12,
+      14,    18,     0,    19,    15,     0,    42,    16,    17,     0,
+       8,     0,     0,     0,     0,    38,    39,     0,     0,     0,
+      37,     0,     0,     0,     0,     0,    13,    21,    10,    41,
+       0,     5,     0,    32,     0,     0,     0,    40,    47,     0,
+       0,     0,     0,     0,     0,     0,    43,    11,     0,     0,
+      20,     6,    31,     0,    45,     0,    33,    34,    35,    36,
+      22,     0,     0,     0,     0,     0,     0,     0,     9,    23,
+      44,    46,    27,    28,    29,    30,    25,    26,    24
 };
 
 /* YYPGOTO[NTERM-NUM].  */
-static const yytype_int16 yypgoto[] =
+static const yytype_int8 yypgoto[] =
 {
-     -57,   -57,   123,   129,   125,   -31,   -38,   -36,   -57,   -57,
-     -57,   -57,    76,   -57,   -22,   -56,    98,   -47,    82,   -57
+     -53,   -53,   -53,   -53,   -53,   -26,   -34,   -32,   -53,   -53,
+     -53,   -53,    67,   -53,   -17,   -52,    87,   -41,    83,   -53
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-       0,     2,     3,     4,    16,    42,    43,    44,    45,    46,
-      94,    47,    87,    48,    63,    64,    49,    50,    51,    52
+       0,     2,     3,     7,    12,    38,    39,    40,    41,    42,
+      90,    43,    83,    44,    59,    60,    45,    46,    47,    48
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -734,79 +735,76 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      54,    78,    73,    68,    28,     1,    81,    70,     7,    88,
-      88,    72,    29,    59,    60,    71,    59,    60,    35,    36,
-      59,    60,    73,    13,    75,    30,    12,   100,   101,   102,
-     103,    92,    70,    31,    76,    61,    70,    62,     8,    80,
-      62,     5,     6,    95,    62,    83,    84,    85,    86,   116,
-     117,   118,   119,   120,   121,    10,    70,    34,    35,    36,
-      37,    38,   113,    39,    34,    35,    36,    37,    38,     5,
-      39,     6,    14,    15,    18,    91,    20,    21,    23,    33,
-     122,    19,   112,    34,    35,    36,    37,    38,    22,    39,
-      40,    26,   105,   106,   107,   108,    27,    53,    24,    25,
-      41,   109,   110,    34,    35,    36,    37,    38,    32,    39,
-      40,    34,    35,    36,    37,    38,    55,    39,    57,    56,
-      58,    65,    66,    67,    74,    79,    93,    11,    82,    90,
-      96,    97,     9,    98,    99,   104,    17,   111,    77,    69,
-     114,   115,    89
+      50,    74,     1,    64,    69,    23,    77,    66,     4,    84,
+      84,    68,     5,    24,    55,    56,    67,    55,    56,    31,
+      32,     6,    55,    56,    69,    71,    25,    96,    97,    98,
+      99,    88,    66,     8,    26,    72,    66,    57,    58,    13,
+      76,    58,    10,    11,    91,     9,    58,    14,    15,   112,
+     113,   114,   115,   116,   117,    16,    66,    18,    30,    31,
+      32,    33,    34,   109,    35,    30,    31,    32,    33,    34,
+      17,    35,    79,    80,    81,    82,    87,    21,    19,    29,
+      20,   118,    22,   108,    30,    31,    32,    33,    34,    27,
+      35,    36,    28,   101,   102,   103,   104,    49,    52,    63,
+      51,    37,   105,   106,    30,    31,    32,    33,    34,    53,
+      35,    36,    30,    31,    32,    33,    34,    54,    35,    61,
+      62,    89,    70,    75,    65,    78,    86,    92,    93,    85,
+      94,   110,    95,   100,   107,    73,   111
 };
 
 static const yytype_int8 yycheck[] =
 {
-      31,    57,    49,    41,    11,    13,    62,    43,     0,    65,
-      66,    49,    19,     3,     4,    46,     3,     4,     5,     6,
-       3,     4,    69,     5,    55,    11,     6,    83,    84,    85,
-      86,    69,    68,    19,    56,    18,    72,    27,    13,    61,
-      27,    11,    12,    74,    27,    26,    27,    28,    29,   105,
-     106,   107,   108,   109,   110,    13,    92,     4,     5,     6,
-       7,     8,    93,    10,     4,     5,     6,     7,     8,    11,
-      10,    12,    11,    12,    18,    22,     4,     4,    11,     4,
-     111,    18,    22,     4,     5,     6,     7,     8,    19,    10,
-      11,    20,    14,    15,    16,    17,    19,     4,    18,    18,
-      21,    23,    24,     4,     5,     6,     7,     8,    20,    10,
-      11,     4,     5,     6,     7,     8,    19,    10,    18,    25,
-      18,    18,    18,     4,    19,    19,     9,     4,    20,    20,
-      20,    19,     3,    20,    19,    19,    11,    19,    56,    41,
-      20,    20,    66
+      26,    53,    13,    37,    45,    11,    58,    39,    12,    61,
+      62,    45,     0,    19,     3,     4,    42,     3,     4,     5,
+       6,    13,     3,     4,    65,    51,    11,    79,    80,    81,
+      82,    65,    64,     5,    19,    52,    68,    18,    27,    18,
+      57,    27,    11,    12,    70,    11,    27,     6,     4,   101,
+     102,   103,   104,   105,   106,     4,    88,    18,     4,     5,
+       6,     7,     8,    89,    10,     4,     5,     6,     7,     8,
+      11,    10,    26,    27,    28,    29,    22,    19,    18,     4,
+      18,   107,    19,    22,     4,     5,     6,     7,     8,    20,
+      10,    11,    20,    14,    15,    16,    17,     4,    25,     4,
+      19,    21,    23,    24,     4,     5,     6,     7,     8,    18,
+      10,    11,     4,     5,     6,     7,     8,    18,    10,    18,
+      18,     9,    19,    19,    37,    20,    20,    20,    19,    62,
+      20,    20,    19,    19,    19,    52,    20
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,    13,    31,    32,    33,    11,    12,     0,    13,    33,
-      13,    32,     6,     5,    11,    12,    34,    34,    18,    18,
-       4,     4,    19,    11,    18,    18,    20,    19,    11,    19,
-      11,    19,    20,     4,     4,     5,     6,     7,     8,    10,
-      11,    21,    35,    36,    37,    38,    39,    41,    43,    46,
-      47,    48,    49,     4,    35,    19,    25,    18,    18,     3,
-       4,    18,    27,    44,    45,    18,    18,     4,    36,    46,
-      37,    35,    36,    47,    19,    35,    44,    48,    45,    19,
-      44,    45,    20,    26,    27,    28,    29,    42,    45,    42,
-      20,    22,    36,     9,    40,    35,    20,    19,    20,    19,
-      45,    45,    45,    45,    19,    14,    15,    16,    17,    23,
-      24,    19,    22,    35,    20,    20,    45,    45,    45,    45,
-      45,    45,    35
+       0,    13,    31,    32,    12,     0,    13,    33,     5,    11,
+      11,    12,    34,    18,     6,     4,     4,    11,    18,    18,
+      18,    19,    19,    11,    19,    11,    19,    20,    20,     4,
+       4,     5,     6,     7,     8,    10,    11,    21,    35,    36,
+      37,    38,    39,    41,    43,    46,    47,    48,    49,     4,
+      35,    19,    25,    18,    18,     3,     4,    18,    27,    44,
+      45,    18,    18,     4,    36,    46,    37,    35,    36,    47,
+      19,    35,    44,    48,    45,    19,    44,    45,    20,    26,
+      27,    28,    29,    42,    45,    42,    20,    22,    36,     9,
+      40,    35,    20,    19,    20,    19,    45,    45,    45,    45,
+      19,    14,    15,    16,    17,    23,    24,    19,    22,    35,
+      20,    20,    45,    45,    45,    45,    45,    45,    35
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    30,    31,    31,    32,    33,    34,    34,    34,    34,
-      35,    35,    35,    35,    36,    36,    37,    37,    37,    37,
-      37,    38,    38,    39,    40,    41,    42,    42,    42,    42,
-      42,    42,    43,    43,    44,    44,    44,    44,    44,    45,
-      45,    45,    46,    46,    47,    48,    48,    49,    49
+       0,    30,    31,    32,    33,    34,    34,    34,    34,    35,
+      35,    35,    35,    36,    36,    37,    37,    37,    37,    37,
+      38,    38,    39,    40,    41,    42,    42,    42,    42,    42,
+      42,    43,    43,    44,    44,    44,    44,    44,    45,    45,
+      45,    46,    46,    47,    48,    48,    49,    49
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     3,     3,     7,     6,     7,     7,     5,     5,
-       4,     2,     3,     1,     2,     1,     1,     1,     1,     1,
-       1,     3,     2,     4,     2,     5,     3,     3,     3,     3,
-       3,     3,     4,     3,     3,     3,     3,     3,     1,     1,
-       1,     2,     2,     1,     3,     5,     4,     5,     3
+       0,     2,     3,     7,     6,     7,     7,     5,     5,     4,
+       2,     3,     1,     2,     1,     1,     1,     1,     1,     1,
+       3,     2,     4,     2,     5,     3,     3,     3,     3,     3,
+       3,     4,     3,     3,     3,     3,     3,     1,     1,     1,
+       2,     2,     1,     3,     5,     4,     5,     3
 };
 
 
@@ -1270,59 +1268,54 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* program: print_line read_line func  */
-#line 36 "part1.y"
-                                              {(yyval.nptr) = createProg((yyvsp[-2].nptr), (yyvsp[-1].nptr), (yyvsp[0].nptr));  printNode((yyval.nptr)); freeNode((yyval.nptr));}
-#line 1276 "y.tab.c"
-    break;
-
-  case 3: /* program: read_line print_line func  */
 #line 37 "part1.y"
-                                              {(yyval.nptr) = createProg((yyvsp[-1].nptr), (yyvsp[-2].nptr), (yyvsp[0].nptr)); printNode((yyval.nptr)); freeNode((yyval.nptr));}
-#line 1282 "y.tab.c"
+                                              {(yyval.nptr) = createProg((yyvsp[-2].nptr), (yyvsp[-1].nptr), (yyvsp[0].nptr));  printNode((yyval.nptr));
+												root = (yyval.nptr);}
+#line 1275 "y.tab.c"
     break;
 
-  case 4: /* print_line: EXTERN VOID PRINT '(' INT ')' ';'  */
-#line 38 "part1.y"
-                                                    {(yyval.nptr) = createExtern("print"); printNode((yyval.nptr));}
-#line 1288 "y.tab.c"
-    break;
-
-  case 5: /* read_line: EXTERN INT READ '(' ')' ';'  */
+  case 3: /* print_line: EXTERN VOID PRINT '(' INT ')' ';'  */
 #line 39 "part1.y"
-                                                    {(yyval.nptr) = createExtern("read"); printNode((yyval.nptr));}
+                                                    {(yyval.nptr) = createExtern("print");}
+#line 1281 "y.tab.c"
+    break;
+
+  case 4: /* read_line: EXTERN INT READ '(' ')' ';'  */
+#line 40 "part1.y"
+                                                    {(yyval.nptr) = createExtern("read");}
+#line 1287 "y.tab.c"
+    break;
+
+  case 5: /* func: INT NAME '(' INT NAME ')' code_block  */
+#line 44 "part1.y"
+                                                  {(yyval.nptr) = createFunc((yyvsp[-5].idname), createVar((yyvsp[-2].idname)), (yyvsp[0].nptr)); printNode((yyval.nptr));
+													free((yyvsp[-5].idname)); free((yyvsp[-2].idname));}
 #line 1294 "y.tab.c"
     break;
 
-  case 6: /* func: INT NAME '(' INT NAME ')' code_block  */
-#line 43 "part1.y"
+  case 6: /* func: VOID NAME '(' INT NAME ')' code_block  */
+#line 46 "part1.y"
                                                   {(yyval.nptr) = createFunc((yyvsp[-5].idname), createVar((yyvsp[-2].idname)), (yyvsp[0].nptr)); printNode((yyval.nptr));
 													free((yyvsp[-5].idname)); free((yyvsp[-2].idname));}
 #line 1301 "y.tab.c"
     break;
 
-  case 7: /* func: VOID NAME '(' INT NAME ')' code_block  */
-#line 45 "part1.y"
-                                                  {(yyval.nptr) = createFunc((yyvsp[-5].idname), createVar((yyvsp[-2].idname)), (yyvsp[0].nptr)); printNode((yyval.nptr));
-													free((yyvsp[-5].idname)); free((yyvsp[-2].idname));}
+  case 7: /* func: INT NAME '(' ')' code_block  */
+#line 48 "part1.y"
+                                                  {(yyval.nptr) = createFunc((yyvsp[-3].idname), NULL, (yyvsp[0].nptr)); printNode((yyval.nptr));
+													free((yyvsp[-3].idname));}
 #line 1308 "y.tab.c"
     break;
 
-  case 8: /* func: INT NAME '(' ')' code_block  */
-#line 47 "part1.y"
+  case 8: /* func: VOID NAME '(' ')' code_block  */
+#line 50 "part1.y"
                                                   {(yyval.nptr) = createFunc((yyvsp[-3].idname), NULL, (yyvsp[0].nptr)); printNode((yyval.nptr));
 													free((yyvsp[-3].idname));}
 #line 1315 "y.tab.c"
     break;
 
-  case 9: /* func: VOID NAME '(' ')' code_block  */
-#line 49 "part1.y"
-                                                  {(yyval.nptr) = createFunc((yyvsp[-3].idname), NULL, (yyvsp[0].nptr)); printNode((yyval.nptr));
-													free((yyvsp[-3].idname));}
-#line 1322 "y.tab.c"
-    break;
-
-  case 10: /* code_block: '{' var_decls stmts '}'  */
-#line 54 "part1.y"
+  case 9: /* code_block: '{' var_decls stmts '}'  */
+#line 55 "part1.y"
                                         {
 											vector<astNode*>* new_vec = new vector<astNode*>();
 											new_vec->insert(new_vec->end(), (yyvsp[-2].svec_ptr)->begin(), (yyvsp[-2].svec_ptr)->end());
@@ -1332,11 +1325,11 @@ yyreduce:
 											delete((yyvsp[-2].svec_ptr));
 											delete((yyvsp[-1].svec_ptr));
 										}
-#line 1336 "y.tab.c"
+#line 1329 "y.tab.c"
     break;
 
-  case 11: /* code_block: var_decls stmts  */
-#line 63 "part1.y"
+  case 10: /* code_block: var_decls stmts  */
+#line 64 "part1.y"
                                                         {
 											vector<astNode*>* new_vec = new vector<astNode*>();
 											new_vec->insert(new_vec->end(), (yyvsp[-1].svec_ptr)->begin(), (yyvsp[-1].svec_ptr)->end());
@@ -1346,236 +1339,236 @@ yyreduce:
 											delete((yyvsp[-1].svec_ptr));
 											delete((yyvsp[0].svec_ptr));
 										}
-#line 1350 "y.tab.c"
+#line 1343 "y.tab.c"
     break;
 
-  case 12: /* code_block: '{' stmts '}'  */
-#line 72 "part1.y"
-                                                                {(yyval.nptr) = createBlock((yyvsp[-1].svec_ptr)); printNode((yyval.nptr));}
-#line 1356 "y.tab.c"
-    break;
-
-  case 13: /* code_block: stmts  */
+  case 11: /* code_block: '{' stmts '}'  */
 #line 73 "part1.y"
+                                                                {(yyval.nptr) = createBlock((yyvsp[-1].svec_ptr)); printNode((yyval.nptr));}
+#line 1349 "y.tab.c"
+    break;
+
+  case 12: /* code_block: stmts  */
+#line 74 "part1.y"
                                                                         {(yyval.nptr) = createBlock((yyvsp[0].svec_ptr)); printNode((yyval.nptr));}
-#line 1362 "y.tab.c"
+#line 1355 "y.tab.c"
     break;
 
-  case 14: /* stmts: stmts stmt  */
-#line 77 "part1.y"
-                                                                {(yyval.svec_ptr) = (yyvsp[-1].svec_ptr); (yyval.svec_ptr)->push_back((yyvsp[0].nptr));}
-#line 1368 "y.tab.c"
-    break;
-
-  case 15: /* stmts: stmt  */
+  case 13: /* stmts: stmts stmt  */
 #line 78 "part1.y"
-                                                                        {(yyval.svec_ptr) = new vector<astNode*>(); (yyval.svec_ptr)->push_back((yyvsp[0].nptr));}
-#line 1374 "y.tab.c"
+                                                                {(yyval.svec_ptr) = (yyvsp[-1].svec_ptr); (yyval.svec_ptr)->push_back((yyvsp[0].nptr));}
+#line 1361 "y.tab.c"
     break;
 
-  case 16: /* stmt: assign_stmt  */
+  case 14: /* stmts: stmt  */
 #line 79 "part1.y"
-                                                                {(yyval.nptr) = (yyvsp[0].nptr); printNode((yyval.nptr));}
-#line 1380 "y.tab.c"
+                                                                        {(yyval.svec_ptr) = new vector<astNode*>(); (yyval.svec_ptr)->push_back((yyvsp[0].nptr));}
+#line 1367 "y.tab.c"
     break;
 
-  case 17: /* stmt: call_func_stmt  */
+  case 15: /* stmt: assign_stmt  */
 #line 80 "part1.y"
                                                                 {(yyval.nptr) = (yyvsp[0].nptr); printNode((yyval.nptr));}
-#line 1386 "y.tab.c"
+#line 1373 "y.tab.c"
     break;
 
-  case 18: /* stmt: return_stmt  */
+  case 16: /* stmt: call_func_stmt  */
 #line 81 "part1.y"
                                                                 {(yyval.nptr) = (yyvsp[0].nptr); printNode((yyval.nptr));}
-#line 1392 "y.tab.c"
+#line 1379 "y.tab.c"
     break;
 
-  case 19: /* stmt: condition_block  */
+  case 17: /* stmt: return_stmt  */
 #line 82 "part1.y"
                                                                 {(yyval.nptr) = (yyvsp[0].nptr); printNode((yyval.nptr));}
-#line 1398 "y.tab.c"
+#line 1385 "y.tab.c"
     break;
 
-  case 20: /* stmt: while_block  */
+  case 18: /* stmt: condition_block  */
 #line 83 "part1.y"
                                                                 {(yyval.nptr) = (yyvsp[0].nptr); printNode((yyval.nptr));}
-#line 1404 "y.tab.c"
+#line 1391 "y.tab.c"
     break;
 
-  case 21: /* condition_block: if_condition code_block else_condition  */
-#line 86 "part1.y"
-                                                                {(yyval.nptr) = createIf((yyvsp[-2].nptr), (yyvsp[-1].nptr), (yyvsp[0].nptr)); printNode((yyval.nptr));}
-#line 1410 "y.tab.c"
-    break;
-
-  case 22: /* condition_block: if_condition code_block  */
-#line 87 "part1.y"
-                                                                                                {(yyval.nptr) = createIf((yyvsp[-1].nptr), (yyvsp[0].nptr)); printNode((yyval.nptr));}
-#line 1416 "y.tab.c"
-    break;
-
-  case 23: /* if_condition: IF '(' bool_condition ')'  */
-#line 88 "part1.y"
-                                                        {(yyval.nptr) = (yyvsp[-1].nptr); printNode((yyval.nptr));}
-#line 1422 "y.tab.c"
-    break;
-
-  case 24: /* else_condition: ELSE code_block  */
-#line 89 "part1.y"
+  case 19: /* stmt: while_block  */
+#line 84 "part1.y"
                                                                 {(yyval.nptr) = (yyvsp[0].nptr); printNode((yyval.nptr));}
-#line 1428 "y.tab.c"
+#line 1397 "y.tab.c"
     break;
 
-  case 25: /* while_block: WHILE '(' bool_condition ')' code_block  */
-#line 92 "part1.y"
+  case 20: /* condition_block: if_condition code_block else_condition  */
+#line 87 "part1.y"
+                                                                {(yyval.nptr) = createIf((yyvsp[-2].nptr), (yyvsp[-1].nptr), (yyvsp[0].nptr)); printNode((yyval.nptr));}
+#line 1403 "y.tab.c"
+    break;
+
+  case 21: /* condition_block: if_condition code_block  */
+#line 88 "part1.y"
+                                                                                                {(yyval.nptr) = createIf((yyvsp[-1].nptr), (yyvsp[0].nptr)); printNode((yyval.nptr));}
+#line 1409 "y.tab.c"
+    break;
+
+  case 22: /* if_condition: IF '(' bool_condition ')'  */
+#line 89 "part1.y"
+                                                        {(yyval.nptr) = (yyvsp[-1].nptr); printNode((yyval.nptr));}
+#line 1415 "y.tab.c"
+    break;
+
+  case 23: /* else_condition: ELSE code_block  */
+#line 90 "part1.y"
+                                                                {(yyval.nptr) = (yyvsp[0].nptr); printNode((yyval.nptr));}
+#line 1421 "y.tab.c"
+    break;
+
+  case 24: /* while_block: WHILE '(' bool_condition ')' code_block  */
+#line 93 "part1.y"
                                                                                 {(yyval.nptr) = createWhile((yyvsp[-2].nptr),(yyvsp[0].nptr));}
-#line 1434 "y.tab.c"
+#line 1427 "y.tab.c"
     break;
 
-  case 26: /* bool_condition: term '<' term  */
-#line 95 "part1.y"
-                                                        {(yyval.nptr) = createRExpr((yyvsp[-2].nptr), (yyvsp[0].nptr), lt); printNode((yyval.nptr));}
-#line 1440 "y.tab.c"
-    break;
-
-  case 27: /* bool_condition: term '>' term  */
+  case 25: /* bool_condition: term '<' term  */
 #line 96 "part1.y"
-                                                                        {(yyval.nptr) = createRExpr((yyvsp[-2].nptr), (yyvsp[0].nptr), gt); printNode((yyval.nptr));}
-#line 1446 "y.tab.c"
+                                                        {(yyval.nptr) = createRExpr((yyvsp[-2].nptr), (yyvsp[0].nptr), lt); printNode((yyval.nptr));}
+#line 1433 "y.tab.c"
     break;
 
-  case 28: /* bool_condition: term LE term  */
+  case 26: /* bool_condition: term '>' term  */
 #line 97 "part1.y"
-                                                                        {(yyval.nptr) = createRExpr((yyvsp[-2].nptr), (yyvsp[0].nptr), le); printNode((yyval.nptr));}
-#line 1452 "y.tab.c"
+                                                                        {(yyval.nptr) = createRExpr((yyvsp[-2].nptr), (yyvsp[0].nptr), gt); printNode((yyval.nptr));}
+#line 1439 "y.tab.c"
     break;
 
-  case 29: /* bool_condition: term GE term  */
+  case 27: /* bool_condition: term LE term  */
 #line 98 "part1.y"
-                                                                        {(yyval.nptr) = createRExpr((yyvsp[-2].nptr), (yyvsp[0].nptr), ge); printNode((yyval.nptr));}
-#line 1458 "y.tab.c"
+                                                                        {(yyval.nptr) = createRExpr((yyvsp[-2].nptr), (yyvsp[0].nptr), le); printNode((yyval.nptr));}
+#line 1445 "y.tab.c"
     break;
 
-  case 30: /* bool_condition: term EQ term  */
+  case 28: /* bool_condition: term GE term  */
 #line 99 "part1.y"
-                                                                        {(yyval.nptr) = createRExpr((yyvsp[-2].nptr), (yyvsp[0].nptr), eq); printNode((yyval.nptr));}
-#line 1464 "y.tab.c"
+                                                                        {(yyval.nptr) = createRExpr((yyvsp[-2].nptr), (yyvsp[0].nptr), ge); printNode((yyval.nptr));}
+#line 1451 "y.tab.c"
     break;
 
-  case 31: /* bool_condition: term NEQ term  */
+  case 29: /* bool_condition: term EQ term  */
 #line 100 "part1.y"
+                                                                        {(yyval.nptr) = createRExpr((yyvsp[-2].nptr), (yyvsp[0].nptr), eq); printNode((yyval.nptr));}
+#line 1457 "y.tab.c"
+    break;
+
+  case 30: /* bool_condition: term NEQ term  */
+#line 101 "part1.y"
                                                                         {(yyval.nptr) = createRExpr((yyvsp[-2].nptr), (yyvsp[0].nptr), neq); printNode((yyval.nptr));}
+#line 1463 "y.tab.c"
+    break;
+
+  case 31: /* assign_stmt: NAME '=' expr ';'  */
+#line 104 "part1.y"
+                                                                {(yyval.nptr) = createAsgn(createVar((yyvsp[-3].idname)), (yyvsp[-1].nptr)); printNode((yyval.nptr));
+												free((yyvsp[-3].idname));}
 #line 1470 "y.tab.c"
     break;
 
-  case 32: /* assign_stmt: NAME '=' expr ';'  */
-#line 103 "part1.y"
-                                                                {(yyval.nptr) = createAsgn(createVar((yyvsp[-3].idname)), (yyvsp[-1].nptr)); printNode((yyval.nptr));
-												free((yyvsp[-3].idname));}
+  case 32: /* assign_stmt: NAME '=' call_func_stmt  */
+#line 106 "part1.y"
+                                                                        {(yyval.nptr) = createAsgn(createVar((yyvsp[-2].idname)), (yyvsp[0].nptr)); printNode((yyval.nptr));
+												free((yyvsp[-2].idname));}
 #line 1477 "y.tab.c"
     break;
 
-  case 33: /* assign_stmt: NAME '=' call_func_stmt  */
-#line 105 "part1.y"
-                                                                        {(yyval.nptr) = createAsgn(createVar((yyvsp[-2].idname)), (yyvsp[0].nptr)); printNode((yyval.nptr));
-												free((yyvsp[-2].idname));}
-#line 1484 "y.tab.c"
-    break;
-
-  case 34: /* expr: term '+' term  */
-#line 107 "part1.y"
-                                                                        {(yyval.nptr) = createBExpr((yyvsp[-2].nptr), (yyvsp[0].nptr), add); printNode((yyval.nptr));}
-#line 1490 "y.tab.c"
-    break;
-
-  case 35: /* expr: term '-' term  */
+  case 33: /* expr: term '+' term  */
 #line 108 "part1.y"
-                                                                                {(yyval.nptr) = createBExpr((yyvsp[-2].nptr), (yyvsp[0].nptr), sub); printNode((yyval.nptr));}
-#line 1496 "y.tab.c"
+                                                                        {(yyval.nptr) = createBExpr((yyvsp[-2].nptr), (yyvsp[0].nptr), add); printNode((yyval.nptr));}
+#line 1483 "y.tab.c"
     break;
 
-  case 36: /* expr: term '*' term  */
+  case 34: /* expr: term '-' term  */
 #line 109 "part1.y"
-                                                                                {(yyval.nptr) = createBExpr((yyvsp[-2].nptr), (yyvsp[0].nptr), mul); printNode((yyval.nptr));}
-#line 1502 "y.tab.c"
+                                                                                {(yyval.nptr) = createBExpr((yyvsp[-2].nptr), (yyvsp[0].nptr), sub); printNode((yyval.nptr));}
+#line 1489 "y.tab.c"
     break;
 
-  case 37: /* expr: term '/' term  */
+  case 35: /* expr: term '*' term  */
 #line 110 "part1.y"
-                                                                                {(yyval.nptr) = createBExpr((yyvsp[-2].nptr), (yyvsp[0].nptr), divide); printNode((yyval.nptr));}
-#line 1508 "y.tab.c"
+                                                                                {(yyval.nptr) = createBExpr((yyvsp[-2].nptr), (yyvsp[0].nptr), mul); printNode((yyval.nptr));}
+#line 1495 "y.tab.c"
     break;
 
-  case 38: /* expr: term  */
+  case 36: /* expr: term '/' term  */
 #line 111 "part1.y"
+                                                                                {(yyval.nptr) = createBExpr((yyvsp[-2].nptr), (yyvsp[0].nptr), divide); printNode((yyval.nptr));}
+#line 1501 "y.tab.c"
+    break;
+
+  case 37: /* expr: term  */
+#line 112 "part1.y"
                                                                                         {(yyval.nptr) = (yyvsp[0].nptr); printNode((yyval.nptr));}
-#line 1514 "y.tab.c"
+#line 1507 "y.tab.c"
     break;
 
-  case 39: /* term: NUM  */
-#line 114 "part1.y"
-                                                                                        {(yyval.nptr) = createCnst((yyvsp[0].ival)); printNode((yyval.nptr));}
-#line 1520 "y.tab.c"
-    break;
-
-  case 40: /* term: NAME  */
+  case 38: /* term: NUM  */
 #line 115 "part1.y"
-                                                                                        {(yyval.nptr) = createVar((yyvsp[0].idname)); printNode((yyval.nptr)); free((yyvsp[0].idname));}
-#line 1526 "y.tab.c"
+                                                                                        {(yyval.nptr) = createCnst((yyvsp[0].ival)); printNode((yyval.nptr));}
+#line 1513 "y.tab.c"
     break;
 
-  case 41: /* term: '-' term  */
+  case 39: /* term: NAME  */
 #line 116 "part1.y"
+                                                                                        {(yyval.nptr) = createVar((yyvsp[0].idname)); printNode((yyval.nptr)); free((yyvsp[0].idname));}
+#line 1519 "y.tab.c"
+    break;
+
+  case 40: /* term: '-' term  */
+#line 117 "part1.y"
                                                                                         {(yyval.nptr) = createUExpr((yyvsp[0].nptr), uminus); printNode((yyval.nptr));}
-#line 1532 "y.tab.c"
+#line 1525 "y.tab.c"
     break;
 
-  case 42: /* var_decls: var_decls decl  */
-#line 119 "part1.y"
-                                                        {(yyval.svec_ptr) = (yyvsp[-1].svec_ptr); (yyval.svec_ptr)->push_back((yyvsp[0].nptr));}
-#line 1538 "y.tab.c"
-    break;
-
-  case 43: /* var_decls: decl  */
+  case 41: /* var_decls: var_decls decl  */
 #line 120 "part1.y"
+                                                        {(yyval.svec_ptr) = (yyvsp[-1].svec_ptr); (yyval.svec_ptr)->push_back((yyvsp[0].nptr));}
+#line 1531 "y.tab.c"
+    break;
+
+  case 42: /* var_decls: decl  */
+#line 121 "part1.y"
                                                                         {(yyval.svec_ptr) = new vector<astNode*>(); (yyval.svec_ptr)->push_back((yyvsp[0].nptr));}
+#line 1537 "y.tab.c"
+    break;
+
+  case 43: /* decl: INT NAME ';'  */
+#line 122 "part1.y"
+                                                                {(yyval.nptr) = createDecl((yyvsp[-1].idname)); printNode((yyval.nptr));
+										free((yyvsp[-1].idname));}
 #line 1544 "y.tab.c"
     break;
 
-  case 44: /* decl: INT NAME ';'  */
-#line 121 "part1.y"
-                                                                {(yyval.nptr) = createDecl((yyvsp[-1].idname)); printNode((yyval.nptr));
-										free((yyvsp[-1].idname));}
-#line 1551 "y.tab.c"
-    break;
-
-  case 45: /* call_func_stmt: PRINT '(' term ')' ';'  */
-#line 125 "part1.y"
-                                        {(yyval.nptr) = createCall("print"); printNode((yyval.nptr));}
-#line 1557 "y.tab.c"
-    break;
-
-  case 46: /* call_func_stmt: READ '(' ')' ';'  */
+  case 44: /* call_func_stmt: PRINT '(' term ')' ';'  */
 #line 126 "part1.y"
+                                        {(yyval.nptr) = createCall("print"); printNode((yyval.nptr));}
+#line 1550 "y.tab.c"
+    break;
+
+  case 45: /* call_func_stmt: READ '(' ')' ';'  */
+#line 127 "part1.y"
                                                                 {(yyval.nptr) = createCall("read"); printNode((yyval.nptr));}
-#line 1563 "y.tab.c"
+#line 1556 "y.tab.c"
     break;
 
-  case 47: /* return_stmt: RETURN '(' expr ')' ';'  */
-#line 129 "part1.y"
-                                                {(yyval.nptr) = createRet((yyvsp[-2].nptr)); printNode((yyval.nptr));}
-#line 1569 "y.tab.c"
-    break;
-
-  case 48: /* return_stmt: RETURN expr ';'  */
+  case 46: /* return_stmt: RETURN '(' expr ')' ';'  */
 #line 130 "part1.y"
+                                                {(yyval.nptr) = createRet((yyvsp[-2].nptr)); printNode((yyval.nptr));}
+#line 1562 "y.tab.c"
+    break;
+
+  case 47: /* return_stmt: RETURN expr ';'  */
+#line 131 "part1.y"
                                                                         {(yyval.nptr) = createRet((yyvsp[-1].nptr)); printNode((yyval.nptr));}
-#line 1575 "y.tab.c"
+#line 1568 "y.tab.c"
     break;
 
 
-#line 1579 "y.tab.c"
+#line 1572 "y.tab.c"
 
       default: break;
     }
@@ -1768,7 +1761,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 131 "part1.y"
+#line 132 "part1.y"
 
 
 int yyerror(char *s){
@@ -1789,6 +1782,12 @@ int main(int argc, char* argv[]){
 			}
 		}
 		yyparse();
+
+		int a = semantic_analysis(root);
+		printf("%d\n", a);
+
+		freeNode(root);
+		
 		if (argc == 2) fclose(yyin);
 		yylex_destroy();
 		return 0;

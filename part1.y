@@ -1,5 +1,6 @@
 %{
 #include "./ast/ast.h"
+#include "./ast/smta.h"
 #include<stdio.h>
 extern int yylex();
 extern int yylex_destroy();
@@ -7,6 +8,8 @@ extern int yywrap();
 int yyerror(char *);
 extern FILE * yyin;
 extern int yylineno;
+
+astNode* root;
 %}
 
 %union{
@@ -15,7 +18,6 @@ extern int yylineno;
 	astNode *nptr;
 	vector<astNode *> *svec_ptr;
 }
-
 
 %token <ival> NUM
 %token <idname> NAME
@@ -30,13 +32,12 @@ extern int yylineno;
 %type <svec_ptr> stmts var_decls
 
 %start program
-
 %%
 
-program: print_line read_line func            {$$ = createProg($1, $2, $3);  printNode($$); freeNode($$);}
-        | read_line print_line func           {$$ = createProg($2, $1, $3); printNode($$); freeNode($$);}  // do we need to check
-print_line: EXTERN VOID PRINT '(' INT ')' ';'       {$$ = createExtern("print"); printNode($$);}
-read_line: EXTERN INT READ '(' ')' ';'              {$$ = createExtern("read"); printNode($$);}
+program: print_line read_line func            {$$ = createProg($1, $2, $3);  printNode($$);
+												root = $$;}
+print_line: EXTERN VOID PRINT '(' INT ')' ';'       {$$ = createExtern("print");}
+read_line: EXTERN INT READ '(' ')' ';'              {$$ = createExtern("read");}
 
 
 
@@ -148,6 +149,12 @@ int main(int argc, char* argv[]){
 			}
 		}
 		yyparse();
+
+		int a = semantic_analysis(root);
+		printf("%d\n", a);
+
+		freeNode(root);
+		
 		if (argc == 2) fclose(yyin);
 		yylex_destroy();
 		return 0;
