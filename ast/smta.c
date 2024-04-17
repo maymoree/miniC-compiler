@@ -14,7 +14,7 @@ int semantic_analysis(astNode* root){
     int passed;
 
     if (root != NULL) {
-        passed = traverse(stack_symbol_table, root);
+        traverse(stack_symbol_table, root);
     }
 
     delete(stack_symbol_table);
@@ -32,20 +32,16 @@ int traverse(vector<vector<char*>*>* stack_symbol_table, astNode* node){
     // BLOCK TYPE and FUNCTION BODY
     // also checks that stack isn't empty, meaning there is prior code block
     // also checks that top symbol stack isn't empty as well, meaning there is func name
-    if (type == ast_stmt && node->stmt.type == ast_block && stack_symbol_table->size() > 0 && stack_symbol_table->back()->size() > 0){
+    if (type == ast_stmt && node->stmt.type == ast_block && stack_symbol_table->size() > 0 && stack_symbol_table->back()->size() > 0){      
         vector<char*>* curr_sym_table = stack_symbol_table->back();
 
         for (int i = 0; i < node->stmt.block.stmt_list->size(); i++){
             traverse(stack_symbol_table, node->stmt.block.stmt_list->at(i));
         }
-
-        delete curr_sym_table;
-
     }
     
     // BLOCK TYPE
     else if (type == ast_stmt && node->stmt.type == ast_block){
-
         vector<char*>* curr_sym_table = new vector<char*> ();
         stack_symbol_table->push_back(curr_sym_table);
         
@@ -71,16 +67,15 @@ int traverse(vector<vector<char*>*>* stack_symbol_table, astNode* node){
 
         stack_symbol_table->pop_back();
         delete curr_sym_table;
-
     } 
     
     // DECLARATION TYPE
     else if (type == ast_stmt && node->stmt.type == ast_decl){
-        const char* var_name = node->stmt.decl.name;
+        char* var_name = node->stmt.decl.name;
 
         vector<char*>* curr_sym_table = stack_symbol_table->back();
 
-        for (const char* var : *curr_sym_table) {
+        for (char* var : *curr_sym_table) {
             // variable exists in top symbol table
             if (strcmp(var, var_name) == 0) {
                 printf("Error: Variable already declared in this code block.\n");
@@ -89,9 +84,7 @@ int traverse(vector<vector<char*>*>* stack_symbol_table, astNode* node){
                 curr_sym_table->push_back(strdup(var_name));
             }
         }
-
-        delete curr_sym_table;
-
+        
     } 
     
     // VARIABLE TYPE
@@ -123,6 +116,11 @@ int traverse(vector<vector<char*>*>* stack_symbol_table, astNode* node){
     }
 
     // OTHER TYPES
+
+    else if (type == ast_prog) {
+        traverse(stack_symbol_table, node->prog.func);
+    }
+
     else if (type == ast_cnst) {
 
     }
