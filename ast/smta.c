@@ -114,7 +114,7 @@ int traverse(vector<vector<char*>*>* stack_symbol_table, astNode* node, bool& pa
     // VARIABLE TYPE
     else if (type == ast_var){
         printf("VAR ------\n");  
-        const char* var_name = node->var.name;
+        char* var_name = node->var.name;
 
         bool found = false;
 
@@ -133,6 +133,7 @@ int traverse(vector<vector<char*>*>* stack_symbol_table, astNode* node, bool& pa
             printf("Error: Variable '%s' is used but not declared.\n", var_name);
             passed = false;
         }
+
     } 
     
     // EXTERN TYPE
@@ -209,17 +210,4 @@ int traverse(vector<vector<char*>*>* stack_symbol_table, astNode* node, bool& pa
 
 
     return true;
-}
-
-void freeTable(set<char*>* sym_table) {
-	assert(sym_table != NULL);
-	
-	set<char*>::iterator it = sym_table->begin();
-	while(it != sym_table->end()) {
-		free(*it);
-		it++;
-	}
-	delete(sym_table);
- 
-
 }
