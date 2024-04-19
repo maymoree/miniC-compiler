@@ -10,6 +10,12 @@ VALGRIND = valgrind --leak-check=full --show-leak-kinds=all
 valgrind: $(filename).out
 	$(VALGRIND) ./$(filename).out ./miniCfiles/p1.c
 
+testbad: $(filename).out
+	$(VALGRIND) ./$(filename).out ./miniCfiles/semantic_analysis_tests/p1_bad.c
+
+testgood: $(filename).out
+	$(VALGRIND) ./$(filename).out ./miniCfiles/p5.c
+
 clean:
 	rm -rf $(filename).out lex.yy.c y.tab.c y.tab.h y.output
 	rm -f *~ *.o

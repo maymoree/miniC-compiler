@@ -6,4 +6,4 @@
 #include <vector>
 
 int semantic_analysis(astNode* root);
-int traverse(vector<vector<char*>*> *stack_symbol_table, astNode* node);
+int traverse(vector<vector<char*>*> *stack_symbol_table, astNode* node, bool& passed);
