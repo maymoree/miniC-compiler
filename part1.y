@@ -123,7 +123,7 @@ decl: INT NAME ';' 						{$$ = createDecl($2); printNode($$);
 										free($2);}
 
 
-call_func_stmt: PRINT '(' term ')' ';'	{$$ = createCall("print"); printNode($$);}
+call_func_stmt: PRINT '(' NAME ')' ';'	{$$ = createCall("print", createVar($3)); printNode($$); free($3);}
 					| READ '(' ')' ';' 	{$$ = createCall("read"); printNode($$);}
 
 

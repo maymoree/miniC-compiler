@@ -7,14 +7,11 @@ VALGRIND = valgrind --leak-check=full --show-leak-kinds=all
 	lex $(filename).l
 	g++ -g lex.yy.c y.tab.c ./ast/ast.c ./ast/smta.c -o $(filename).out
 
-valgrind: $(filename).out
-	$(VALGRIND) ./$(filename).out ./miniCfiles/p1.c
-
 testbad: $(filename).out
-	$(VALGRIND) ./$(filename).out ./miniCfiles/semantic_analysis_tests/p1_bad.c
+	$(VALGRIND) ./$(filename).out ./miniCfiles/semantic_analysis_tests/p4_bad.c
 
 testgood: $(filename).out
-	$(VALGRIND) ./$(filename).out ./miniCfiles/p5.c
+	$(VALGRIND) ./$(filename).out ./miniCfiles/p3.c
 
 clean:
 	rm -f *~ *.o
