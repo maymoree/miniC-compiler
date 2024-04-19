@@ -17,6 +17,7 @@ testgood: $(filename).out
 	$(VALGRIND) ./$(filename).out ./miniCfiles/p5.c
 
 clean:
-	rm -rf $(filename).out lex.yy.c y.tab.c y.tab.h y.output
 	rm -f *~ *.o
 	rm -rf *.dSYM
+	rm -rf $(filename).out lex.yy.c y.tab.c y.tab.h y.output
+	
