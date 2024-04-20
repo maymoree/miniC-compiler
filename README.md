@@ -10,4 +10,4 @@
     - part1.l part1.y 
 - Semantic Analysis works
     - smta.c smta.h
-- Note: shift/reduce conflict has yet to be resolved
+- Note: 12 shift/reduce conflict has yet to be resolved -- but default returns correct output

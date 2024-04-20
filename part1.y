@@ -31,6 +31,9 @@ astNode* root;
 
 %type <svec_ptr> stmts var_decls
 
+%nonassoc LOWER_THAN_ELSE
+%nonassoc HIGHER_ELSE
+
 %start program
 %%
 
@@ -84,8 +87,8 @@ stmt: assign_stmt						{$$ = $1; printNode($$);}
 		| while_block					{$$ = $1; printNode($$);}
 
 
-condition_block: if_condition code_block else_condition		{$$ = createIf($1, $2, $3); printNode($$);}
-					| if_condition code_block				{$$ = createIf($1, $2); printNode($$);}     // handles cases with & w/o {}
+condition_block: if_condition code_block %prec LOWER_THAN_ELSE				{$$ = createIf($1, $2); printNode($$);}     // handles cases with & w/o {}
+					| if_condition code_block else_condition				{$$ = createIf($1, $2, $3); printNode($$);}
 if_condition: IF '(' bool_condition ')'			{$$ = $3; printNode($$);}
 else_condition: ELSE code_block					{$$ = $2; printNode($$);}
 
