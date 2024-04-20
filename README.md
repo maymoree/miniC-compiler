@@ -10,4 +10,4 @@
     - part1.l part1.y 
 - Semantic Analysis works
     - smta.c smta.h
-- Note: Code has 1 error and 42 bytes of mem leaks in certain cases; shift/reduce conflict has yet to be resolved
+- Note: 12 shift/reduce conflict has yet to be resolved -- but default returns correct output

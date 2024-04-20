@@ -18,7 +18,6 @@ int semantic_analysis(astNode* root){
 
     if (root != NULL) {
         passed = traverse(stack_symbol_table, root, passed);
-        printf("pass or fail: %d\n", passed);
     }
     // if it fails we have to clean it better???
     // like pop off stuff and clean the vars inside???
@@ -30,34 +29,26 @@ int semantic_analysis(astNode* root){
 }
 
 int traverse(vector<vector<char*>*>* stack_symbol_table, astNode* node, bool& passed){
-
-    printf("stack sym size: %ld\n", stack_symbol_table->size());
-    printf("PASSED AT TOP ---- %d\n", passed);
     
     node_type type = node->type;
 
     // BLOCK TYPE and FUNCTION BODY
     if (type == ast_stmt && node->stmt.type == ast_block && body_of_func){    
-        printf("BLOCK and FUNC BODY ------\n");  
         vector<char*>* curr_sym_table = stack_symbol_table->back();
 
         body_of_func = false;
         for (int i = 0; i < node->stmt.block.stmt_list->size(); i++){
             traverse(stack_symbol_table, node->stmt.block.stmt_list->at(i), passed);
         }
-
-        printf("block and func 1 is passed: %d\n", passed);
     }
     
     // BLOCK TYPE
     else if (type == ast_stmt && node->stmt.type == ast_block){
-        printf("BLOCK ------\n");  
         vector<char*>* curr_sym_table = new vector<char*> ();
         stack_symbol_table->push_back(curr_sym_table);
         
         for (int i = 0; i < node->stmt.block.stmt_list->size(); i++){
             traverse(stack_symbol_table, node->stmt.block.stmt_list->at(i), passed);
-            printf("block only 1 is passed: %d\n", passed);
         }
 
         stack_symbol_table->pop_back();
@@ -67,7 +58,6 @@ int traverse(vector<vector<char*>*>* stack_symbol_table, astNode* node, bool& pa
     
     // FUNCTION TYPE
     else if (type == ast_func){
-        printf("FUNC ------\n");  
         vector<char*>* curr_sym_table = new vector<char*> ();
         stack_symbol_table->push_back(curr_sym_table);
 
@@ -77,7 +67,6 @@ int traverse(vector<vector<char*>*>* stack_symbol_table, astNode* node, bool& pa
 
         body_of_func = true;
         traverse(stack_symbol_table, node->func.body, passed);
-        printf("func only 1 is passed: %d\n", passed);
 
         stack_symbol_table->pop_back();
         delete curr_sym_table;
@@ -85,7 +74,6 @@ int traverse(vector<vector<char*>*>* stack_symbol_table, astNode* node, bool& pa
     
     // DECLARATION TYPE
     else if (type == ast_stmt && node->stmt.type == ast_decl){
-        printf("DECL ------\n");  
         char* var_name = node->stmt.decl.name;
 
         vector<char*>* curr_sym_table = stack_symbol_table->back();
@@ -93,17 +81,12 @@ int traverse(vector<vector<char*>*>* stack_symbol_table, astNode* node, bool& pa
         bool in_table = false;
 
         for (int j = 0; j < curr_sym_table->size(); j++) {
-            printf("size: %ld\n", curr_sym_table->size());
-            printf("at j: %s\n", curr_sym_table->at(j));
-            printf("var name: %s\n", var_name);
-            
             if (strcmp(curr_sym_table->at(j), var_name) == 0) {
                 in_table = true;   
             } 
         }
 
         if (in_table){
-            printf("Error: Variable %s already declared in this code block.\n", var_name);
             passed = false; // did not pass
         } else {
             curr_sym_table->push_back(var_name);
@@ -113,7 +96,6 @@ int traverse(vector<vector<char*>*>* stack_symbol_table, astNode* node, bool& pa
     
     // VARIABLE TYPE
     else if (type == ast_var){
-        printf("VAR ------\n");  
         char* var_name = node->var.name;
 
         bool found = false;
@@ -130,7 +112,6 @@ int traverse(vector<vector<char*>*>* stack_symbol_table, astNode* node, bool& pa
         
         // variable is not found, print error
         if (!found) {
-            printf("Error: Variable '%s' is used but not declared.\n", var_name);
             passed = false;
         }
 
