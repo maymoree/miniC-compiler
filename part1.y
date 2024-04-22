@@ -32,7 +32,7 @@ astNode* root;
 %type <svec_ptr> stmts var_decls
 
 %nonassoc LOWER_THAN_ELSE
-%nonassoc HIGHER_ELSE
+%nonassoc ELSE
 
 %start program
 %%
@@ -64,18 +64,7 @@ code_block : '{' var_decls stmts '}' 	{
 											delete($2);
 											delete($3);
 										} 
-				| var_decls stmts 	{
-											vector<astNode*>* new_vec = new vector<astNode*>();
-											new_vec->insert(new_vec->end(), $1->begin(), $1->end());
-											new_vec->insert(new_vec->end(), $2->begin(), $2->end());
-											$$ = createBlock(new_vec); 
-											printNode($$);
-											delete($1);
-											delete($2);
-										} 
 				| '{' stmts '}' 		{$$ = createBlock($2); printNode($$);} 
-				| stmts					{$$ = createBlock($1); printNode($$);} 
-
 
 
 stmts: stmts stmt 						{$$ = $1; $$->push_back($2);}
@@ -85,15 +74,16 @@ stmt: assign_stmt						{$$ = $1; printNode($$);}
 		| return_stmt					{$$ = $1; printNode($$);}
 		| condition_block				{$$ = $1; printNode($$);}
 		| while_block					{$$ = $1; printNode($$);}
+		| code_block					{$$ = $1; printNode($$);}
 
 
-condition_block: if_condition code_block %prec LOWER_THAN_ELSE				{$$ = createIf($1, $2); printNode($$);}     // handles cases with & w/o {}
-					| if_condition code_block else_condition				{$$ = createIf($1, $2, $3); printNode($$);}
+condition_block: if_condition stmt %prec LOWER_THAN_ELSE				{$$ = createIf($1, $2); printNode($$);}     // handles cases with & w/o {}
+					| if_condition stmt else_condition				{$$ = createIf($1, $2, $3); printNode($$);}
 if_condition: IF '(' bool_condition ')'			{$$ = $3; printNode($$);}
-else_condition: ELSE code_block					{$$ = $2; printNode($$);}
+else_condition: ELSE stmt						{$$ = $2; printNode($$);}
 
 
-while_block: WHILE '(' bool_condition ')' code_block				{$$ = createWhile($3,$5);}
+while_block: WHILE '(' bool_condition ')' stmt				{$$ = createWhile($3,$5);}
 
 
 bool_condition: term '<' term				{$$ = createRExpr($1, $3, lt); printNode($$);}
