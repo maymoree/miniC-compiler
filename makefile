@@ -3,7 +3,7 @@ filename = part1
 VALGRIND = valgrind --leak-check=full --show-leak-kinds=all
 
 (filename).out: $(filename).l 
-	yacc -d -t -v $(filename).y 
+	yacc -d -t -v $(filename).y -Wcounterexamples
 	lex $(filename).l 
 	g++ -g lex.yy.c y.tab.c ./ast/ast.c ./ast/smta.c -o $(filename).out
 
@@ -16,5 +16,5 @@ testgood: $(filename).out
 clean:
 	rm -f *~ *.o
 	rm -rf *.dSYM
-	rm -rf $(filename).out lex.yy.c y.tab.c y.tab.h y.output
+	rm -rf $(filename).out lex.yy.c y.tab.c y.tab.h
 	
