@@ -11,3 +11,13 @@
 - Semantic Analysis works
     - smta.c smta.h
 - Note: All shift/reduce conflicts resolved!!!
+
+## Part 3 -- Optimization (optimization folder)
+- run 'make' to compile optimization file
+- run 'make llvm_file' to get .ll files for testing
+
+- optimization.c
+- optimization.h
+- Note: have common sub expr function done
+
+#### organize the repo/files better AND add info to .h files!
