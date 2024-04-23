@@ -13,12 +13,11 @@ using namespace std;
 #define prt(x) if(x) { printf("%s\n", x); }
 
 LLVMModuleRef createLLVMModel(char * filename);
-void common_sub_expr(LLVMModuleRef module);
+vector<LLVMValueRef>* common_sub_expr(LLVMModuleRef module);
+void dead_code_elim(LLVMModuleRef module, vector<LLVMValueRef>* elim_instructions);
+vector<LLVMValueRef>* const_folding (LLVMModuleRef module);
 void help_print_instructions(LLVMModuleRef module);
-void dead_code_elim(LLVMModuleRef module);
 void print_vector(vector<LLVMValueRef>* elim_instruction);
-
-vector<LLVMValueRef>* elim_instructions = new vector<LLVMValueRef> ();
 
 /* This function reads the given llvm file and loads the LLVM IR into
 	 data-structures that we can works on for optimization phase.
@@ -46,7 +45,9 @@ LLVMModuleRef createLLVMModel(char * filename){
 	return m;
 }
 
-void common_sub_expr(LLVMModuleRef module) {
+vector<LLVMValueRef>* common_sub_expr(LLVMModuleRef module) {
+
+	vector<LLVMValueRef>* elim_instructions = new vector<LLVMValueRef> ();
 
 	// loop through functions
 	for (LLVMValueRef function = LLVMGetFirstFunction(module); 
@@ -106,10 +107,11 @@ void common_sub_expr(LLVMModuleRef module) {
 		}
 
 	}
+	return (elim_instructions);
 
 }
 
-void dead_code_elim(LLVMModuleRef module){
+void dead_code_elim(LLVMModuleRef module, vector<LLVMValueRef>* elim_instructions){
 	
 	// loop through functions
 	for (LLVMValueRef function = LLVMGetFirstFunction(module); 
@@ -156,6 +158,56 @@ void dead_code_elim(LLVMModuleRef module){
 	help_print_instructions(module);
 }
 
+vector<LLVMValueRef>* const_folding (LLVMModuleRef module) {
+
+	vector<LLVMValueRef>* elim_instructions = new vector<LLVMValueRef> ();
+
+	// loop through functions
+	for (LLVMValueRef function = LLVMGetFirstFunction(module); 
+	function; 
+	function = LLVMGetNextFunction(function)) {
+
+		// loop through basic block
+		for (LLVMBasicBlockRef basicBlock = LLVMGetFirstBasicBlock(function);
+ 			 basicBlock;
+  			 basicBlock = LLVMGetNextBasicBlock(basicBlock)) {
+				
+				// loop through instructions in each block
+				for (LLVMValueRef instruction = LLVMGetFirstInstruction(basicBlock); 
+				instruction; 
+				instruction = LLVMGetNextInstruction(instruction)) {
+
+					LLVMOpcode instruc_opcode = LLVMGetInstructionOpcode(instruction);
+
+					// binary operators
+					if (instruc_opcode == LLVMAdd || instruc_opcode == LLVMSub || instruc_opcode == LLVMMul) {
+						LLVMValueRef operand1 = LLVMGetOperand(instruction, 0);
+						LLVMValueRef operand2 = LLVMGetOperand(instruction, 1);
+
+						if (instruc_opcode == LLVMAdd) {
+							int counter = count(elim_instructions->begin(), elim_instructions->end(), instruction);
+							if (counter <= 0) {elim_instructions->push_back(instruction);}
+							LLVMReplaceAllUsesWith(instruction, LLVMConstAdd(operand1, operand2));
+
+						} else if (instruc_opcode == LLVMSub) {
+							int counter = count(elim_instructions->begin(), elim_instructions->end(), instruction);
+							if (counter <= 0) {elim_instructions->push_back(instruction);}
+							LLVMReplaceAllUsesWith(instruction, LLVMConstSub(operand1, operand2));
+
+						} else if (instruc_opcode == LLVMMul) {
+							int counter = count(elim_instructions->begin(), elim_instructions->end(), instruction);
+							if (counter <= 0) {elim_instructions->push_back(instruction);}
+							LLVMReplaceAllUsesWith(instruction, LLVMConstMul(operand1, operand2));
+						}
+					}
+					
+				}
+
+			}
+
+	}
+	return(elim_instructions);
+}
 
 
 void help_print_instructions(LLVMModuleRef module) {
@@ -205,9 +257,10 @@ int main(int argc, char** argv)
 	}
 
 	if (m != NULL){
-		common_sub_expr(m);
-		dead_code_elim(m);
-
+		vector<LLVMValueRef>* common_m = common_sub_expr(m);
+		dead_code_elim(m, common_m);
+		vector<LLVMValueRef>* const_m = const_folding(m);
+		dead_code_elim(m, const_m);
 	}
 	else {
 	    fprintf(stderr, "m is NULL\n");

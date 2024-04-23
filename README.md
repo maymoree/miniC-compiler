@@ -25,6 +25,7 @@
 
 ## To Dos:
 - [] add info to .h files
-- [] constant folding
-- [] thoroughly test local optimization
+- [x] constant folding
+- [x] thoroughly test local optimization
+- [] check valgrind for local optimization
 - [] global optimization

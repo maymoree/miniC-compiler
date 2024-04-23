@@ -13,9 +13,8 @@ using namespace std;
 #define prt(x) if(x) { printf("%s\n", x); }
 
 LLVMModuleRef createLLVMModel(char * filename);
-void common_sub_expr(LLVMModuleRef module);
+vector<LLVMValueRef>* common_sub_expr(LLVMModuleRef module);
+void dead_code_elim(LLVMModuleRef module, vector<LLVMValueRef>* elim_instructions);
+vector<LLVMValueRef>* const_folding (LLVMModuleRef module);
 void help_print_instructions(LLVMModuleRef module);
-void dead_code_elim(LLVMModuleRef module);
 void print_vector(vector<LLVMValueRef>* elim_instruction);
-
-vector<LLVMValueRef>* elim_instructions = new vector<LLVMValueRef> ();
