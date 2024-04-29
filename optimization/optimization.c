@@ -137,7 +137,7 @@ void dead_code_elim(LLVMModuleRef module, vector<LLVMValueRef>* elim_instruction
 						// if found, eliminate it
 						if (counter > 0) {
 							LLVMValueRef elim_instruction = instruction;
-							//get next instruction first before deleting the current one
+							// //get next instruction first before deleting the current one
 							instruction = LLVMGetNextInstruction(instruction);
 							LLVMInstructionEraseFromParent(elim_instruction);
 						} else {
@@ -257,14 +257,18 @@ int main(int argc, char** argv)
 	}
 
 	if (m != NULL){
-		vector<LLVMValueRef>* common_m = common_sub_expr(m);
-		dead_code_elim(m, common_m);
-		vector<LLVMValueRef>* const_m = const_folding(m);
-		dead_code_elim(m, const_m);
+		vector<LLVMValueRef>* common_elim = common_sub_expr(m);
+		dead_code_elim(m, common_elim);
+		vector<LLVMValueRef>* const_elim = const_folding(m);
+		dead_code_elim(m, const_elim);
+		LLVMDisposeModule(m);
+		delete(common_elim);
+		delete(const_elim);
 	}
 	else {
 	    fprintf(stderr, "m is NULL\n");
 	}
-	
+	LLVMShutdown();
+
 	return 0;
 }
