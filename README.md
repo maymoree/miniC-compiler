@@ -25,7 +25,8 @@
 
 ## To Dos:
 - [] add info to .h files
+- [] global optimization
+- [] check error in local optimization -- something with invalid write
 - [x] constant folding
 - [x] thoroughly test local optimization
-- [] check valgrind for local optimization
-- [] global optimization
+- [x] check valgrind for local optimization
