@@ -18,3 +18,5 @@ void dead_code_elim(LLVMModuleRef module, vector<LLVMValueRef>* elim_instruction
 vector<LLVMValueRef>* const_folding (LLVMModuleRef module);
 void help_print_instructions(LLVMModuleRef module);
 void print_vector(vector<LLVMValueRef>* elim_instruction);
+void compute_gen(LLVMModuleRef module, unordered_map<LLVMBasicBlockRef, set<LLVMValueRef>*>* gen_map);
+set<LLVMValueRef>* find_all_stores(LLVMModuleRef module);

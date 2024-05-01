@@ -1,4 +1,6 @@
 #include <vector>
+#include <set>
+#include <unordered_map>
 #include <algorithm> 
 #include <iostream> 
 #include <stdio.h>
@@ -18,7 +20,8 @@ void dead_code_elim(LLVMModuleRef module, vector<LLVMValueRef>* elim_instruction
 vector<LLVMValueRef>* const_folding (LLVMModuleRef module);
 void help_print_instructions(LLVMModuleRef module);
 void print_vector(vector<LLVMValueRef>* elim_instruction);
-
+void compute_gen(LLVMModuleRef module, unordered_map<LLVMBasicBlockRef, set<LLVMValueRef>*>* gen_map);
+set<LLVMValueRef>* find_all_stores(LLVMModuleRef module); 
 /* This function reads the given llvm file and loads the LLVM IR into
 	 data-structures that we can works on for optimization phase.
 */
@@ -216,8 +219,157 @@ vector<LLVMValueRef>* const_folding (LLVMModuleRef module) {
 	return(elim_instructions);
 }
 
+void compute_gen(LLVMModuleRef module, unordered_map<LLVMBasicBlockRef, set<LLVMValueRef>*>* gen_map) {
+
+	// loop through functions
+	for (LLVMValueRef function = LLVMGetFirstFunction(module); 
+	function; 
+	function = LLVMGetNextFunction(function)) {
+
+		// loop through basic block
+		for (LLVMBasicBlockRef basicBlock = LLVMGetFirstBasicBlock(function);
+ 			 basicBlock;
+  			 basicBlock = LLVMGetNextBasicBlock(basicBlock)) {
+				
+				// initialize empty set
+				set<LLVMValueRef>* gen_block = new set<LLVMValueRef> ();
+
+				// loop through instructions in each block
+				for (LLVMValueRef instruction = LLVMGetFirstInstruction(basicBlock); 
+				instruction; 
+				instruction = LLVMGetNextInstruction(instruction)) {
+
+					LLVMOpcode instruc_opcode = LLVMGetInstructionOpcode(instruction);
+
+					// check if opcode is store instruction
+					if (instruc_opcode == LLVMStore) {
+
+						// printf("STORE FOUND\n");
+
+						// check to remove killed instructions
+						LLVMValueRef operand = LLVMGetOperand(instruction, 1); // gets location
+						// set to store instructions that have to be deleleted
+						set<LLVMValueRef>* to_erase = new set<LLVMValueRef> ();
+						// loops through and checks for instructions
+						set<LLVMValueRef>::iterator other_instruc;
+						for (other_instruc = gen_block->begin(); other_instruc != gen_block->end(); ++other_instruc) {
+							if (operand == LLVMGetOperand(*other_instruc, 1)) {
+								to_erase->insert(*other_instruc);
+							}
+						}
+						// erases those instructions from gen_block
+						set<LLVMValueRef>::iterator erase_instruc;
+						for (erase_instruc = to_erase->begin(); erase_instruc != to_erase->end(); ++erase_instruc){
+							gen_block->erase(*erase_instruc);
+						}
+						// delete the created set
+						delete(to_erase);
+
+						// add instruction to gen_block
+						gen_block->insert(instruction);
+
+					}
+
+				}
+
+				// insert block's set into unordered map
+				(*gen_map)[basicBlock] = gen_block;
 
 
+				// printf("Gen Block:\n");
+				// set<LLVMValueRef>::iterator itr;
+				// for (itr = gen_block->begin(); itr != gen_block->end(); itr++) {
+				// 	LLVMDumpValue(*itr);
+				// }
+		}
+	}
+
+}
+
+void compute_kill(LLVMModuleRef module, unordered_map<LLVMBasicBlockRef, set<LLVMValueRef>*>* kill_map) {
+	
+	// get all stores
+	set<LLVMValueRef>* all_stores = find_all_stores(module);
+
+	// loop through functions
+	for (LLVMValueRef function = LLVMGetFirstFunction(module); 
+	function; 
+	function = LLVMGetNextFunction(function)) {
+
+		// loop through basic block
+		for (LLVMBasicBlockRef basicBlock = LLVMGetFirstBasicBlock(function);
+		basicBlock;
+		basicBlock = LLVMGetNextBasicBlock(basicBlock)) {
+				
+			// initialize empty set
+			set<LLVMValueRef>* kill_block = new set<LLVMValueRef> ();
+
+			for (LLVMValueRef instruction = LLVMGetFirstInstruction(basicBlock);
+			instruction;
+			instruction = LLVMGetNextInstruction(instruction)) {
+
+				LLVMOpcode instruc_opcode = LLVMGetInstructionOpcode(instruction);
+
+				// check if opcode is store instruction
+				if (instruc_opcode == LLVMStore) {
+
+					LLVMValueRef operand = LLVMGetOperand(instruction, 1); // gets location
+
+					set<LLVMValueRef>::iterator store_instruc;
+					for (store_instruc = all_stores->begin(); store_instruc != all_stores->end(); ++store_instruc){
+						
+						if (operand == LLVMGetOperand(*store_instruc, 1) && *store_instruc != instruction) {
+							kill_block->insert(*store_instruc);
+						}
+
+					}
+
+				}
+
+			}
+			(*kill_map)[basicBlock] = kill_block;
+		}
+	}
+	delete(all_stores);
+}
+
+
+
+
+
+
+// HELPER FUNCTIONS!!!!!
+
+set<LLVMValueRef>* find_all_stores(LLVMModuleRef module) {
+	
+	// initialize empty set
+	set<LLVMValueRef>* all_stores = new set<LLVMValueRef> ();
+
+	// loop through functions
+	for (LLVMValueRef function = LLVMGetFirstFunction(module); 
+	function; 
+	function = LLVMGetNextFunction(function)) {
+
+		// loop through basic block
+		for (LLVMBasicBlockRef basicBlock = LLVMGetFirstBasicBlock(function);
+ 			 basicBlock;
+  			 basicBlock = LLVMGetNextBasicBlock(basicBlock)) {
+
+				// loop through instructions in each block
+				for (LLVMValueRef instruction = LLVMGetFirstInstruction(basicBlock); 
+				instruction; 
+				instruction = LLVMGetNextInstruction(instruction)) {
+
+					if (LLVMGetInstructionOpcode(instruction) == LLVMStore) {
+						all_stores->insert(instruction);
+					}
+
+				}
+		}
+	}
+	return all_stores;
+
+}
 
 void help_print_instructions(LLVMModuleRef module) {
 	// loop through functions
@@ -271,9 +423,27 @@ int main(int argc, char** argv)
 		vector<LLVMValueRef>* const_elim = const_folding(m);
 		dead_code_elim(m, const_elim);
 
+		unordered_map<LLVMBasicBlockRef, set<LLVMValueRef>*>* gen_map = new unordered_map<LLVMBasicBlockRef, set<LLVMValueRef>*> ();
+		compute_gen(m, gen_map);
+
+		unordered_map<LLVMBasicBlockRef, set<LLVMValueRef>*>* kill_map = new unordered_map<LLVMBasicBlockRef, set<LLVMValueRef>*> ();
+		compute_kill(m, kill_map);
+
 		LLVMDisposeModule(m);
 		delete(common_elim);
 		delete(const_elim);
+
+		for (auto set_gen = gen_map->begin(); set_gen != gen_map->end(); ++set_gen) {
+    		delete set_gen->second;
+		}
+
+		delete(gen_map);
+
+		for (auto set_kill = kill_map->begin(); set_kill != kill_map->end(); ++set_kill) {
+    		delete set_kill->second;
+		}
+
+		delete(kill_map);
 	}
 	else {
 	    fprintf(stderr, "m is NULL\n");
