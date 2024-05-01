@@ -13,7 +13,7 @@ valgrind: $(LLVMCODE)
 	$(VALGRIND) ./$(LLVMCODE) ./opt_tests/p3_const_prop.ll
 
 test: $(LLVMCODE)
-	./$(LLVMCODE) ./opt_tests/p4_const_prop.ll
+	./$(LLVMCODE) ./opt_tests/p3_const_prop.ll
 
 clean: 
 	rm -rf $(TEST).ll

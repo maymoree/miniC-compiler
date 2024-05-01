@@ -184,21 +184,28 @@ vector<LLVMValueRef>* const_folding (LLVMModuleRef module) {
 						LLVMValueRef operand1 = LLVMGetOperand(instruction, 0);
 						LLVMValueRef operand2 = LLVMGetOperand(instruction, 1);
 
-						if (instruc_opcode == LLVMAdd) {
-							int counter = count(elim_instructions->begin(), elim_instructions->end(), instruction);
-							if (counter <= 0) {elim_instructions->push_back(instruction);}
-							LLVMReplaceAllUsesWith(instruction, LLVMConstAdd(operand1, operand2));
+						// check if both operands are constants
+						if (LLVMIsConstant(operand1) && LLVMIsConstant(operand2)){
+							if (instruc_opcode == LLVMAdd) {
+								int counter = count(elim_instructions->begin(), elim_instructions->end(), instruction);
+								if (counter <= 0) {elim_instructions->push_back(instruction);}
+								LLVMValueRef added;
+								added = LLVMConstAdd(operand1, operand2);
+								LLVMReplaceAllUsesWith(instruction, added);
 
-						} else if (instruc_opcode == LLVMSub) {
-							int counter = count(elim_instructions->begin(), elim_instructions->end(), instruction);
-							if (counter <= 0) {elim_instructions->push_back(instruction);}
-							LLVMReplaceAllUsesWith(instruction, LLVMConstSub(operand1, operand2));
+							} else if (instruc_opcode == LLVMSub) {
+								int counter = count(elim_instructions->begin(), elim_instructions->end(), instruction);
+								if (counter <= 0) {elim_instructions->push_back(instruction);}
+								LLVMReplaceAllUsesWith(instruction, LLVMConstSub(operand1, operand2));
 
-						} else if (instruc_opcode == LLVMMul) {
-							int counter = count(elim_instructions->begin(), elim_instructions->end(), instruction);
-							if (counter <= 0) {elim_instructions->push_back(instruction);}
-							LLVMReplaceAllUsesWith(instruction, LLVMConstMul(operand1, operand2));
+							} else if (instruc_opcode == LLVMMul) {
+								int counter = count(elim_instructions->begin(), elim_instructions->end(), instruction);
+								if (counter <= 0) {elim_instructions->push_back(instruction);}
+								LLVMReplaceAllUsesWith(instruction, LLVMConstMul(operand1, operand2));
+							}
 						}
+
+
 					}
 					
 				}
@@ -208,6 +215,8 @@ vector<LLVMValueRef>* const_folding (LLVMModuleRef module) {
 	}
 	return(elim_instructions);
 }
+
+
 
 
 void help_print_instructions(LLVMModuleRef module) {
@@ -261,6 +270,7 @@ int main(int argc, char** argv)
 		dead_code_elim(m, common_elim);
 		vector<LLVMValueRef>* const_elim = const_folding(m);
 		dead_code_elim(m, const_elim);
+
 		LLVMDisposeModule(m);
 		delete(common_elim);
 		delete(const_elim);
