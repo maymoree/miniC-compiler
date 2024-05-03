@@ -82,6 +82,7 @@ vector<LLVMValueRef>* common_sub_expr(LLVMModuleRef module) {
 					// get opcode
 					LLVMOpcode instruc_opcode = LLVMGetInstructionOpcode(instruction);
 
+
 					// check for similarity only if A is a load instruction
 					if (instruc_opcode == LLVMLoad) {
 
@@ -118,10 +119,58 @@ vector<LLVMValueRef>* common_sub_expr(LLVMModuleRef module) {
 
 						}	
 					}
+
+
+					else if (instruc_opcode == LLVMAdd || instruc_opcode == LLVMMul) {
+						
+						LLVMValueRef operand1 = LLVMGetOperand(instruction, 0);
+						LLVMValueRef operand2 = LLVMGetOperand(instruction, 1);
+
+						// loop through all other instructions
+						for (LLVMValueRef other_instruc = LLVMGetNextInstruction(instruction); 
+						other_instruc; 
+						other_instruc = LLVMGetNextInstruction(other_instruc)) {
+
+							if ((instruc_opcode == LLVMGetInstructionOpcode(other_instruc)) &&
+							 (((operand1 == LLVMGetOperand(other_instruc,1)) && (operand2 == LLVMGetOperand(other_instruc,0))) || 
+							 ((operand1 == LLVMGetOperand(other_instruc,0)) && (operand2 == LLVMGetOperand(other_instruc,1))))) {
+							
+							// replace B with A
+							elim_instructions->push_back(other_instruc);
+							LLVMReplaceAllUsesWith(other_instruc, instruction);
+							}	
+						}
+
+					}
+
+					else if (instruc_opcode == LLVMSub) {
+
+						LLVMValueRef operand1 = LLVMGetOperand(instruction, 0);
+						LLVMValueRef operand2 = LLVMGetOperand(instruction, 1);
+
+						// loop through all other instructions
+						for (LLVMValueRef other_instruc = LLVMGetNextInstruction(instruction); 
+						other_instruc; 
+						other_instruc = LLVMGetNextInstruction(other_instruc)) {
+
+							if ((instruc_opcode == LLVMGetInstructionOpcode(other_instruc)) &&
+							((operand1 == LLVMGetOperand(other_instruc,1)) && (operand2 == LLVMGetOperand(other_instruc,0)))) {
+							
+							// replace B with A
+							elim_instructions->push_back(other_instruc);
+							LLVMReplaceAllUsesWith(other_instruc, instruction);
+							}	
+						}
+
+					}
+
+
 				}
 		}
 
 	}
+	// help_print_instructions(module);
+	printf(" ------ COMMON SUB EXPR ------");
 	return (elim_instructions);
 
 }
@@ -170,7 +219,7 @@ void dead_code_elim(LLVMModuleRef module, vector<LLVMValueRef>* elim_instruction
 			}
 
 	}
-	// help_print_instructions(module);
+	help_print_instructions(module);
 }
 
 vector<LLVMValueRef>* const_folding (LLVMModuleRef module) {
@@ -228,6 +277,7 @@ vector<LLVMValueRef>* const_folding (LLVMModuleRef module) {
 			}
 
 	}
+	printf(" ------ CONST FOLDING ------");
 	return(elim_instructions);
 }
 
@@ -608,27 +658,29 @@ bool delete_load(LLVMModuleRef module,
 					// get location of instruction, %t
 					LLVMValueRef instruc_operand = LLVMGetOperand(instruction,0);
 
-					// create set to store instructions of R
-					set<LLVMValueRef>* r_const = new set<LLVMValueRef> ();
-
 					LLVMValueRef last_r = NULL; // grabs the last constant value
 
-					// find instructions in R that store to %t and are constant
+					bool all_const = true;
+
+					set<LLVMValueRef>* r_const = new set<LLVMValueRef> ();
+
+					// check if all instrucs that store to %t are constant
 					set<LLVMValueRef>::iterator r_instruc;
 					for (r_instruc = R->begin(); r_instruc != R->end(); ++r_instruc){
-						if (LLVMIsConstant(LLVMGetOperand(*r_instruc, 0)) && instruc_operand == LLVMGetOperand(*r_instruc, 1)) {
-							r_const->insert(*r_instruc);
-							last_r = *r_instruc;
+						// if it at the same location
+						if (instruc_operand == LLVMGetOperand(*r_instruc, 1)) {
+							// check if it is a constant
+							if (!LLVMIsConstant(LLVMGetOperand(*r_instruc, 0))) {
+								printf("\n NOT A CONSTANT \n");
+								all_const = false;
+							}
+							r_const->insert(*r_instruc); // still store to r_const 
+							last_r = *r_instruc; // still get the last const in all R that's at loc %t
 						}
 					}
-
-					printf("\nALL store constants in R that store to location t:\n");
-					set<LLVMValueRef>::iterator itr;
-					for (itr = r_const->begin(); itr != r_const->end(); itr++) {
-						LLVMDumpValue(*itr);
-					}
-
-					if (last_r != NULL) {
+					
+					// use r_const in here; else delete immediately
+					if (last_r != NULL && all_const) {
 
 						printf("\n NOT NULL !!\n");
 						printf("This is last r: \n");
@@ -765,7 +817,7 @@ void optimize(LLVMModuleRef module) {
 	while (changes_made) {
 		changes_made = false;
 
-		changes_made = global_constant_propagation(module);
+		// changes_made = global_constant_propagation(module);
 		changes_made = local_constant_folding(module);
 
 		help_print_instructions(module);
