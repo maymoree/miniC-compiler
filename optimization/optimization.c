@@ -289,11 +289,11 @@ void compute_gen(LLVMModuleRef module, unordered_map<LLVMBasicBlockRef, set<LLVM
 				(*gen_map)[basicBlock] = gen_block;
 
 
-				printf("\nGen Block:\n");
-				set<LLVMValueRef>::iterator itr;
-				for (itr = gen_block->begin(); itr != gen_block->end(); itr++) {
-					LLVMDumpValue(*itr);
-				}
+				// printf("\nGen Block:\n");
+				// set<LLVMValueRef>::iterator itr;
+				// for (itr = gen_block->begin(); itr != gen_block->end(); itr++) {
+				// 	LLVMDumpValue(*itr);
+				// }
 		}
 	}
 
@@ -340,11 +340,11 @@ void compute_kill(LLVMModuleRef module, unordered_map<LLVMBasicBlockRef, set<LLV
 				}
 
 			}
-			printf("\nKill Block:\n");
-			set<LLVMValueRef>::iterator itr;
-			for (itr = kill_block->begin(); itr != kill_block->end(); itr++) {
-				LLVMDumpValue(*itr);
-			}
+			// printf("\nKill Block:\n");
+			// set<LLVMValueRef>::iterator itr;
+			// for (itr = kill_block->begin(); itr != kill_block->end(); itr++) {
+			// 	LLVMDumpValue(*itr);
+			// }
 			(*kill_map)[basicBlock] = kill_block;
 		}
 	}
@@ -400,21 +400,21 @@ void compute_in_out (LLVMModuleRef module,
                 (*pred_map)[successor]->insert(basicBlock);
             }
 
-			printf("\n For this block: ");
-			LLVMDumpValue(LLVMBasicBlockAsValue(basicBlock));
-			printf("\n");
+			// printf("\n For this block: ");
+			// LLVMDumpValue(LLVMBasicBlockAsValue(basicBlock));
+			// printf("\n");
 
-			printf("\nIn Block:\n");
-			set<LLVMValueRef>::iterator itr1;
-			for (itr1 = (*in_map)[basicBlock]->begin(); itr1 != (*in_map)[basicBlock]->end(); itr1++) {
-				LLVMDumpValue(*itr1);
-			}
+			// printf("\nIn Block:\n");
+			// set<LLVMValueRef>::iterator itr1;
+			// for (itr1 = (*in_map)[basicBlock]->begin(); itr1 != (*in_map)[basicBlock]->end(); itr1++) {
+			// 	LLVMDumpValue(*itr1);
+			// }
 
-			printf("\nOut Block:\n");
-			set<LLVMValueRef>::iterator itr2;
-			for (itr2 = (*out_map)[basicBlock]->begin(); itr2 != (*out_map)[basicBlock]->end(); itr2++) {
-				LLVMDumpValue(*itr2);
-			}
+			// printf("\nOut Block:\n");
+			// set<LLVMValueRef>::iterator itr2;
+			// for (itr2 = (*out_map)[basicBlock]->begin(); itr2 != (*out_map)[basicBlock]->end(); itr2++) {
+			// 	LLVMDumpValue(*itr2);
+			// }
 
 		}
 
@@ -447,15 +447,15 @@ void compute_in_out (LLVMModuleRef module,
 			basicBlock;
 			basicBlock = LLVMGetNextBasicBlock(basicBlock)) {
 				
-				printf("\n For this block: ");
-				LLVMDumpValue(LLVMBasicBlockAsValue(basicBlock));
-				printf("\n");
+				// printf("\n For this block: ");
+				// LLVMDumpValue(LLVMBasicBlockAsValue(basicBlock));
+				// printf("\n");
 
-				printf("\n OLD out Block:\n");
-				set<LLVMValueRef>::iterator itr0;
-				for (itr0 = (*old_out_map)[basicBlock]->begin(); itr0 != (*old_out_map)[basicBlock]->end(); itr0++) {
-					LLVMDumpValue(*itr0);
-				}
+				// printf("\n OLD out Block:\n");
+				// set<LLVMValueRef>::iterator itr0;
+				// for (itr0 = (*old_out_map)[basicBlock]->begin(); itr0 != (*old_out_map)[basicBlock]->end(); itr0++) {
+				// 	LLVMDumpValue(*itr0);
+				// }
 				
 				// IN[B] = union(OUT[P1], OUT[P2],.., OUT[PN]),
 				// where P1, P2, .. PN are predecessors of basic block B in the control flow graph.		
@@ -466,20 +466,20 @@ void compute_in_out (LLVMModuleRef module,
 				for (LLVMBasicBlockRef pred : *pred_block) {
 					set<LLVMValueRef>* pred_out_block = (*old_out_map)[pred]; // Get OUT[Pred]
 
-					printf("\nPRED'S OLD OUT:\n");
-					set<LLVMValueRef>::iterator itr5;
-					for (itr5 = pred_out_block->begin(); itr5 != pred_out_block->end(); itr5++) {
-						LLVMDumpValue(*itr5);
-					}
+					// printf("\nPRED'S OLD OUT:\n");
+					// set<LLVMValueRef>::iterator itr5;
+					// for (itr5 = pred_out_block->begin(); itr5 != pred_out_block->end(); itr5++) {
+					// 	LLVMDumpValue(*itr5);
+					// }
 
 					(*in_map)[basicBlock]->insert(pred_out_block->begin(), pred_out_block->end()); // Add OUT[Pred]
 				}
 
-				printf("\nIn Block:\n");
-				set<LLVMValueRef>::iterator itr1;
-				for (itr1 = (*in_map)[basicBlock]->begin(); itr1 != (*in_map)[basicBlock]->end(); itr1++) {
-					LLVMDumpValue(*itr1);
-				}
+				// printf("\nIn Block:\n");
+				// set<LLVMValueRef>::iterator itr1;
+				// for (itr1 = (*in_map)[basicBlock]->begin(); itr1 != (*in_map)[basicBlock]->end(); itr1++) {
+				// 	LLVMDumpValue(*itr1);
+				// }
 
 				// oldout = OUT[B]
 				set<LLVMValueRef>* old_out = (*old_out_map)[basicBlock];
@@ -506,26 +506,23 @@ void compute_in_out (LLVMModuleRef module,
 					change = true;
 				}
 
-				printf("\nOut Block:\n");
-				set<LLVMValueRef>::iterator itr2;
-				for (itr2 = (*out_map)[basicBlock]->begin(); itr2 != (*out_map)[basicBlock]->end(); itr2++) {
-					LLVMDumpValue(*itr2);
-				}
+				// printf("\nOut Block:\n");
+				// set<LLVMValueRef>::iterator itr2;
+				// for (itr2 = (*out_map)[basicBlock]->begin(); itr2 != (*out_map)[basicBlock]->end(); itr2++) {
+				// 	LLVMDumpValue(*itr2);
+				// }
 
-				printf("\nTrue: %d\n", change);
+				// printf("\nTrue: %d\n", change);
 			}
 		}
+
+		// clean up old out map
 		for (auto& block_set_pair : *old_out_map) {
-			delete block_set_pair.second;  // Free the old set
+			delete block_set_pair.second;
 		}
 
 		delete(old_out_map);
 
-		// for (auto& block_out_pair : *out_map) {
-		// 	LLVMBasicBlockRef block = block_out_pair.first;
-		// 	set<LLVMValueRef>* new_set = new set<LLVMValueRef>(*block_out_pair.second); // Make a new set copying the updated out_map
-		// 	(*old_out_map)[block] = new_set;
-		// }
 	}
 	for (auto pred = pred_map->begin(); pred != pred_map->end(); ++pred) {
 		delete pred->second;
@@ -549,65 +546,111 @@ void delete_load(LLVMModuleRef module,
 		basicBlock = LLVMGetNextBasicBlock(basicBlock)) {
 				
 			// initialize empty set
+			// all instrucs in IN are stores
 			set<LLVMValueRef>* in_block = (*in_map)[basicBlock];
 			set<LLVMValueRef>* R = new set<LLVMValueRef>(*in_block);
 
 			// set to store instructions to delete
 			set<LLVMValueRef>* erase_load_instruc = new set<LLVMValueRef> ();
 
+			printf("\n       NEW BLOCK --------------\n");
+
+			printf("\nR Block:\n");
+			set<LLVMValueRef>::iterator itr;
+			for (itr = R->begin(); itr != R->end(); itr++) {
+				LLVMDumpValue(*itr);
+			}
+
 			for (LLVMValueRef instruction = LLVMGetFirstInstruction(basicBlock);
 			instruction;
 			instruction = LLVMGetNextInstruction(instruction)) {
+
+				printf("\nTHIS INSTRUCTION----\n");
+				LLVMDumpValue(instruction);
+				printf("\n");
 
 				LLVMOpcode instruc_opcode = LLVMGetInstructionOpcode(instruction);
 
 				// instruction is store
 				if (instruc_opcode == LLVMStore) {
+
+					printf("\nSTORE\n");
+					
 					// add instruction
 					R->insert(instruction);
+
 					// remove instructions' kill_set from R
+					LLVMValueRef instruc_operand = LLVMGetOperand(instruction,1); // get locatioin of instruction
 					set<LLVMValueRef>::iterator killed_instruc;
-					for (killed_instruc = (*kill_map)[basicBlock]->begin(); killed_instruc != (*kill_map)[basicBlock]->end(); ++killed_instruc){
-						R->erase(*killed_instruc);
+					for (killed_instruc = R->begin(); killed_instruc != R->end(); ) {
+						// if it's not itself, and the same memory --> gets killed
+						if ((*killed_instruc != instruction) && (LLVMGetOperand(*killed_instruc,1) == instruc_operand)) {
+								killed_instruc = R->erase(killed_instruc); // update killed_instruc
+						} else {
+							++killed_instruc;
+						}
+					}
+
+					printf("\nR Block UPDATED:\n");
+					set<LLVMValueRef>::iterator itr;
+					for (itr = R->begin(); itr != R->end(); itr++) {
+						LLVMDumpValue(*itr);
 					}
 				}
 
 				// instruction is load
 				if (instruc_opcode == LLVMLoad) {
 
+					printf("\nLOAD\n");
+
 					// get location of instruction, %t
-					LLVMValueRef instruc_operand = LLVMGetOperand(instruction,1);
+					LLVMValueRef instruc_operand = LLVMGetOperand(instruction,0);
 
 					// create set to store instructions of R
 					set<LLVMValueRef>* r_const = new set<LLVMValueRef> ();
 
 					LLVMValueRef last_r = NULL; // grabs the last constant value
 
-					// find instructions in R that load to %t and are constant
+					// find instructions in R that store to %t and are constant
 					set<LLVMValueRef>::iterator r_instruc;
 					for (r_instruc = R->begin(); r_instruc != R->end(); ++r_instruc){
-						if (LLVMIsConstant(*r_instruc) && instruc_operand == LLVMGetOperand(*r_instruc, 1)) {
+						if (LLVMIsConstant(LLVMGetOperand(*r_instruc, 0)) && instruc_operand == LLVMGetOperand(*r_instruc, 1)) {
 							r_const->insert(*r_instruc);
 							last_r = *r_instruc;
 						}
 					}
 
+					printf("\nALL store constants in R that store to location t:\n");
+					set<LLVMValueRef>::iterator itr;
+					for (itr = r_const->begin(); itr != r_const->end(); itr++) {
+						LLVMDumpValue(*itr);
+					}
+
 					if (last_r != NULL) {
+
+						printf("\n NOT NULL !!\n");
+						printf("This is last r: \n");
+						LLVMDumpValue(last_r);
+
 						// check if all values are the same constant
 						bool same_const = true;
 						for (r_instruc = r_const->begin(); r_instruc != r_const->end(); r_instruc++) {
 							// should we compare the one next to it? or would that be messy : (
 							// check if their constant values are the same
-							if (LLVMConstIntGetSExtValue(*r_instruc) != LLVMConstIntGetSExtValue(last_r))
+							if (LLVMConstIntGetSExtValue(LLVMGetOperand(*r_instruc, 0)) != LLVMConstIntGetSExtValue(LLVMGetOperand(last_r, 0))) {
 								same_const = false;
+								printf("\nNOT SAME CONSTANT\n");
+							}
 						}
 
 						// replace all uses of instruction with constant
 						if (same_const) {
-							long long target_const = LLVMConstIntGetSExtValue(last_r);
+							printf("\nALL SAME CONSTANT\n");
+							long long target_const = LLVMConstIntGetSExtValue(LLVMGetOperand(last_r, 0));
 							LLVMReplaceAllUsesWith(instruction, LLVMConstInt(LLVMInt32Type(), target_const, 0));
 							erase_load_instruc->insert(instruction);
 						}
+
 					}
 
 					delete(r_const);
@@ -624,6 +667,7 @@ void delete_load(LLVMModuleRef module,
 
 		}
 	}
+	help_print_instructions(module);
 }
 
 
