@@ -10,10 +10,10 @@ llvm_file: ./optimizer_test_results/$(TEST).c
 	clang -S -emit-llvm ./optimizer_test_results/$(TEST).c -o ./optimizer_test_results/$(TEST).ll
 
 valgrind: $(LLVMCODE)
-	$(VALGRIND) ./$(LLVMCODE) ./optimizer_test_results/p2_common_subexpr.ll
+	$(VALGRIND) ./$(LLVMCODE) ./optimizer_test_results/p4_const_prop.ll
 
 test: $(LLVMCODE)
-	./$(LLVMCODE) ./optimizer_test_results/p2_common_subexpr.ll
+	./$(LLVMCODE) ./optimizer_test_results/p4_const_prop.ll
 
 clean: 
 	rm -rf $(TEST).ll

@@ -817,7 +817,7 @@ void optimize(LLVMModuleRef module) {
 	while (changes_made) {
 		changes_made = false;
 
-		// changes_made = global_constant_propagation(module);
+		changes_made = global_constant_propagation(module);
 		changes_made = local_constant_folding(module);
 
 		help_print_instructions(module);
