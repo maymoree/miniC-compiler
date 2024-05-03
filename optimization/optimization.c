@@ -27,12 +27,12 @@ void compute_in_out (LLVMModuleRef module,
 					unordered_map<LLVMBasicBlockRef, std::set<LLVMValueRef>*>* out_map, 
 					unordered_map<LLVMBasicBlockRef, std::set<LLVMValueRef>*>* gen_map, 
 					unordered_map<LLVMBasicBlockRef, std::set<LLVMValueRef>*>* kill_map);
-void delete_load(LLVMModuleRef module,
+bool delete_load(LLVMModuleRef module,
 				unordered_map<LLVMBasicBlockRef, set<LLVMValueRef>*>* in_map,
 				unordered_map<LLVMBasicBlockRef,set<LLVMValueRef>*>* kill_map);
-void local_constant_folding(LLVMModuleRef module);
-void global_constant_propagation(LLVMModuleRef module);
-
+bool local_constant_folding(LLVMModuleRef module);
+bool global_constant_propagation(LLVMModuleRef module);
+void optimize(LLVMModuleRef module);
 
 /* This function reads the given llvm file and loads the LLVM IR into
 	 data-structures that we can works on for optimization phase.
@@ -531,9 +531,11 @@ void compute_in_out (LLVMModuleRef module,
 	delete(pred_map);
 }
 
-void delete_load(LLVMModuleRef module,
+bool delete_load(LLVMModuleRef module,
 				unordered_map<LLVMBasicBlockRef, set<LLVMValueRef>*>* in_map,
 				unordered_map<LLVMBasicBlockRef,set<LLVMValueRef>*>* kill_map) {
+
+	bool changes_made = false;
 
 	// loop through functions
 	for (LLVMValueRef function = LLVMGetFirstFunction(module); 
@@ -657,6 +659,11 @@ void delete_load(LLVMModuleRef module,
 				}
 			}
 
+			// determining if any changes were made in constant propagation
+			if (erase_load_instruc->size() > 0) {
+				changes_made = true;
+			}
+
 			set<LLVMValueRef>::iterator instruc;
 			for (instruc = erase_load_instruc->begin(); instruc != erase_load_instruc->end(); ++instruc){
 				LLVMInstructionEraseFromParent(*instruc);
@@ -667,7 +674,8 @@ void delete_load(LLVMModuleRef module,
 
 		}
 	}
-	help_print_instructions(module);
+    return changes_made;
+	// help_print_instructions(module);
 }
 
 
@@ -679,7 +687,9 @@ void delete_load(LLVMModuleRef module,
 // AND CLEAN UPS -----------------------------------------
 // -------------------------------------------------------
 
-void local_constant_folding(LLVMModuleRef module) {
+bool local_constant_folding(LLVMModuleRef module) {
+
+	bool changes_made = false;
 
 	vector<LLVMValueRef>* common_elim = common_sub_expr(module);
 
@@ -689,13 +699,20 @@ void local_constant_folding(LLVMModuleRef module) {
 
 	dead_code_elim(module, const_elim);
 
+	if (const_elim->size() > 0){
+		// changes made if there are more code to eliminate
+		changes_made = true;
+	}
+
 	// clean up
 	delete(common_elim);
 	delete(const_elim);
 
+	return changes_made;
+
 }
 
-void global_constant_propagation(LLVMModuleRef module) {
+bool global_constant_propagation(LLVMModuleRef module) {
 	
 	// create unordered maps
 	unordered_map<LLVMBasicBlockRef, set<LLVMValueRef>*>* gen_map = new unordered_map<LLVMBasicBlockRef, set<LLVMValueRef>*> ();
@@ -713,7 +730,7 @@ void global_constant_propagation(LLVMModuleRef module) {
 	compute_in_out(module, in_map, out_map, gen_map, kill_map);
 	// help_print_instructions(module);
 
-	delete_load(module, in_map, kill_map);
+	bool changes_made = delete_load(module, in_map, kill_map);
 	// help_print_instructions(module);
 
 	// cleanup
@@ -736,9 +753,26 @@ void global_constant_propagation(LLVMModuleRef module) {
 		delete set_out->second;
 	}
 	delete(out_map);
+
+	// either returns true or false
+	return changes_made;
 }
 
+void optimize(LLVMModuleRef module) {
 
+	bool changes_made = true;
+
+	while (changes_made) {
+		changes_made = false;
+
+		changes_made = global_constant_propagation(module);
+		changes_made = local_constant_folding(module);
+
+		help_print_instructions(module);
+	}
+
+	printf("\n ------------------------- OPTIMIZED FIXED POINT ------------------------- \n");
+}
 
 
 
@@ -822,14 +856,8 @@ int main(int argc, char** argv)
 	}
 
 	if (m != NULL){
-		
-		global_constant_propagation(m);
 
-		// help_print_instructions(m);
-		
-		local_constant_folding(m);		
-
-		// help_print_instructions(m);	
+		optimize(m);
 
 		LLVMDisposeModule(m);
 	}

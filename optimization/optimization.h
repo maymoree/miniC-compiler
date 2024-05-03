@@ -25,8 +25,9 @@ void compute_in_out (LLVMModuleRef module,
 					unordered_map<LLVMBasicBlockRef, std::set<LLVMValueRef>*>* out_map, 
 					unordered_map<LLVMBasicBlockRef, std::set<LLVMValueRef>*>* gen_map, 
 					unordered_map<LLVMBasicBlockRef, std::set<LLVMValueRef>*>* kill_map);
-void delete_load(LLVMModuleRef module,
+bool delete_load(LLVMModuleRef module,
 				unordered_map<LLVMBasicBlockRef, set<LLVMValueRef>*>* in_map,
 				unordered_map<LLVMBasicBlockRef,set<LLVMValueRef>*>* kill_map);
-void local_constant_folding(LLVMModuleRef module);
-void global_constant_propagation(LLVMModuleRef module);
+bool local_constant_folding(LLVMModuleRef module);
+bool global_constant_propagation(LLVMModuleRef module);
+void optimize(LLVMModuleRef module);
