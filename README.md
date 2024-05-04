@@ -13,6 +13,8 @@
 2. Semantic Analysis
    - smta.c
    - smta.h
+3. Front end Test
+   - frontend_test.c
 
 ## Part 3 -- Optimization (optimization folder)
 - run `make` to compile optimization file

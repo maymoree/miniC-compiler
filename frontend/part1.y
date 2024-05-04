@@ -7,7 +7,6 @@ extern int yylex_destroy();
 extern int yywrap();
 int yyerror(char *);
 extern FILE * yyin;
-extern int yylineno;
 
 astNode* root;
 %}
@@ -125,33 +124,9 @@ return_stmt: RETURN '(' expr ')' ';'		{$$ = createRet($3); printNode($$);}
 %%
 
 int yyerror(char *s){
-	fprintf(stderr, "%s at line %d\n",s, yylineno);
 	exit(1);
 }
 
-int main(int argc, char* argv[]){
-		#if YYDEBUG
-			 yydebug = 1;
-		#endif
-
-		if (argc == 2){
-			yyin = fopen(argv[1], "r");
-			if (yyin == NULL) {
-				fprintf(stderr, "File open error\n");
-				return 1;
-			}
-		}
-		yyparse();
-
-		if (semantic_analysis(root)){
-			printf("Passed semantic analysis.\n");
-		} else {
-			printf("Failed semantic analysis.\n");
-		}
-
-		freeNode(root);
-		
-		if (argc == 2) fclose(yyin);
-		yylex_destroy();
-		return 0;
+astNode* ret_root(){
+	return root;
 }
