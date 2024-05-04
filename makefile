@@ -1,13 +1,31 @@
+.PHONY: all frontend optimization clean test valgrind $(TARGET)
 
-.PHONY: all frontend optimization clean test valgrind
+CC = g++
+CFLAGS = -g -Wall -I./frontend -I./optimization -I./ast -I /usr/include/llvm-c-15/
+LDFLAGS = -L./frontend -L./optimization -lfrontend -loptimization
 
-all: frontend optimization
+SRC = miniC_compiler.c
+OBJ = $(SRC:.c=.o)
+TARGET = miniC_compiler.out
+
+all: frontend optimization $(TARGET)
 
 frontend:
 	$(MAKE) -C frontend
 
 optimization:
 	$(MAKE) -C optimization
+
+$(TARGET): $(OBJ)
+	$(CC) $(CFLAGS) $(OBJ) -o $@ $(LDFLAGS)
+
+$(OBJ): $(SRC)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+clean:
+	$(MAKE) -C frontend clean
+	$(MAKE) -C optimization clean
+	rm -f $(OBJ) $(TARGET)
 
 test: test_frontend test_optimization
 
@@ -26,7 +44,3 @@ valgrind_frontend:
 
 valgrind_optimization:
 	$(MAKE) -C optimization valgrind
-
-clean:
-	$(MAKE) -C frontend clean
-	$(MAKE) -C optimization clean

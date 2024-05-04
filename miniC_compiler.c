@@ -8,10 +8,6 @@
 #include "./frontend/smta.h"
 #include "./optimization/optimization.h"
 
-#include <llvm-c/Core.h>
-#include <llvm-c/IRReader.h>
-#include <llvm-c/Types.h>
-
 extern int yylex();
 extern int yywrap();
 extern int yylineno;
@@ -55,20 +51,9 @@ int main(int argc, char* argv[]){
 		
 		
 		// PART 3 ---------------------
-
-		LLVMModuleRef m;
-
 		if (argc >= 2){
-			m = createLLVMModel(argv[2]);
+			main_optimization(argv[2]);
 		}
-		else{
-			m = NULL;
-			return 1;
-		}
-
-		main_optimization(m);
-		
-
 		
 		
 		// clean up

@@ -1,6 +1,8 @@
 # miniC-compiler
 ### Compiler for miniC files by Memo Tangtipongkul -- April 14, 2024
 
+#### Have to go into each folder to compile/run make
+
 ## Part 1 -- Frontend (frontend folder)
 - run `make` to compile all files
 - run `make smta_bad` to see outcome of **failed semantic analysis** tests
@@ -29,7 +31,7 @@
    - optimization.h
 
 ## To Dos:
-- [] restructure code to 1 main .c
+- [] restructure code to 1 main.c
 - [] add info to .h files
 - [x] global optimization
 - [x] check error in local optimization -- had to check operand was constant
