@@ -1,20 +1,20 @@
-filename = part1
+filename = frontend_test
 
 VALGRIND = valgrind --leak-check=full --show-leak-kinds=all
 
-(filename).out: $(filename).l 
-	yacc -d -t -v $(filename).y -Wcounterexamples
-	lex $(filename).l 
-	g++ -g lex.yy.c y.tab.c ../ast/ast.c ./smta.c -o $(filename).out
+(filename): $(filename).c
+	yacc -d -t -v part1.y -Wcounterexamples
+	lex part1.l 
+	g++ -g -o $(filename) $(filename).c lex.yy.c y.tab.c ../ast/ast.c ./smta.c -o $(filename)
 
-smta_bad: $(filename).out
-	$(VALGRIND) ./$(filename).out ../miniCfiles/semantic_analysis_tests/p4_bad.c
+smta_bad: $(filename)
+	$(VALGRIND) ./$(filename) ../miniCfiles/semantic_analysis_tests/p4_bad.c
 
-smta_good: $(filename).out
-	$(VALGRIND) ./$(filename).out ../miniCfiles/semantic_analysis_tests/p1_good.c
+smta_good: $(filename)
+	$(VALGRIND) ./$(filename) ../miniCfiles/semantic_analysis_tests/p1_good.c
 
 clean:
 	rm -f *~ *.o
 	rm -rf *.dSYM
-	rm -rf $(filename).out lex.yy.c y.tab.c y.tab.h
+	rm -rf $(filename) lex.yy.c y.tab.c y.tab.h frontend_test
 

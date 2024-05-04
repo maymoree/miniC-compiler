@@ -33,4 +33,4 @@ bool delete_load(LLVMModuleRef module,
 bool local_constant_folding(LLVMModuleRef module);
 bool global_constant_propagation(LLVMModuleRef module);
 void optimize(LLVMModuleRef module);
-void main_optimization(LLVMModuleRef m);
+void main_optimization(char* file);
