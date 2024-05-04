@@ -1,22 +1,32 @@
-LLVMCODE = optimization
-TEST = p3_const_prop
+LLVMCODE = optimization_test
 VALGRIND = valgrind --leak-check=full --show-leak-kinds=all
 
-$(LLVMCODE): $(LLVMCODE).c
-	g++ -g -I /usr/include/llvm-c-15/ -c $(LLVMCODE).c
-	g++ $(LLVMCODE).o `llvm-config-15 --cxxflags --ldflags --libs core` -I /usr/include/llvm-c-15/ -o $@
+# Define source files
+SRC = optimization_test.c optimization.c
 
-llvm_file: ./opt_tests/$(TEST).c
-	clang -S -emit-llvm ./opt_tests/$(TEST).c -o ./opt_tests/$(TEST).ll
+# Define object files
+OBJ = $(SRC:.c=.o)
+
+# Compiler flags
+CFLAGS = -g -I /usr/include/llvm-c-15/
+
+$(LLVMCODE): $(OBJ)
+	g++ $(OBJ) `llvm-config-15 --cxxflags --ldflags --libs core` -o $@
+
+%.o: %.c optimization.h
+	g++ $(CFLAGS) -c $< -o $@
+
+llvm_file: ./optimizer_test_results/$(TEST).c
+	clang -S -emit-llvm ./optimizer_test_results/$(TEST).c -o ./optimizer_test_results/$(TEST).ll
 
 valgrind: $(LLVMCODE)
-	$(VALGRIND) ./$(LLVMCODE) ./opt_tests/p3_const_prop.ll
+	$(VALGRIND) ./$(LLVMCODE) ./optimizer_test_results/p4_const_prop.ll
 
 test: $(LLVMCODE)
-	./$(LLVMCODE) ./opt_tests/p3_const_prop.ll
+	./$(LLVMCODE) ./optimizer_test_results/p4_const_prop.ll
 
 clean: 
 	rm -rf $(TEST).ll
 	rm -rf $(LLVMCODE)
-	rm -rf *.o
+	rm -rf $(OBJ)
 	rm -rf *.out

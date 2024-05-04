@@ -3,11 +3,12 @@ extern int read();
 
 int func(int p){
 	int a;
+	int b;
 	int c1;
 	int c2;
 	a = 10;
-	c1 = a + p;
-  	c2 = a + p;
+	b = 20;
+  c2 = a < b;
 	
-	return (c1+c2);
+	return c2;
 }

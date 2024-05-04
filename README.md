@@ -21,11 +21,15 @@
 **FILES**
 1. Optimization
    - optimization.c
+      - module for optimization
+   - optimization_test.c
+      - can individually test optimization: `make test` and `make valgrind`
    - optimization.h
 
 ## To Dos:
+- [] restructure code to 1 main .c
 - [] add info to .h files
-- [] global optimization
+- [x] global optimization
 - [x] check error in local optimization -- had to check operand was constant
 - [x] constant folding
 - [x] thoroughly test local optimization

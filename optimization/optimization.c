@@ -27,12 +27,13 @@ void compute_in_out (LLVMModuleRef module,
 					unordered_map<LLVMBasicBlockRef, std::set<LLVMValueRef>*>* out_map, 
 					unordered_map<LLVMBasicBlockRef, std::set<LLVMValueRef>*>* gen_map, 
 					unordered_map<LLVMBasicBlockRef, std::set<LLVMValueRef>*>* kill_map);
-void delete_load(LLVMModuleRef module,
+bool delete_load(LLVMModuleRef module,
 				unordered_map<LLVMBasicBlockRef, set<LLVMValueRef>*>* in_map,
 				unordered_map<LLVMBasicBlockRef,set<LLVMValueRef>*>* kill_map);
-void local_constant_folding(LLVMModuleRef module);
-void global_constant_propagation(LLVMModuleRef module);
-
+bool local_constant_folding(LLVMModuleRef module);
+bool global_constant_propagation(LLVMModuleRef module);
+void optimize(LLVMModuleRef module);
+void main_optimization(LLVMModuleRef m);
 
 /* This function reads the given llvm file and loads the LLVM IR into
 	 data-structures that we can works on for optimization phase.
@@ -82,6 +83,7 @@ vector<LLVMValueRef>* common_sub_expr(LLVMModuleRef module) {
 					// get opcode
 					LLVMOpcode instruc_opcode = LLVMGetInstructionOpcode(instruction);
 
+
 					// check for similarity only if A is a load instruction
 					if (instruc_opcode == LLVMLoad) {
 
@@ -118,10 +120,58 @@ vector<LLVMValueRef>* common_sub_expr(LLVMModuleRef module) {
 
 						}	
 					}
+
+
+					else if (instruc_opcode == LLVMAdd || instruc_opcode == LLVMMul) {
+						
+						LLVMValueRef operand1 = LLVMGetOperand(instruction, 0);
+						LLVMValueRef operand2 = LLVMGetOperand(instruction, 1);
+
+						// loop through all other instructions
+						for (LLVMValueRef other_instruc = LLVMGetNextInstruction(instruction); 
+						other_instruc; 
+						other_instruc = LLVMGetNextInstruction(other_instruc)) {
+
+							if ((instruc_opcode == LLVMGetInstructionOpcode(other_instruc)) &&
+							 (((operand1 == LLVMGetOperand(other_instruc,1)) && (operand2 == LLVMGetOperand(other_instruc,0))) || 
+							 ((operand1 == LLVMGetOperand(other_instruc,0)) && (operand2 == LLVMGetOperand(other_instruc,1))))) {
+							
+							// replace B with A
+							elim_instructions->push_back(other_instruc);
+							LLVMReplaceAllUsesWith(other_instruc, instruction);
+							}	
+						}
+
+					}
+
+					else if (instruc_opcode == LLVMSub) {
+
+						LLVMValueRef operand1 = LLVMGetOperand(instruction, 0);
+						LLVMValueRef operand2 = LLVMGetOperand(instruction, 1);
+
+						// loop through all other instructions
+						for (LLVMValueRef other_instruc = LLVMGetNextInstruction(instruction); 
+						other_instruc; 
+						other_instruc = LLVMGetNextInstruction(other_instruc)) {
+
+							if ((instruc_opcode == LLVMGetInstructionOpcode(other_instruc)) &&
+							((operand1 == LLVMGetOperand(other_instruc,1)) && (operand2 == LLVMGetOperand(other_instruc,0)))) {
+							
+							// replace B with A
+							elim_instructions->push_back(other_instruc);
+							LLVMReplaceAllUsesWith(other_instruc, instruction);
+							}	
+						}
+
+					}
+
+
 				}
 		}
 
 	}
+	// help_print_instructions(module);
+	printf(" ------ COMMON SUB EXPR ------");
 	return (elim_instructions);
 
 }
@@ -170,7 +220,7 @@ void dead_code_elim(LLVMModuleRef module, vector<LLVMValueRef>* elim_instruction
 			}
 
 	}
-	// help_print_instructions(module);
+	help_print_instructions(module);
 }
 
 vector<LLVMValueRef>* const_folding (LLVMModuleRef module) {
@@ -228,6 +278,7 @@ vector<LLVMValueRef>* const_folding (LLVMModuleRef module) {
 			}
 
 	}
+	printf(" ------ CONST FOLDING ------");
 	return(elim_instructions);
 }
 
@@ -531,9 +582,11 @@ void compute_in_out (LLVMModuleRef module,
 	delete(pred_map);
 }
 
-void delete_load(LLVMModuleRef module,
+bool delete_load(LLVMModuleRef module,
 				unordered_map<LLVMBasicBlockRef, set<LLVMValueRef>*>* in_map,
 				unordered_map<LLVMBasicBlockRef,set<LLVMValueRef>*>* kill_map) {
+
+	bool changes_made = false;
 
 	// loop through functions
 	for (LLVMValueRef function = LLVMGetFirstFunction(module); 
@@ -606,27 +659,29 @@ void delete_load(LLVMModuleRef module,
 					// get location of instruction, %t
 					LLVMValueRef instruc_operand = LLVMGetOperand(instruction,0);
 
-					// create set to store instructions of R
-					set<LLVMValueRef>* r_const = new set<LLVMValueRef> ();
-
 					LLVMValueRef last_r = NULL; // grabs the last constant value
 
-					// find instructions in R that store to %t and are constant
+					bool all_const = true;
+
+					set<LLVMValueRef>* r_const = new set<LLVMValueRef> ();
+
+					// check if all instrucs that store to %t are constant
 					set<LLVMValueRef>::iterator r_instruc;
 					for (r_instruc = R->begin(); r_instruc != R->end(); ++r_instruc){
-						if (LLVMIsConstant(LLVMGetOperand(*r_instruc, 0)) && instruc_operand == LLVMGetOperand(*r_instruc, 1)) {
-							r_const->insert(*r_instruc);
-							last_r = *r_instruc;
+						// if it at the same location
+						if (instruc_operand == LLVMGetOperand(*r_instruc, 1)) {
+							// check if it is a constant
+							if (!LLVMIsConstant(LLVMGetOperand(*r_instruc, 0))) {
+								printf("\n NOT A CONSTANT \n");
+								all_const = false;
+							}
+							r_const->insert(*r_instruc); // still store to r_const 
+							last_r = *r_instruc; // still get the last const in all R that's at loc %t
 						}
 					}
-
-					printf("\nALL store constants in R that store to location t:\n");
-					set<LLVMValueRef>::iterator itr;
-					for (itr = r_const->begin(); itr != r_const->end(); itr++) {
-						LLVMDumpValue(*itr);
-					}
-
-					if (last_r != NULL) {
+					
+					// use r_const in here; else delete immediately
+					if (last_r != NULL && all_const) {
 
 						printf("\n NOT NULL !!\n");
 						printf("This is last r: \n");
@@ -657,6 +712,11 @@ void delete_load(LLVMModuleRef module,
 				}
 			}
 
+			// determining if any changes were made in constant propagation
+			if (erase_load_instruc->size() > 0) {
+				changes_made = true;
+			}
+
 			set<LLVMValueRef>::iterator instruc;
 			for (instruc = erase_load_instruc->begin(); instruc != erase_load_instruc->end(); ++instruc){
 				LLVMInstructionEraseFromParent(*instruc);
@@ -667,7 +727,8 @@ void delete_load(LLVMModuleRef module,
 
 		}
 	}
-	help_print_instructions(module);
+    return changes_made;
+	// help_print_instructions(module);
 }
 
 
@@ -679,7 +740,9 @@ void delete_load(LLVMModuleRef module,
 // AND CLEAN UPS -----------------------------------------
 // -------------------------------------------------------
 
-void local_constant_folding(LLVMModuleRef module) {
+bool local_constant_folding(LLVMModuleRef module) {
+
+	bool changes_made = false;
 
 	vector<LLVMValueRef>* common_elim = common_sub_expr(module);
 
@@ -689,13 +752,20 @@ void local_constant_folding(LLVMModuleRef module) {
 
 	dead_code_elim(module, const_elim);
 
+	if (const_elim->size() > 0){
+		// changes made if there are more code to eliminate
+		changes_made = true;
+	}
+
 	// clean up
 	delete(common_elim);
 	delete(const_elim);
 
+	return changes_made;
+
 }
 
-void global_constant_propagation(LLVMModuleRef module) {
+bool global_constant_propagation(LLVMModuleRef module) {
 	
 	// create unordered maps
 	unordered_map<LLVMBasicBlockRef, set<LLVMValueRef>*>* gen_map = new unordered_map<LLVMBasicBlockRef, set<LLVMValueRef>*> ();
@@ -713,7 +783,7 @@ void global_constant_propagation(LLVMModuleRef module) {
 	compute_in_out(module, in_map, out_map, gen_map, kill_map);
 	// help_print_instructions(module);
 
-	delete_load(module, in_map, kill_map);
+	bool changes_made = delete_load(module, in_map, kill_map);
 	// help_print_instructions(module);
 
 	// cleanup
@@ -736,9 +806,26 @@ void global_constant_propagation(LLVMModuleRef module) {
 		delete set_out->second;
 	}
 	delete(out_map);
+
+	// either returns true or false
+	return changes_made;
 }
 
+void optimize(LLVMModuleRef module) {
 
+	bool changes_made = true;
+
+	while (changes_made) {
+		changes_made = false;
+
+		changes_made = global_constant_propagation(module);
+		changes_made = local_constant_folding(module);
+
+		help_print_instructions(module);
+	}
+
+	printf("\n ------------------------- OPTIMIZED FIXED POINT ------------------------- \n");
+}
 
 
 
@@ -808,28 +895,12 @@ void print_vector(vector<LLVMValueRef>* elim_instruction) {
         }
 }
 
-
-int main(int argc, char** argv)
-{
-	LLVMModuleRef m;
-
-	if (argc == 2){
-		m = createLLVMModel(argv[1]);
-	}
-	else{
-		m = NULL;
-		return 1;
-	}
+// call main_optimization in outside main
+void main_optimization(LLVMModuleRef m) {
 
 	if (m != NULL){
-		
-		global_constant_propagation(m);
 
-		// help_print_instructions(m);
-		
-		local_constant_folding(m);		
-
-		// help_print_instructions(m);	
+		optimize(m);
 
 		LLVMDisposeModule(m);
 	}
@@ -838,5 +909,4 @@ int main(int argc, char** argv)
 	}
 	LLVMShutdown();
 
-	return 0;
 }
