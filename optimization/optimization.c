@@ -33,6 +33,7 @@ bool delete_load(LLVMModuleRef module,
 bool local_constant_folding(LLVMModuleRef module);
 bool global_constant_propagation(LLVMModuleRef module);
 void optimize(LLVMModuleRef module);
+void main_optimization(LLVMModuleRef m);
 
 /* This function reads the given llvm file and loads the LLVM IR into
 	 data-structures that we can works on for optimization phase.
@@ -894,18 +895,8 @@ void print_vector(vector<LLVMValueRef>* elim_instruction) {
         }
 }
 
-
-int main(int argc, char** argv)
-{
-	LLVMModuleRef m;
-
-	if (argc == 2){
-		m = createLLVMModel(argv[1]);
-	}
-	else{
-		m = NULL;
-		return 1;
-	}
+// call main_optimization in outside main
+void main_optimization(LLVMModuleRef m) {
 
 	if (m != NULL){
 
@@ -918,5 +909,4 @@ int main(int argc, char** argv)
 	}
 	LLVMShutdown();
 
-	return 0;
 }
