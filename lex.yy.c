@@ -473,9 +473,9 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "./frontend/part1.l"
-#line 2 "./frontend/part1.l"
-#include "../ast/ast.h"
+#line 1 "frontend/part1.l"
+#line 2 "frontend/part1.l"
+#include <ast.h>
 #include "y.tab.h"
 #include <stdio.h>
 #include <string.h>
@@ -699,7 +699,7 @@ YY_DECL
 		}
 
 	{
-#line 11 "./frontend/part1.l"
+#line 11 "frontend/part1.l"
 
 #line 705 "lex.yy.c"
 
@@ -760,52 +760,52 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 12 "./frontend/part1.l"
+#line 12 "frontend/part1.l"
 {return PRINT;}               //functions
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 13 "./frontend/part1.l"
+#line 13 "frontend/part1.l"
 {return READ;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 14 "./frontend/part1.l"
+#line 14 "frontend/part1.l"
 {return RETURN;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 15 "./frontend/part1.l"
+#line 15 "frontend/part1.l"
 {return IF;}                 //conditions
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 16 "./frontend/part1.l"
+#line 16 "frontend/part1.l"
 {return ELSE;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 17 "./frontend/part1.l"
+#line 17 "frontend/part1.l"
 {return WHILE;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 18 "./frontend/part1.l"
+#line 18 "frontend/part1.l"
 {return INT;}                     //types
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 19 "./frontend/part1.l"
+#line 19 "frontend/part1.l"
 {return VOID;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 20 "./frontend/part1.l"
+#line 20 "frontend/part1.l"
 {return EXTERN;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 21 "./frontend/part1.l"
+#line 21 "frontend/part1.l"
 {                                                       //integers
                         yylval.ival = atoi(yytext);
 						return NUM;
@@ -813,7 +813,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 25 "./frontend/part1.l"
+#line 25 "frontend/part1.l"
 {                                                   //variable names
                         yylval.idname = strdup(yytext);
 						return NAME; // free in yacc file
@@ -821,48 +821,48 @@ YY_RULE_SETUP
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 29 "./frontend/part1.l"
+#line 29 "frontend/part1.l"
 {return yytext[0];}        //operators
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 30 "./frontend/part1.l"
+#line 30 "frontend/part1.l"
 {return GE;}                     // greater equal to
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 31 "./frontend/part1.l"
+#line 31 "frontend/part1.l"
 {return LE;}                     // lesser equal to
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 32 "./frontend/part1.l"
+#line 32 "frontend/part1.l"
 {return EQ;}                     // equal to
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 33 "./frontend/part1.l"
+#line 33 "frontend/part1.l"
 {return NEQ;}                     // not equal to
 	YY_BREAK
 case 17:
 /* rule 17 can match eol */
 YY_RULE_SETUP
-#line 34 "./frontend/part1.l"
+#line 34 "frontend/part1.l"
 {yylineno++;}                                   
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 35 "./frontend/part1.l"
+#line 35 "frontend/part1.l"
 
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 36 "./frontend/part1.l"
+#line 36 "frontend/part1.l"
 
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 37 "./frontend/part1.l"
+#line 37 "frontend/part1.l"
 ECHO;
 	YY_BREAK
 #line 869 "lex.yy.c"
@@ -1870,7 +1870,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 37 "./frontend/part1.l"
+#line 37 "frontend/part1.l"
 
 
 int yywrap(){

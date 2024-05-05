@@ -1,46 +1,56 @@
-.PHONY: all frontend optimization clean test valgrind $(TARGET)
+lex = ./frontend/part1.l
+yacc = ./frontend/part1.y
+smta = ./frontend/smta
+opt = ./optimization/optimization
+ast = ./ast/ast
+cmplr = miniC_compiler
 
-CC = g++
-CFLAGS = -g -Wall -I./frontend -I./optimization -I./ast -I /usr/include/llvm-c-15/
-LDFLAGS = -L./frontend -L./optimization -lfrontend -loptimization
 
-SRC = miniC_compiler.c
-OBJ = $(SRC:.c=.o)
-TARGET = miniC_compiler.out
+INC = ./ast/ast.c ./frontend/smta.c
 
-all: frontend optimization $(TARGET)
+CFLAGS = -g -I ./ast -I ./frontend -I ./optimization -I /usr/include/llvm-c-15/
 
-frontend:
-	$(MAKE) -C frontend
+$(cmplr).out: $(cmplr).c $(opt).o $(smta).o $(ast).o lex.yy.c y.tab.c
+	g++ $(CFLAGS) -o $@ $(cmplr).c lex.yy.c y.tab.c $(opt).o $(smta).o $(ast).o `llvm-config-15 --cxxflags --ldflags --libs core`
 
-optimization:
-	$(MAKE) -C optimization
+$(ast).o: $(ast).c $(ast).h
+	g++ $(CFLAGS) -c $< -o $@
 
-$(TARGET): $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) -o $@ $(LDFLAGS)
+$(opt).o: $(opt).c $(opt).h
+	g++ $(CFLAGS) -c $< -o $@
 
-$(OBJ): $(SRC)
-	$(CC) $(CFLAGS) -c $< -o $@
+$(smta).o: $(smta).c $(smta).h
+	g++ $(CFLAGS) -c $< -o $@
 
-clean:
-	$(MAKE) -C frontend clean
-	$(MAKE) -C optimization clean
-	rm -f $(OBJ) $(TARGET)
+lex.yy.c : $(lex) y.tab.h
+	lex $<
 
-test: test_frontend test_optimization
+y.tab.h y.tab.c : $(yacc)
+	yacc -d -v $<		
 
-test_frontend:
-	$(MAKE) -C frontend smta_good
-	$(MAKE) -C frontend smta_bad
+clean :
+	rm -f *.o y.tab.c y.tab.h y.output lex.yy.c $(cmplr).out
+	rm -f before llvm-ir.s llvm-ir.s-faster peda* .gdb_history
 
-test_optimization:
-	$(MAKE) -C optimization test
+# INC = ./ast/ast.c ./frontend/smta.c $(opt).c
 
-valgrind: valgrind_frontend valgrind_optimization
+# CFLAGS = -g -I ~/miniC_compiler/ast -I ~/miniC_compiler/frontend -I ~/miniC_compiler/optimization -I /usr/include/llvm-c-15/ 
 
-valgrind_frontend:
-	$(MAKE) -C frontend smta_good
-	$(MAKE) -C frontend smta_bad
+# $(cmplr).out : $(cmplr).c lex.yy.c y.tab.c $(INC)
+# 	g++ $(CFLAGS) -o $(cmplr).out $(cmplr).c lex.yy.c y.tab.c $(INC) `llvm-config-15 --cxxflags --ldflags --libs core`
 
-valgrind_optimization:
-	$(MAKE) -C optimization valgrind
+# $(opt).o: $(opt).c $(opt).h
+# 	g++ $(CFLAGS) -c $(opt).c
+
+# $(smta).o: $(smta).c $(smta).h
+# 	g++ $(CFLAGS) -c $(smta).c
+
+# lex.yy.c : $(lex) y.tab.h
+# 	lex $(lex)	
+
+# y.tab.h y.tab.c : $(yacc)
+# 	yacc -d -v $(yacc)		
+
+# clean :
+# 	rm -f *.o y.tab.c y.tab.h y.output lex.yy.c
+# 	rm -f before llvm-ir.s llvm-ir.s-faster peda* .gdb_history

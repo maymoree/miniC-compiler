@@ -1,6 +1,6 @@
 %{
-#include "../ast/ast.h"
-#include "./smta.h"
+#include <ast.h>
+#include "smta.h"
 #include<stdio.h>
 extern int yylex();
 extern int yylex_destroy();
