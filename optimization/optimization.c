@@ -219,7 +219,7 @@ void dead_code_elim(LLVMModuleRef module, vector<LLVMValueRef>* elim_instruction
 			}
 
 	}
-	help_print_instructions(module);
+	// help_print_instructions(module);
 }
 
 vector<LLVMValueRef>* const_folding (LLVMModuleRef module) {
@@ -643,10 +643,10 @@ bool delete_load(LLVMModuleRef module,
 					}
 
 					// printf("\nR Block UPDATED:\n");
-					set<LLVMValueRef>::iterator itr;
-					for (itr = R->begin(); itr != R->end(); itr++) {
-						LLVMDumpValue(*itr);
-					}
+					// set<LLVMValueRef>::iterator itr;
+					// for (itr = R->begin(); itr != R->end(); itr++) {
+					// 	LLVMDumpValue(*itr);
+					// }
 				}
 
 				// instruction is load
@@ -683,7 +683,7 @@ bool delete_load(LLVMModuleRef module,
 
 						// printf("\n NOT NULL !!\n");
 						// printf("This is last r: \n");
-						LLVMDumpValue(last_r);
+						// LLVMDumpValue(last_r);
 
 						// check if all values are the same constant
 						bool same_const = true;
@@ -821,8 +821,8 @@ void optimize(LLVMModuleRef module) {
 
 		// help_print_instructions(module);
 	}
-
-	// printf("\n ------------------------- OPTIMIZED FIXED POINT ------------------------- \n");
+	help_print_instructions(module);
+	printf("\n ------------------------- OPTIMIZED FIXED POINT ------------------------- \n");
 }
 
 
@@ -871,7 +871,7 @@ void help_print_instructions(LLVMModuleRef module) {
  			 basicBlock;
   			 basicBlock = LLVMGetNextBasicBlock(basicBlock)) {
 				
-				printf("List of Instructions------------\n");
+				printf("\nList of Instructions------------\n");
 
 				// loop through instructions in each block
 				for (LLVMValueRef instruction = LLVMGetFirstInstruction(basicBlock); 
