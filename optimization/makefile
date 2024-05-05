@@ -8,10 +8,10 @@ SRC = optimization_test.c optimization.c
 OBJ = $(SRC:.c=.o)
 
 # Compiler flags
-CFLAGS = -g -I /usr/include/llvm-c-15/
+CFLAGS = -g -I /usr/include/llvm-c-15/ -I ~/miniC_compiler/ast
 
 $(LLVMCODE): $(OBJ)
-	g++ $(OBJ) `llvm-config-15 --cxxflags --ldflags --libs core` -o $@
+	g++ $(CFLAGS) $(OBJ) `llvm-config-15 --cxxflags --ldflags --libs core` -o $@
 
 %.o: %.c optimization.h
 	g++ $(CFLAGS) -c $< -o $@

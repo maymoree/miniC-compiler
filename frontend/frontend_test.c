@@ -1,5 +1,5 @@
-#include "../ast/ast.h"
-#include "./smta.h"
+#include <ast.h> // -I include paths
+#include "smta.h" // local folder
 #include <stdio.h>
 extern int yylex();
 extern int yylex_destroy();

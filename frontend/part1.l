@@ -1,5 +1,5 @@
 %{
-#include "../ast/ast.h"
+#include <ast.h>
 #include "y.tab.h"
 #include <stdio.h>
 #include <string.h>

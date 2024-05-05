@@ -1,12 +1,12 @@
+#include <ast.h>
+#include <smta.h>
+#include <optimization.h>
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <unistd.h>
-
-#include "./ast/ast.h"
-#include "./frontend/smta.h"
-#include "./optimization/optimization.h"
 
 extern int yylex();
 extern int yywrap();
