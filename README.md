@@ -1,11 +1,10 @@
 # miniC-compiler
 ### Compiler for miniC files by Memo Tangtipongkul -- April 14, 2024
 
-#### Have to go into each folder to compile/run make
-
 ## Compiling
 - run `make` to compile files in all folders
 - run `make test` to test `miniC_compiler` file
+- run `make valgrind` to test `miniC_compiler` file for mem leaks and errors
 
 ## Test Output
 Currently... have not created bash test files a nicely formatted output
