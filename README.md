@@ -11,6 +11,7 @@ Currently... have not created bash test files a nicely formatted output
 ### Part 1 output --> calls ./miniCfiles/p1.c
 - prints out the ast
 ### Part 3 output --> calls ./optimization/optimizer_test_results/p4_const_prop.ll
+- creates test.ll file 
 - prints out the optimized instructions
    - each block is marked by ***List of Instructions-------------***
 
