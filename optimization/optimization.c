@@ -904,6 +904,8 @@ void main_optimization(char* file) {
 
 		optimize(m);
 
+		LLVMPrintModuleToFile (m, "test.ll", NULL);
+
 		LLVMDisposeModule(m);
 	}
 	else {
