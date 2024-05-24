@@ -8,6 +8,8 @@ int func(int i){
 	b = 2;
 
 	if (a < i){
+		int a;
+		a = 20;
 		while (b < i){
 			b = b + 20;
 		}

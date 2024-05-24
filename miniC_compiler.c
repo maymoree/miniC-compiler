@@ -1,6 +1,7 @@
 #include <ast.h>
 #include <smta.h>
 #include <optimization.h>
+#include <irbuilder.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -37,7 +38,6 @@ int main(int argc, char* argv[]){
 
         astNode* root = ret_root();
 
-		// prints the ast
 		if (semantic_analysis(root)){
 			printf("Passed semantic analysis.\n");
 		} else {
@@ -45,15 +45,17 @@ int main(int argc, char* argv[]){
 			return 1;
 		}
 
-		freeNode(root);
+		// PART 2 --------------------
+		printf("\nPART 2 !!!!!!!\n");
+		ir_builder(root);
 
-
+		// freeNode(root);
 		
 		
 		// PART 3 ---------------------
-		if (argc >= 2){
-			main_optimization(argv[2]);
-		}
+		// if (argc >= 2){
+		// 	main_optimization(argv[2]);
+		// }
 		
 		
 		// clean up

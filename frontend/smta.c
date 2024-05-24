@@ -11,6 +11,8 @@ bool body_of_func;
 
 int semantic_analysis(astNode* root){
 
+    printNode(root);
+
     vector<vector<char*>*>* stack_symbol_table = new vector<vector<char*>*> (); // holds all
 
     bool passed;

@@ -1,18 +1,22 @@
 lex = ./frontend/part1.l
 yacc = ./frontend/part1.y
 smta = ./frontend/smta
+ir = ./ir_builder/irbuilder
 opt = ./optimization/optimization
 ast = ./ast/ast
 cmplr = miniC_compiler
 
 INC = ./ast/ast.c ./frontend/smta.c
 
-CFLAGS = -g -I ./ast -I ./frontend -I ./optimization -I /usr/include/llvm-c-15/
+CFLAGS = -g -I ./ast -I ./frontend -I ./optimization -I ./ir_builder -I /usr/include/llvm-c-15/
 
 VALGRIND = valgrind --leak-check=full --show-leak-kinds=all
 
-$(cmplr).out: $(cmplr).c $(opt).o $(smta).o $(ast).o lex.yy.c y.tab.c
-	g++ $(CFLAGS) -o $@ $(cmplr).c lex.yy.c y.tab.c $(opt).o $(smta).o $(ast).o `llvm-config-15 --cxxflags --ldflags --libs core`
+$(cmplr).out: $(cmplr).c $(opt).o $(smta).o $(ir).o $(ast).o lex.yy.c y.tab.c
+	g++ $(CFLAGS) -o $@ $(cmplr).c lex.yy.c y.tab.c $(opt).o $(ir).o $(smta).o $(ast).o `llvm-config-15 --cxxflags --ldflags --libs core`
+
+$(ir).o: $(ir).c $(ir).h
+	g++ $(CFLAGS) -c $< -o $@
 
 $(ast).o: $(ast).c $(ast).h
 	g++ $(CFLAGS) -c $< -o $@

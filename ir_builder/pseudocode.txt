@@ -1,0 +1,181 @@
+global map names <var name, int (for adding it to var)> --> map stores letter and the last number that letter is used with
+
+
+// main function that calls the different parts
+ir_builder(astNode* root) {
+
+    // traverse through ast first for preprocessing
+    stack_variable_names = vector of vector --> contains a vector of names at each scope
+    pre_traverse(astNode* root, stack_variable_names)
+
+    map variable_alloc <var name, LLVMValueRef(alloc)>
+    generate_alloc(variable_alloc, stack_variable_names)
+
+    create the LLVMModule m
+    setting target
+    builder_traverse(Module m, astNode* root, map variable_alloc)
+
+}
+
+
+
+
+// this is really similar to traversing in smta.c
+pre_traverse(astNode* root, stack_variable_names) {
+
+    node type = get node type
+    
+    if it's a block type and function body { // might have to add another parameter like in smta.c
+        get last vector in stack
+        loop through the size of its statement stmt list
+            pre_traverse(stack_variable_names, node at index of loop)
+    }
+
+    if it's a block type  {
+        create a new vector
+        add that vector to stack
+        loop through its stmt list
+            pre_traverse(stack_variable_names, node at index of loop)
+        
+        remove the last element in stack
+        delete the new vector
+    }
+
+    if it's a function {
+        create new vector
+        add vector to stack
+        check for parameters {
+            add parameter name to current vector
+        }
+
+        pre_traverse(stack_variable_names, body of func)
+
+        remove the last element in stack
+        delete the new vector
+
+    }
+
+    // DECLARATION
+    if (node type is ast statement && statement type is declaration) {
+        var name = get the decl name
+        current_scope = get previous vector from stack
+
+        check if var name exists in ALL STACK not just curr scope
+
+        if not found:
+            add new var name to current_scope
+            add the var name to global map names <var name, 0>
+        else found:
+            new var name = generate_new_name(var name)
+            add new var name to current_scope
+
+    }
+
+    // VARIABLE
+    if (node type is variable) {
+
+        var name = get the var name
+        curent_scope = get previous vector from stack
+
+        if the var name matches the first letter of any decl name in current_scope: (a1 matches a)
+            change the var name to the whole name in current scope (change a to a1)
+
+    }
+
+    pre_traverse through other types similarly to smta.c
+
+}
+
+
+
+
+
+generate_alloc(variable_alloc, stack_variable_names)
+
+    loop through stack{
+        loop through scope vector {
+            if it's a var name:
+                create alloc statement for each var name
+                store into map <var name, LLVMValueRef(alloc)>
+            if it's the parameter: // how do we check this?
+                create store statement
+                store into map <var name, store statement>
+        }
+    }
+       
+
+
+
+
+builder_traverse(module m, astNode* root, map variable_alloc) {
+
+    node type = get node type
+    
+    // FIRST BASIC BLOCK OF THE FUNC --> block type and body of function
+    if it's a block type and function body { // might have to add another parameter like in smta.c
+        // we already created the map and alloc of all declaration variables and parameter
+        loop through it's statement list
+            builder_traverse(module m, astNode* node at i, map variable_alloc)
+    }
+
+    if (node type is statement and statement type is RET) {
+        create a return instruction
+        LLVMBuildRet(LLVMBuilderRef, LLVMValueRef V)
+        break
+    }
+
+    if (node type is function) {
+        add function to module
+        mark is body is true --> similar to what i did in smta.c
+    }
+
+    if (node type is statement and statement type is IF) {
+        create a condition value --> another function to traverse through different binary expressions?
+        create "true" block
+        create "false" block
+        create "dummy" block
+        
+        create terminal condition branch
+
+        build the "true" block
+        jump to the dummy block
+
+        build the "false" block
+        if it has "else" part then handle accordingly
+        jump to the dummy block
+
+        continue building with the dummy block
+        break
+    }
+
+    if (node type is statement and statement type if WHILE) {
+        create condition block --> will be entry and exit point
+        create body block
+        
+        build the condition block
+        put position of builder to be at end of condition block
+        build a condition value --> another function to traverse through different binary expressions?
+
+        build the body block and put builder at end of block
+        jump back to condition block
+
+        continue building after condition block is no longer true
+        break
+    }
+
+
+    for each type of instruction add it with builder accordingly...
+        builder_traverse(m)
+
+}
+
+
+
+
+// HELPER FUNCTIONS
+generate_new_name(var name) {
+    use the map to determine which name to change it to
+    update the map[var_name] + 1
+    new name is "var name" + map[var name] (e.g. a1 to a2 or b to b1)
+    return the name
+}
