@@ -11,13 +11,21 @@ int func(int i){
 		int a;
 		a = 20;
 		while (b < i){
+			int a;
+			a = 7 + b;
 			b = b + 20;
 		}
 		a = 10 + b;
 	}
 	else {
-		if (b < i) 
+		int a;
+		a = 1;
+		if (b < i) {
+			int a;
+			a = 7;
 			b = a;
+		}
+			
 	}
 	
 	return 1;

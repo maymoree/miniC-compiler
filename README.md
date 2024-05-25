@@ -26,6 +26,16 @@ Currently... have not created bash test files a nicely formatted output
    - smta.c
    - smta.h
 
+
+## Part 2 -- IR Builder  (ir_builder folder)
+
+**FILES**
+1. Preprocessing and building
+   - irbuilder.c
+   - irbuilder.h
+2. Pseudocode
+   - pseudocode.txt
+
 ## Part 3 -- Optimization (optimization folder)
 
 **FILES**
