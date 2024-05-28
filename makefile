@@ -1,10 +1,12 @@
-lex = ./frontend/part1.l
-yacc = ./frontend/part1.y
+lex = ./ir_builder/grammar_shared/minic.l
+yacc = ./ir_builder/grammar_shared/minic.y
 smta = ./frontend/smta
 ir = ./ir_builder/irbuilder
 opt = ./optimization/optimization
 ast = ./ast/ast
 cmplr = miniC_compiler
+
+TEST = ./ir_builder/builder_tests/p2
 
 INC = ./ast/ast.c ./frontend/smta.c
 
@@ -34,10 +36,13 @@ y.tab.h y.tab.c : $(yacc)
 	yacc -d -v $<		
 
 test: $(cmplr).out
-	./$(cmplr).out ./miniCfiles/p1.c ./optimization/optimizer_test_results/p4_const_prop.ll
+	./$(cmplr).out ./ir_builder/builder_tests/p2.c ./optimization/optimizer_test_results/p4_const_prop.ll
 
 valgrind: $(cmplr).out
-	$(VALGRIND) ./$(cmplr).out ./miniCfiles/p1.c ./optimization/optimizer_test_results/p4_const_prop.ll
+	$(VALGRIND) ./$(cmplr).out ./ir_builder/builder_tests/p2.c ./optimization/optimizer_test_results/p4_const_prop.ll
+
+llvm_file: $(TEST).c
+	clang -S -emit-llvm $(TEST).c -o $(TEST).s
 
 clean :
 	rm -f *.o y.tab.c y.tab.h y.output lex.yy.c $(cmplr).out 

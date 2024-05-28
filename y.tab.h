@@ -55,21 +55,23 @@ extern int yydebug;
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
     NUM = 258,                     /* NUM  */
-    NAME = 259,                    /* NAME  */
-    PRINT = 260,                   /* PRINT  */
-    READ = 261,                    /* READ  */
-    RETURN = 262,                  /* RETURN  */
-    IF = 263,                      /* IF  */
-    ELSE = 264,                    /* ELSE  */
-    WHILE = 265,                   /* WHILE  */
-    INT = 266,                     /* INT  */
-    VOID = 267,                    /* VOID  */
-    EXTERN = 268,                  /* EXTERN  */
-    LE = 269,                      /* LE  */
-    GE = 270,                      /* GE  */
-    EQ = 271,                      /* EQ  */
-    NEQ = 272,                     /* NEQ  */
-    LOWER_THAN_ELSE = 273          /* LOWER_THAN_ELSE  */
+    ID = 259,                      /* ID  */
+    INT = 260,                     /* INT  */
+    VOID = 261,                    /* VOID  */
+    PRINT = 262,                   /* PRINT  */
+    READ = 263,                    /* READ  */
+    WHILE = 264,                   /* WHILE  */
+    IF = 265,                      /* IF  */
+    ELSE = 266,                    /* ELSE  */
+    EXTERN = 267,                  /* EXTERN  */
+    RETURN = 268,                  /* RETURN  */
+    EQ = 269,                      /* EQ  */
+    GT = 270,                      /* GT  */
+    LT = 271,                      /* LT  */
+    GE = 272,                      /* GE  */
+    LE = 273,                      /* LE  */
+    NEQ = 274,                     /* NEQ  */
+    NOELSE = 275                   /* NOELSE  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -79,34 +81,37 @@ extern int yydebug;
 #define YYerror 256
 #define YYUNDEF 257
 #define NUM 258
-#define NAME 259
-#define PRINT 260
-#define READ 261
-#define RETURN 262
-#define IF 263
-#define ELSE 264
-#define WHILE 265
-#define INT 266
-#define VOID 267
-#define EXTERN 268
-#define LE 269
-#define GE 270
-#define EQ 271
-#define NEQ 272
-#define LOWER_THAN_ELSE 273
+#define ID 259
+#define INT 260
+#define VOID 261
+#define PRINT 262
+#define READ 263
+#define WHILE 264
+#define IF 265
+#define ELSE 266
+#define EXTERN 267
+#define RETURN 268
+#define EQ 269
+#define GT 270
+#define LT 271
+#define GE 272
+#define LE 273
+#define NEQ 274
+#define NOELSE 275
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 14 "frontend/part1.y"
+#line 13 "ir_builder/grammar_shared/minic.y"
 
 	int ival;
 	char * idname;
 	astNode *nptr;
 	vector<astNode *> *svec_ptr;
+	
 
-#line 110 "y.tab.h"
+#line 115 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

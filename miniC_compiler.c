@@ -8,6 +8,9 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <unistd.h>
+#include <llvm-c/Core.h>
+#include <llvm-c/IRReader.h>
+#include <llvm-c/Types.h>
 
 extern int yylex();
 extern int yywrap();
@@ -43,9 +46,7 @@ int main(int argc, char* argv[]){
 
     // PART 2 --------------------
     printf("\nPART 2 !!!!!!!\n");
-    ir_builder(root);
-
-    freeNode(root);
+    LLVMModuleRef mod = ir_builder(root);
 
     // PART 3 ---------------------
     if (argc >= 2){
@@ -55,6 +56,6 @@ int main(int argc, char* argv[]){
     // clean up
     if (argc >= 2) fclose(yyin);
     yylex_destroy();
-
+    freeNode(root);
     return 0;
 }
