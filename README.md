@@ -8,8 +8,9 @@
 
 ## Test Output
 Currently... have not created bash test files a nicely formatted output
-### Part 1 output --> calls ./miniCfiles/p1.c
-- prints out the ast
+### Part 1 and 2 output --> calls ./ir_builder/builder_test/p2.c
+- part 1: prints out the ast and runs semantic analysis
+- part 2: creats `pt2.ll` file containing module
 ### Part 3 output --> calls ./optimization/optimizer_test_results/p4_const_prop.ll
 - creates test.ll file 
 - prints out the optimized instructions

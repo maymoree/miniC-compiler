@@ -36,6 +36,8 @@ LLVMModuleRef ir_builder(astNode* root) {
 
     LLVMModuleRef mod = build_traverse(root, NULL);
 
+    LLVMDumpModule(mod);
+
     LLVMPrintModuleToFile(mod, "pt2.ll", NULL);
 
     // free and clean up
@@ -54,7 +56,6 @@ LLVMModuleRef build_traverse(astNode* node, LLVMModuleRef mod) {
     node_type type = node->type;
 
     if (type == ast_prog) {
-        printf("\nin prog\n");
         // create module & set target
         mod = LLVMModuleCreateWithName("");
         LLVMSetTarget(mod, "x86_64-pc-linux-gnu");
@@ -163,7 +164,7 @@ LLVMModuleRef build_traverse(astNode* node, LLVMModuleRef mod) {
 
         // add load and return to retBB
         LLVMValueRef load = LLVMBuildLoad2(builder, LLVMInt32Type(), ret_ref, "");
-        LLVMBuildStore(builder, load, ret_ref);
+        LLVMBuildRet(builder, load);
        
         LLVMBasicBlockRef exitBB = genIRStmt(&node->func.body->stmt, builder, entryBB, var_map, mod, func);
 
@@ -194,27 +195,21 @@ LLVMModuleRef build_traverse(astNode* node, LLVMModuleRef mod) {
 
 LLVMBasicBlockRef genIRStmt(astStmt* node, LLVMBuilderRef &builder, LLVMBasicBlockRef startBB, map<string, LLVMValueRef>* var_map, LLVMModuleRef mod, LLVMValueRef func) {
 
-    LLVMDumpModule(mod);
-
     assert(node != NULL && builder != NULL);
     switch (node->type) {
         case ast_asgn: {
-            printf("\nast_asgn\n");
             // set position at end of startBB
             LLVMPositionBuilderAtEnd(builder, startBB);
             LLVMValueRef rhs = genIRExpr(node->asgn.rhs, builder, var_map, mod); 
             LLVMValueRef store_val = LLVMBuildStore(builder, rhs, var_map->at(node->asgn.lhs->var.name));
-            printf("\nast_asgn DONE\n");
             return startBB;
         }
         case ast_call: {
-            printf("\nast_call\n");
             // must be a print stmt... no checks since grammar should be correct
 
             // set position at end of startBB
             LLVMPositionBuilderAtEnd(builder, startBB);
             
-            printf("\nast_call genIRExpr\n");
             // generate val of printed
             LLVMValueRef print_val = genIRExpr(node->call.param, builder, var_map, mod);
 
@@ -230,12 +225,10 @@ LLVMBasicBlockRef genIRStmt(astStmt* node, LLVMBuilderRef &builder, LLVMBasicBlo
             param[0] = print_val;
 
             LLVMValueRef call_val = LLVMBuildCall2(builder, print_type, print_func, param, 1, "");
-            printf("\nast_call DONE\n");
             free(param);
             return startBB;
         }
         case ast_while: {
-            printf("\nast_while\n");
 
             // set position at end of startBB
             LLVMPositionBuilderAtEnd(builder, startBB);
@@ -249,7 +242,6 @@ LLVMBasicBlockRef genIRStmt(astStmt* node, LLVMBuilderRef &builder, LLVMBasicBlo
             // set pos builder to end of condBB
             LLVMPositionBuilderAtEnd(builder, condBB);
 
-            printf("\nast_while genIRExpr\n");
             // genirexpr for condition
             LLVMValueRef cond_val = genIRExpr(node->whilen.cond, builder, var_map, mod);
 
@@ -258,7 +250,6 @@ LLVMBasicBlockRef genIRStmt(astStmt* node, LLVMBuilderRef &builder, LLVMBasicBlo
             LLVMBasicBlockRef falseBB = LLVMAppendBasicBlock(func, "");
             LLVMBuildCondBr(builder, cond_val, trueBB, falseBB);
 
-            printf("\nast_while genIREstmt\n");
             // gen trueExitBB
             LLVMBasicBlockRef trueExitBB = genIRStmt(&node->whilen.body->stmt, builder, trueBB, var_map, mod, func);
 
@@ -268,17 +259,14 @@ LLVMBasicBlockRef genIRStmt(astStmt* node, LLVMBuilderRef &builder, LLVMBasicBlo
             // unconditional branch --> has to link to LLVMBuilderRef, but links to trueExitBB it's moved to end of builder right???
             LLVMBuildBr(builder, condBB);
 
-            printf("\nast_while DONE\n");
 
             // return falseBB
             return falseBB;
         }
         case ast_if: {
-            printf("\nast_if\n");
             // set pos to end of startBB
             LLVMPositionBuilderAtEnd(builder, startBB);
             
-            printf("\nast_if genIRExpr\n");
             // genirexpr for condition
             LLVMValueRef cond_val = genIRExpr(node->ifn.cond, builder, var_map, mod);
 
@@ -288,52 +276,37 @@ LLVMBasicBlockRef genIRStmt(astStmt* node, LLVMBuilderRef &builder, LLVMBasicBlo
             LLVMBuildCondBr(builder, cond_val, trueBB, falseBB);
 
             if (node->ifn.else_body == NULL) { // no else
-                printf("\nast_if: no else genIRStmt\n");
                 LLVMBasicBlockRef ifExitBB = genIRStmt(&node->ifn.if_body->stmt, builder, trueBB, var_map, mod, func);
                 LLVMPositionBuilderAtEnd(builder, ifExitBB);
                 LLVMBuildBr(builder, falseBB);
-                printf("\nast_if no else DONE\n");
                 return falseBB;
             } // else body
-            printf("\nast_if if genIRStmt\n");
             LLVMBasicBlockRef ifExitBB = genIRStmt(&node->ifn.if_body->stmt, builder, trueBB, var_map, mod, func);
-            printf("\nast_if else genIRStmt\n");
             LLVMBasicBlockRef elseExitBB = genIRStmt(&node->ifn.else_body->stmt, builder, falseBB, var_map, mod, func);
             LLVMBasicBlockRef endBB = LLVMAppendBasicBlock(func, "");
             LLVMPositionBuilderAtEnd(builder, ifExitBB);
             LLVMBuildBr(builder, endBB);
             LLVMPositionBuilderAtEnd(builder, elseExitBB);
             LLVMBuildBr(builder, endBB);
-            printf("\nast_if if else DONE\n");
             return endBB;
         }
         case ast_ret: {
-            printf("\nast_ret\n");
             LLVMPositionBuilderAtEnd(builder, startBB);
-
-            printf("\nast_ret genIRExpr\n");
 
             LLVMValueRef ret_val = genIRExpr(node->ret.expr, builder, var_map, mod);
 
             LLVMBuildStore(builder, ret_val, ret_ref);
             LLVMBuildBr(builder, retBB);
             LLVMBasicBlockRef endBB = LLVMAppendBasicBlock(func, "");
-            printf("\nast_ret DONE\n");
             return endBB;
         }
         case ast_block: {
-            printf("\nast_block called here for the first time\n");
             LLVMBasicBlockRef prevBB = startBB;
             for (int s = 0; s < node->block.stmt_list->size(); s++){
-                printf("\nast_block genIRStmt\n");
                 prevBB = genIRStmt(&(*node->block.stmt_list->at(s)).stmt, builder, prevBB, var_map, mod, func);
             }
 
-            // for(auto )
-            // return the value returned by the call to genIRStmt on the last statement in the statement list as endBB
-            // HELP IS THIS CORRECT ?????
             LLVMBasicBlockRef endBB = prevBB;
-            printf("\nast_block DONE\n");
             return endBB;
         }
         default: {return startBB;}
@@ -345,52 +318,40 @@ LLVMValueRef genIRExpr(astNode* node, LLVMBuilderRef builder, map<string, LLVMVa
 
     switch(node->type) {
         case ast_cnst: {
-            printf("\ngenIRExpr ast_cnst\n");
             // turn node->cnst.value (int) to llvmvalueref; extend sign or not?
             LLVMValueRef cnst_val = LLVMConstInt(LLVMInt32Type(), node->cnst.value, 1);
-            printf("\ngenIRExpr ast_cnst DONE\n");
             return cnst_val;
         }
         case ast_var: {
-            printf("\ngenIRExpr ast_var\n");
             LLVMValueRef var_alloc = var_map->at(node->var.name);
             LLVMValueRef var_val = LLVMBuildLoad2(builder, LLVMInt32Type(), var_alloc, "");
-            printf("\ngenIRExpr ast_var DONE\n");
             return var_val;
         }
         case ast_uexpr: {
-            printf("\ngenIRExpr ast_uexpr\n");
             LLVMValueRef expr = genIRExpr(node->uexpr.expr, builder, var_map, mod);
             // turn int to llvmvalueref
             LLVMValueRef const_zero = LLVMConstInt(LLVMInt32Type(), 0, 1);
             LLVMValueRef sub_val = LLVMBuildSub(builder, const_zero, expr, "");
-            printf("\ngenIRExpr ast_uexpr DONE\n");
             return sub_val; 
         }
         case ast_bexpr: {
-            printf("\ngenIRExpr ast_bexpr\n");
             LLVMValueRef lhs = genIRExpr(node->bexpr.lhs, builder, var_map, mod);
             LLVMValueRef rhs = genIRExpr(node->bexpr.rhs, builder, var_map, mod);
             op_type op = node->bexpr.op;
             if (op == add) {
-                printf("\ngenIRExpr ast_bexpr add DONE\n");
                 return LLVMBuildAdd(builder, lhs, rhs, "");
             } 
             else if (op == sub) {
-                printf("\ngenIRExpr ast_bexpr sub DONE\n");
                 return LLVMBuildSub(builder, lhs, rhs, "");
             }
             else if (op == mul) {
-                printf("\ngenIRExpr ast_bexpr mul DONE\n");
                 return LLVMBuildMul(builder, lhs, rhs, "");
             }
             else if (op == divide) {
-                printf("\ngenIRExpr ast_bexpr div DONE\n");
                 return LLVMBuildSDiv(builder, lhs, rhs, ""); // not in instructions but in case?????
             }
         }
         case ast_rexpr: {
-            printf("\ngenIRExpr ast_rexpr\n");
             LLVMValueRef lhs = genIRExpr(node->rexpr.lhs, builder, var_map, mod);
             LLVMValueRef rhs = genIRExpr(node->rexpr.rhs, builder, var_map, mod);
             rop_type op = node->rexpr.op;
@@ -414,17 +375,12 @@ LLVMValueRef genIRExpr(astNode* node, LLVMBuilderRef builder, map<string, LLVMVa
             }
         }
         case ast_stmt: {
-            printf("\ngenIRExpr ast_call\n");
             // must be a read function to assign it something!                   
-            // LLVMValueRef LLVMGetNamedFunction(LLVMModuleRef M, const char *Name);???
             LLVMValueRef read_func = LLVMGetNamedFunction(mod, "read");
 
-            // do i have to this like above, or can I just use LLVMInt32Type()??????
             LLVMTypeRef param_types_read[] = {};
             LLVMTypeRef read_type = LLVMFunctionType(LLVMInt32Type(), param_types_read, 0, 0);
-            // not sure : (
             LLVMValueRef call_val = LLVMBuildCall2(builder, read_type, read_func, NULL, 0, "");
-            printf("\ngenIRExpr ast_call DONE\n");
             return call_val;
         }
         default: {return NULL;}

@@ -1,5 +1,5 @@
-; ModuleID = './optimization/optimizer_test_results/p4_const_prop.ll'
-source_filename = "p4_const_prop.c"
+; ModuleID = './ir_builder/builder_tests/p3.c'
+source_filename = "./ir_builder/builder_tests/p3.c"
 target datalayout = "e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-pc-linux-gnu"
 
@@ -11,45 +11,36 @@ define dso_local i32 @func(i32 noundef %0) #0 {
   %5 = alloca i32, align 4
   %6 = alloca i32, align 4
   store i32 %0, ptr %2, align 4
-  store i32 10, ptr %3, align 4
-  store i32 20, ptr %4, align 4
-  store i32 20, ptr %5, align 4
-  store i32 5, ptr %3, align 4
+  store i32 1, ptr %3, align 4
+  store i32 1, ptr %4, align 4
+  store i32 0, ptr %5, align 4
   br label %7
 
-7:                                                ; preds = %18, %1
-  %8 = load i32, ptr %3, align 4
+7:                                                ; preds = %11, %1
+  %8 = load i32, ptr %5, align 4
   %9 = load i32, ptr %2, align 4
   %10 = icmp slt i32 %8, %9
-  br i1 %10, label %11, label %19
+  br i1 %10, label %11, label %20
 
 11:                                               ; preds = %7
   %12 = load i32, ptr %3, align 4
-  %13 = add nsw i32 %12, 1
-  store i32 %13, ptr %3, align 4
-  %14 = load i32, ptr %3, align 4
-  %15 = icmp sgt i32 %14, 20
-  br i1 %15, label %16, label %17
-
-16:                                               ; preds = %11
-  store i32 25, ptr %5, align 4
-  br label %18
-
-17:                                               ; preds = %11
-  store i32 25, ptr %5, align 4
-  br label %18
-
-18:                                               ; preds = %17, %16
+  call void @print(i32 noundef %12)
+  %13 = load i32, ptr %5, align 4
+  %14 = add nsw i32 %13, 1
+  store i32 %14, ptr %5, align 4
+  %15 = load i32, ptr %3, align 4
+  %16 = load i32, ptr %4, align 4
+  %17 = add nsw i32 %15, %16
+  store i32 %17, ptr %6, align 4
+  %18 = load i32, ptr %4, align 4
+  store i32 %18, ptr %3, align 4
+  %19 = load i32, ptr %6, align 4
+  store i32 %19, ptr %4, align 4
   br label %7, !llvm.loop !6
 
-19:                                               ; preds = %7
-  %20 = load i32, ptr %3, align 4
-  call void @print(i32 noundef %20)
-  call void @print(i32 noundef 20)
+20:                                               ; preds = %7
   %21 = load i32, ptr %5, align 4
-  call void @print(i32 noundef %21)
-  %22 = add nsw i32 20, %21
-  ret i32 %22
+  ret i32 %21
 }
 
 declare void @print(i32 noundef) #1
