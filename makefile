@@ -48,4 +48,4 @@ clean :
 	rm -f *.o y.tab.c y.tab.h y.output lex.yy.c $(cmplr).out 
 	rm -f ./optimization/optimization.o ./ast/ast.o ./frontend/smta.o
 	rm -f before llvm-ir.s llvm-ir.s-faster peda* .gdb_history
-	rm -f pt2.ll test.ll
+	rm -f pt2.ll pt3.ll
