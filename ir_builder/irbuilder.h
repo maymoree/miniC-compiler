@@ -6,10 +6,15 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <set>
 #include <cstring>
 #include <algorithm>
 
 using namespace std;
 
-void ir_builder(astNode* root);
-void pre_traverse(astNode* node, vector<vector<char*>*>* stack_variable_names);
+LLVMModuleRef ir_builder(astNode* root);
+void pre_traverse(astNode* node, vector<vector<string>*>* stack_variable_names);
+LLVMModuleRef build_traverse(astNode* node, LLVMModuleRef mod);
+LLVMBasicBlockRef genIRStmt(astNode* node, LLVMBuilderRef builder, LLVMBasicBlockRef startBB, 
+                            map<string, LLVMValueRef>* var_map, LLVMModuleRef mod, LLVMValueRef func);
+LLVMValueRef genIRExpr(astNode* node, LLVMBuilderRef builder, map<string, LLVMValueRef>* var_map, LLVMModuleRef mod);

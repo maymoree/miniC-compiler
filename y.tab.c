@@ -67,20 +67,19 @@
 
 
 /* First part of user prologue.  */
-#line 1 "frontend/part1.y"
+#line 1 "ir_builder/grammar_shared/minic.y"
 
-#include <ast.h>
-#include "smta.h"
-#include<stdio.h>
+#include <stdio.h>
+#include "ast.h"
+
 extern int yylex();
 extern int yylex_destroy();
 extern int yywrap();
-int yyerror(char *);
-extern FILE * yyin;
+void yyerror(const char *);
+extern FILE *yyin;
+astNode *root;
 
-astNode* root;
-
-#line 84 "y.tab.c"
+#line 83 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -125,21 +124,23 @@ extern int yydebug;
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
     NUM = 258,                     /* NUM  */
-    NAME = 259,                    /* NAME  */
-    PRINT = 260,                   /* PRINT  */
-    READ = 261,                    /* READ  */
-    RETURN = 262,                  /* RETURN  */
-    IF = 263,                      /* IF  */
-    ELSE = 264,                    /* ELSE  */
-    WHILE = 265,                   /* WHILE  */
-    INT = 266,                     /* INT  */
-    VOID = 267,                    /* VOID  */
-    EXTERN = 268,                  /* EXTERN  */
-    LE = 269,                      /* LE  */
-    GE = 270,                      /* GE  */
-    EQ = 271,                      /* EQ  */
-    NEQ = 272,                     /* NEQ  */
-    LOWER_THAN_ELSE = 273          /* LOWER_THAN_ELSE  */
+    ID = 259,                      /* ID  */
+    INT = 260,                     /* INT  */
+    VOID = 261,                    /* VOID  */
+    PRINT = 262,                   /* PRINT  */
+    READ = 263,                    /* READ  */
+    WHILE = 264,                   /* WHILE  */
+    IF = 265,                      /* IF  */
+    ELSE = 266,                    /* ELSE  */
+    EXTERN = 267,                  /* EXTERN  */
+    RETURN = 268,                  /* RETURN  */
+    EQ = 269,                      /* EQ  */
+    GT = 270,                      /* GT  */
+    LT = 271,                      /* LT  */
+    GE = 272,                      /* GE  */
+    LE = 273,                      /* LE  */
+    NEQ = 274,                     /* NEQ  */
+    NOELSE = 275                   /* NOELSE  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -149,34 +150,37 @@ extern int yydebug;
 #define YYerror 256
 #define YYUNDEF 257
 #define NUM 258
-#define NAME 259
-#define PRINT 260
-#define READ 261
-#define RETURN 262
-#define IF 263
-#define ELSE 264
-#define WHILE 265
-#define INT 266
-#define VOID 267
-#define EXTERN 268
-#define LE 269
-#define GE 270
-#define EQ 271
-#define NEQ 272
-#define LOWER_THAN_ELSE 273
+#define ID 259
+#define INT 260
+#define VOID 261
+#define PRINT 262
+#define READ 263
+#define WHILE 264
+#define IF 265
+#define ELSE 266
+#define EXTERN 267
+#define RETURN 268
+#define EQ 269
+#define GT 270
+#define LT 271
+#define GE 272
+#define LE 273
+#define NEQ 274
+#define NOELSE 275
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 14 "frontend/part1.y"
+#line 13 "ir_builder/grammar_shared/minic.y"
 
 	int ival;
 	char * idname;
 	astNode *nptr;
 	vector<astNode *> *svec_ptr;
+	
 
-#line 180 "y.tab.c"
+#line 184 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -200,53 +204,46 @@ enum yysymbol_kind_t
   YYSYMBOL_YYerror = 1,                    /* error  */
   YYSYMBOL_YYUNDEF = 2,                    /* "invalid token"  */
   YYSYMBOL_NUM = 3,                        /* NUM  */
-  YYSYMBOL_NAME = 4,                       /* NAME  */
-  YYSYMBOL_PRINT = 5,                      /* PRINT  */
-  YYSYMBOL_READ = 6,                       /* READ  */
-  YYSYMBOL_RETURN = 7,                     /* RETURN  */
-  YYSYMBOL_IF = 8,                         /* IF  */
-  YYSYMBOL_ELSE = 9,                       /* ELSE  */
-  YYSYMBOL_WHILE = 10,                     /* WHILE  */
-  YYSYMBOL_INT = 11,                       /* INT  */
-  YYSYMBOL_VOID = 12,                      /* VOID  */
-  YYSYMBOL_EXTERN = 13,                    /* EXTERN  */
-  YYSYMBOL_LE = 14,                        /* LE  */
-  YYSYMBOL_GE = 15,                        /* GE  */
-  YYSYMBOL_EQ = 16,                        /* EQ  */
-  YYSYMBOL_NEQ = 17,                       /* NEQ  */
-  YYSYMBOL_LOWER_THAN_ELSE = 18,           /* LOWER_THAN_ELSE  */
-  YYSYMBOL_19_ = 19,                       /* '('  */
-  YYSYMBOL_20_ = 20,                       /* ')'  */
-  YYSYMBOL_21_ = 21,                       /* ';'  */
-  YYSYMBOL_22_ = 22,                       /* '{'  */
-  YYSYMBOL_23_ = 23,                       /* '}'  */
-  YYSYMBOL_24_ = 24,                       /* '<'  */
-  YYSYMBOL_25_ = 25,                       /* '>'  */
+  YYSYMBOL_ID = 4,                         /* ID  */
+  YYSYMBOL_INT = 5,                        /* INT  */
+  YYSYMBOL_VOID = 6,                       /* VOID  */
+  YYSYMBOL_PRINT = 7,                      /* PRINT  */
+  YYSYMBOL_READ = 8,                       /* READ  */
+  YYSYMBOL_WHILE = 9,                      /* WHILE  */
+  YYSYMBOL_IF = 10,                        /* IF  */
+  YYSYMBOL_ELSE = 11,                      /* ELSE  */
+  YYSYMBOL_EXTERN = 12,                    /* EXTERN  */
+  YYSYMBOL_RETURN = 13,                    /* RETURN  */
+  YYSYMBOL_EQ = 14,                        /* EQ  */
+  YYSYMBOL_GT = 15,                        /* GT  */
+  YYSYMBOL_LT = 16,                        /* LT  */
+  YYSYMBOL_GE = 17,                        /* GE  */
+  YYSYMBOL_LE = 18,                        /* LE  */
+  YYSYMBOL_NEQ = 19,                       /* NEQ  */
+  YYSYMBOL_NOELSE = 20,                    /* NOELSE  */
+  YYSYMBOL_21_ = 21,                       /* '('  */
+  YYSYMBOL_22_ = 22,                       /* ')'  */
+  YYSYMBOL_23_ = 23,                       /* ';'  */
+  YYSYMBOL_24_ = 24,                       /* '{'  */
+  YYSYMBOL_25_ = 25,                       /* '}'  */
   YYSYMBOL_26_ = 26,                       /* '='  */
   YYSYMBOL_27_ = 27,                       /* '+'  */
   YYSYMBOL_28_ = 28,                       /* '-'  */
   YYSYMBOL_29_ = 29,                       /* '*'  */
   YYSYMBOL_30_ = 30,                       /* '/'  */
   YYSYMBOL_YYACCEPT = 31,                  /* $accept  */
-  YYSYMBOL_program = 32,                   /* program  */
-  YYSYMBOL_print_line = 33,                /* print_line  */
-  YYSYMBOL_read_line = 34,                 /* read_line  */
-  YYSYMBOL_func = 35,                      /* func  */
-  YYSYMBOL_code_block = 36,                /* code_block  */
-  YYSYMBOL_stmts = 37,                     /* stmts  */
-  YYSYMBOL_stmt = 38,                      /* stmt  */
-  YYSYMBOL_condition_block = 39,           /* condition_block  */
-  YYSYMBOL_if_condition = 40,              /* if_condition  */
-  YYSYMBOL_else_condition = 41,            /* else_condition  */
-  YYSYMBOL_while_block = 42,               /* while_block  */
-  YYSYMBOL_bool_condition = 43,            /* bool_condition  */
-  YYSYMBOL_assign_stmt = 44,               /* assign_stmt  */
-  YYSYMBOL_expr = 45,                      /* expr  */
-  YYSYMBOL_term = 46,                      /* term  */
-  YYSYMBOL_var_decls = 47,                 /* var_decls  */
-  YYSYMBOL_decl = 48,                      /* decl  */
-  YYSYMBOL_call_func_stmt = 49,            /* call_func_stmt  */
-  YYSYMBOL_return_stmt = 50                /* return_stmt  */
+  YYSYMBOL_prog = 32,                      /* prog  */
+  YYSYMBOL_extern_read = 33,               /* extern_read  */
+  YYSYMBOL_extern_print = 34,              /* extern_print  */
+  YYSYMBOL_func_def = 35,                  /* func_def  */
+  YYSYMBOL_block_stmt = 36,                /* block_stmt  */
+  YYSYMBOL_var_decls = 37,                 /* var_decls  */
+  YYSYMBOL_decl = 38,                      /* decl  */
+  YYSYMBOL_stmts = 39,                     /* stmts  */
+  YYSYMBOL_stmt = 40,                      /* stmt  */
+  YYSYMBOL_cond = 41,                      /* cond  */
+  YYSYMBOL_expr = 42,                      /* expr  */
+  YYSYMBOL_term = 43                       /* term  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -574,19 +571,19 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  5
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   132
+#define YYLAST   117
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  31
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  20
+#define YYNNTS  13
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  46
+#define YYNRULES  36
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  117
+#define YYNSTATES  99
 
 /* YYMAXUTOK -- Last valid token kind.  */
-#define YYMAXUTOK   273
+#define YYMAXUTOK   275
 
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
@@ -604,15 +601,15 @@ static const yytype_int8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-      19,    20,    29,    27,     2,    28,     2,    30,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,    21,
-      24,    26,    25,     2,     2,     2,     2,     2,     2,     2,
+      21,    22,    29,    27,     2,    28,     2,    30,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,    23,
+       2,    26,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,    22,     2,    23,     2,     2,     2,     2,
+       2,     2,     2,    24,     2,    25,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -627,18 +624,17 @@ static const yytype_int8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
-      15,    16,    17,    18
+      15,    16,    17,    18,    19,    20
 };
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    39,    39,    41,    42,    46,    48,    50,    52,    57,
-      65,    68,    69,    70,    71,    72,    73,    74,    75,    78,
-      79,    80,    81,    84,    87,    88,    89,    90,    91,    92,
-      95,    97,    99,   100,   101,   102,   103,   106,   107,   108,
-     111,   112,   113,   117,   118,   121,   122
+       0,    33,    33,    37,    39,    41,    43,    46,    53,    55,
+      57,    60,    62,    64,    67,    71,    72,    73,    74,    75,
+      76,    77,    80,    81,    82,    83,    84,    85,    88,    89,
+      90,    91,    92,    93,    95,    96,    97
 };
 #endif
 
@@ -654,14 +650,12 @@ static const char *yysymbol_name (yysymbol_kind_t yysymbol) YY_ATTRIBUTE_UNUSED;
    First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const yytname[] =
 {
-  "\"end of file\"", "error", "\"invalid token\"", "NUM", "NAME", "PRINT",
-  "READ", "RETURN", "IF", "ELSE", "WHILE", "INT", "VOID", "EXTERN", "LE",
-  "GE", "EQ", "NEQ", "LOWER_THAN_ELSE", "'('", "')'", "';'", "'{'", "'}'",
-  "'<'", "'>'", "'='", "'+'", "'-'", "'*'", "'/'", "$accept", "program",
-  "print_line", "read_line", "func", "code_block", "stmts", "stmt",
-  "condition_block", "if_condition", "else_condition", "while_block",
-  "bool_condition", "assign_stmt", "expr", "term", "var_decls", "decl",
-  "call_func_stmt", "return_stmt", YY_NULLPTR
+  "\"end of file\"", "error", "\"invalid token\"", "NUM", "ID", "INT",
+  "VOID", "PRINT", "READ", "WHILE", "IF", "ELSE", "EXTERN", "RETURN", "EQ",
+  "GT", "LT", "GE", "LE", "NEQ", "NOELSE", "'('", "')'", "';'", "'{'",
+  "'}'", "'='", "'+'", "'-'", "'*'", "'/'", "$accept", "prog",
+  "extern_read", "extern_print", "func_def", "block_stmt", "var_decls",
+  "decl", "stmts", "stmt", "cond", "expr", "term", YY_NULLPTR
 };
 
 static const char *
@@ -671,7 +665,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-53)
+#define YYPACT_NINF (-38)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -685,18 +679,16 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      -8,    13,    24,    21,    30,   -53,    48,    10,    42,    56,
-      65,    67,   -53,    68,    72,    74,    76,    77,    78,    -1,
-       0,    75,    79,    95,    81,    97,    81,   -53,   -53,    84,
-      70,   -53,    85,   -53,    81,    82,    87,    88,     4,    90,
-      91,   107,   -53,    50,   -53,   -53,    80,   -53,   -53,    70,
-     -53,   -53,   -53,    81,   -53,    12,   108,    93,   -53,   -53,
-      -2,    -2,    94,    14,    -2,    -2,    96,   -53,   -53,   105,
-      60,   -53,   -53,    98,   -53,   100,   101,   103,   -53,   -53,
-      -2,    -2,    -2,    -2,   104,    22,   106,   -53,    80,   -53,
-     -53,   -53,   109,   -53,   110,   -53,   -53,   -53,   -53,   -53,
-      -2,    -2,    -2,    -2,    -2,    -2,    80,   -53,   -53,   -53,
-     -53,   -53,   -53,   -53,   -53,   -53,   -53
+      -5,    11,    12,     9,    15,   -38,    27,    36,    21,    43,
+      49,   -38,    51,    33,    42,    44,    45,    13,    46,    59,
+      66,    61,   -38,   -38,    64,    20,   -38,    61,    62,    67,
+      76,    78,    79,    -2,   -38,    20,   -38,    48,   -38,   -38,
+       0,    72,     6,     6,     6,   -38,   -38,    80,     0,     6,
+      73,    47,   -38,    55,   -38,   -38,    81,   -38,    83,    84,
+      75,    85,    86,    87,   -38,   -38,     6,     6,     6,     6,
+     -38,   -38,    88,    74,     6,     6,     6,     6,     6,     6,
+      74,   -38,    89,   -38,   -38,   -38,   -38,   -38,   -38,   -38,
+     -38,   -38,   -38,   -38,   -38,    91,   -38,    74,   -38
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -705,31 +697,29 @@ static const yytype_int8 yypact[] =
 static const yytype_int8 yydefact[] =
 {
        0,     0,     0,     0,     0,     1,     0,     0,     0,     0,
-       0,     0,     2,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,     0,     0,     3,     4,     0,
-       0,     7,     0,     8,     0,     0,     0,     0,     0,     0,
-       0,     0,    18,     0,    12,    16,     0,    17,    13,     0,
-      41,    14,    15,     0,     5,     0,     0,     0,    37,    38,
-       0,     0,     0,    36,     0,     0,     0,    10,    11,    19,
-       0,    40,     6,     0,    31,     0,     0,     0,    39,    46,
-       0,     0,     0,     0,     0,     0,     0,    42,     0,    20,
-       9,    30,     0,    44,     0,    32,    33,    34,    35,    21,
-       0,     0,     0,     0,     0,     0,     0,    22,    43,    45,
-      26,    27,    28,    29,    24,    25,    23
+       0,     2,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     4,     3,     0,     0,     5,     0,     0,     0,
+       0,     0,     0,     0,    15,     0,    10,     0,    13,     6,
+       0,     0,     0,     0,     0,    34,    35,     0,     0,     0,
+       0,    32,     9,     0,     8,    12,     0,    11,     0,     0,
+       0,     0,     0,     0,    36,    21,     0,     0,     0,     0,
+       7,    14,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,    33,     0,    28,    29,    30,    31,    19,    16,    24,
+      22,    23,    25,    26,    27,    18,    20,     0,    17
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -53,   -53,   -53,   -53,   -53,   -20,    69,   -43,   -53,   -53,
-     -53,   -53,    51,   -53,    34,   -52,   -53,    83,    66,   -53
+     -38,   -38,   -38,   -38,   -38,   -16,   -38,    68,    82,   -37,
+      69,   -17,   -29
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-       0,     2,     3,     7,    12,    42,    43,    44,    45,    46,
-      89,    47,    84,    48,    62,    63,    49,    50,    51,    52
+       0,     2,     7,     3,    11,    34,    35,    36,    37,    38,
+      59,    50,    51
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -737,76 +727,68 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      68,    58,    59,    69,    31,     1,    33,    58,    59,    78,
-      23,    25,    85,    85,    54,    58,    59,    36,    37,    24,
-      26,    10,    11,    60,     5,     4,    61,    68,    95,    96,
-      97,    98,    61,    72,     6,     8,   100,   101,   102,   103,
-      61,    80,    81,    82,    83,   107,   104,   105,   110,   111,
-     112,   113,   114,   115,    35,    36,    37,    38,    39,     9,
-      40,    13,    14,   116,    35,    36,    37,    38,    39,    15,
-      40,    16,    30,    67,    35,    36,    37,    38,    39,    17,
-      40,    41,    30,    90,    35,    36,    37,    38,    39,    73,
-      40,    18,    30,    19,    77,    20,    27,    21,    22,    29,
-      28,    32,    30,    30,    34,    53,    56,    57,    55,    64,
-      65,    66,    75,    76,    88,    79,    86,    87,    70,    91,
-      92,    74,    93,    94,    99,     0,   106,     0,     0,     0,
-     108,   109,    71
+      55,    45,    46,    45,    46,    26,    47,     1,    47,    45,
+      46,    39,     5,    58,    60,    60,    55,     4,    20,    48,
+      64,     6,     8,    56,    28,    29,    49,    30,    49,    31,
+      32,    63,     9,    33,    49,    21,    88,    83,    84,    85,
+      86,    10,    12,    95,    25,    89,    90,    91,    92,    93,
+      94,    13,    28,    14,    16,    30,    15,    31,    32,    28,
+      98,    33,    30,    17,    31,    32,    18,    19,    33,    22,
+      24,    41,    25,    54,    66,    67,    68,    69,    28,    25,
+      70,    30,    23,    31,    32,    25,    27,    33,    40,    74,
+      75,    76,    77,    78,    79,    57,    65,    42,    25,    43,
+      44,    62,    97,    52,    71,    72,    73,    80,    81,    82,
+       0,    87,    96,    61,     0,     0,     0,    53
 };
 
 static const yytype_int8 yycheck[] =
 {
-      43,     3,     4,    46,    24,    13,    26,     3,     4,    61,
-      11,    11,    64,    65,    34,     3,     4,     5,     6,    20,
-      20,    11,    12,    19,     0,    12,    28,    70,    80,    81,
-      82,    83,    28,    53,    13,     5,    14,    15,    16,    17,
-      28,    27,    28,    29,    30,    88,    24,    25,   100,   101,
-     102,   103,   104,   105,     4,     5,     6,     7,     8,    11,
-      10,    19,     6,   106,     4,     5,     6,     7,     8,     4,
-      10,     4,    22,    23,     4,     5,     6,     7,     8,    11,
-      10,    11,    22,    23,     4,     5,     6,     7,     8,    55,
-      10,    19,    22,    19,    60,    19,    21,    20,    20,     4,
-      21,     4,    22,    22,    20,    20,    19,    19,    26,    19,
-      19,     4,     4,    20,     9,    21,    65,    21,    49,    21,
-      20,    55,    21,    20,    20,    -1,    20,    -1,    -1,    -1,
-      21,    21,    49
+      37,     3,     4,     3,     4,    21,     8,    12,     8,     3,
+       4,    27,     0,    42,    43,    44,    53,     6,     5,    21,
+      49,    12,     7,    40,     4,     5,    28,     7,    28,     9,
+      10,    48,     5,    13,    28,    22,    73,    66,    67,    68,
+      69,     5,    21,    80,    24,    74,    75,    76,    77,    78,
+      79,     8,     4,     4,    21,     7,     5,     9,    10,     4,
+      97,    13,     7,    21,     9,    10,    22,    22,    13,    23,
+       4,     4,    24,    25,    27,    28,    29,    30,     4,    24,
+      25,     7,    23,     9,    10,    24,    22,    13,    26,    14,
+      15,    16,    17,    18,    19,    23,    23,    21,    24,    21,
+      21,    21,    11,    35,    23,    22,    22,    22,    22,    22,
+      -1,    23,    23,    44,    -1,    -1,    -1,    35
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,    13,    32,    33,    12,     0,    13,    34,     5,    11,
-      11,    12,    35,    19,     6,     4,     4,    11,    19,    19,
-      19,    20,    20,    11,    20,    11,    20,    21,    21,     4,
-      22,    36,     4,    36,    20,     4,     5,     6,     7,     8,
-      10,    11,    36,    37,    38,    39,    40,    42,    44,    47,
-      48,    49,    50,    20,    36,    26,    19,    19,     3,     4,
-      19,    28,    45,    46,    19,    19,     4,    23,    38,    38,
-      37,    48,    36,    45,    49,     4,    20,    45,    46,    21,
-      27,    28,    29,    30,    43,    46,    43,    21,     9,    41,
-      23,    21,    20,    21,    20,    46,    46,    46,    46,    20,
-      14,    15,    16,    17,    24,    25,    20,    38,    21,    21,
-      46,    46,    46,    46,    46,    46,    38
+       0,    12,    32,    34,     6,     0,    12,    33,     7,     5,
+       5,    35,    21,     8,     4,     5,    21,    21,    22,    22,
+       5,    22,    23,    23,     4,    24,    36,    22,     4,     5,
+       7,     9,    10,    13,    36,    37,    38,    39,    40,    36,
+      26,     4,    21,    21,    21,     3,     4,     8,    21,    28,
+      42,    43,    38,    39,    25,    40,    42,    23,    43,    41,
+      43,    41,    21,    42,    43,    23,    27,    28,    29,    30,
+      25,    23,    22,    22,    14,    15,    16,    17,    18,    19,
+      22,    22,    22,    43,    43,    43,    43,    23,    40,    43,
+      43,    43,    43,    43,    43,    40,    23,    11,    40
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    31,    32,    33,    34,    35,    35,    35,    35,    36,
-      36,    37,    37,    38,    38,    38,    38,    38,    38,    39,
-      39,    40,    41,    42,    43,    43,    43,    43,    43,    43,
-      44,    44,    45,    45,    45,    45,    45,    46,    46,    46,
-      47,    47,    48,    49,    49,    50,    50
+       0,    31,    32,    33,    34,    35,    35,    36,    36,    37,
+      37,    38,    39,    39,    40,    40,    40,    40,    40,    40,
+      40,    40,    41,    41,    41,    41,    41,    41,    42,    42,
+      42,    42,    42,    42,    43,    43,    43
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     3,     7,     6,     7,     7,     5,     5,     4,
-       3,     2,     1,     1,     1,     1,     1,     1,     1,     2,
-       3,     4,     2,     5,     3,     3,     3,     3,     3,     3,
-       4,     3,     3,     3,     3,     3,     1,     1,     1,     2,
-       2,     1,     3,     5,     4,     5,     3
+       0,     2,     3,     6,     7,     5,     7,     4,     3,     2,
+       1,     3,     2,     1,     4,     1,     5,     7,     5,     5,
+       5,     3,     3,     3,     3,     3,     3,     3,     3,     3,
+       3,     3,     1,     3,     1,     1,     2
 };
 
 
@@ -1269,293 +1251,229 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-  case 2: /* program: print_line read_line func  */
-#line 39 "frontend/part1.y"
-                                              {(yyval.nptr) = createProg((yyvsp[-2].nptr), (yyvsp[-1].nptr), (yyvsp[0].nptr));
-												root = (yyval.nptr);}
-#line 1277 "y.tab.c"
+  case 2: /* prog: extern_print extern_read func_def  */
+#line 33 "ir_builder/grammar_shared/minic.y"
+                                                  { (yyval.nptr) = createProg((yyvsp[-2].nptr), (yyvsp[-1].nptr), (yyvsp[0].nptr)); 
+																				    root = (yyval.nptr);
+																					}
+#line 1260 "y.tab.c"
     break;
 
-  case 3: /* print_line: EXTERN VOID PRINT '(' INT ')' ';'  */
-#line 41 "frontend/part1.y"
-                                                    {(yyval.nptr) = createExtern("print");}
-#line 1283 "y.tab.c"
+  case 3: /* extern_read: EXTERN INT READ '(' ')' ';'  */
+#line 37 "ir_builder/grammar_shared/minic.y"
+                                         { (yyval.nptr) = createExtern("read");}
+#line 1266 "y.tab.c"
     break;
 
-  case 4: /* read_line: EXTERN INT READ '(' ')' ';'  */
-#line 42 "frontend/part1.y"
-                                                    {(yyval.nptr) = createExtern("read");}
-#line 1289 "y.tab.c"
+  case 4: /* extern_print: EXTERN VOID PRINT '(' INT ')' ';'  */
+#line 39 "ir_builder/grammar_shared/minic.y"
+                                               { (yyval.nptr) = createExtern("print");}
+#line 1272 "y.tab.c"
     break;
 
-  case 5: /* func: INT NAME '(' INT NAME ')' code_block  */
-#line 46 "frontend/part1.y"
-                                                  {(yyval.nptr) = createFunc((yyvsp[-5].idname), createVar((yyvsp[-2].idname)), (yyvsp[0].nptr));
-													free((yyvsp[-5].idname)); free((yyvsp[-2].idname));}
-#line 1296 "y.tab.c"
+  case 5: /* func_def: INT ID '(' ')' block_stmt  */
+#line 41 "ir_builder/grammar_shared/minic.y"
+                                       {  (yyval.nptr) = createFunc((yyvsp[-3].idname), NULL, (yyvsp[0].nptr)); 
+																					free((yyvsp[-3].idname));}
+#line 1279 "y.tab.c"
     break;
 
-  case 6: /* func: VOID NAME '(' INT NAME ')' code_block  */
-#line 48 "frontend/part1.y"
-                                                  {(yyval.nptr) = createFunc((yyvsp[-5].idname), createVar((yyvsp[-2].idname)), (yyvsp[0].nptr));
-													free((yyvsp[-5].idname)); free((yyvsp[-2].idname));}
-#line 1303 "y.tab.c"
+  case 6: /* func_def: INT ID '(' INT ID ')' block_stmt  */
+#line 43 "ir_builder/grammar_shared/minic.y"
+                                                                            { astNode* vnptr = createVar((yyvsp[-2].idname));
+																								(yyval.nptr) = createFunc((yyvsp[-5].idname), vnptr, (yyvsp[0].nptr)); free((yyvsp[-5].idname)); free((yyvsp[-2].idname));}
+#line 1286 "y.tab.c"
     break;
 
-  case 7: /* func: INT NAME '(' ')' code_block  */
-#line 50 "frontend/part1.y"
-                                                  {(yyval.nptr) = createFunc((yyvsp[-3].idname), NULL, (yyvsp[0].nptr));
-													free((yyvsp[-3].idname));}
-#line 1310 "y.tab.c"
+  case 7: /* block_stmt: '{' var_decls stmts '}'  */
+#line 46 "ir_builder/grammar_shared/minic.y"
+                                     { vector<astNode*>* new_vec = new vector<astNode*>();
+																			 new_vec->insert(new_vec->end(), (yyvsp[-2].svec_ptr)->begin(), (yyvsp[-2].svec_ptr)->end());
+																			 new_vec->insert(new_vec->end(), (yyvsp[-1].svec_ptr)->begin(), (yyvsp[-1].svec_ptr)->end());
+																			 (yyval.nptr) = createBlock(new_vec); 
+																		   delete((yyvsp[-2].svec_ptr));
+																			 delete((yyvsp[-1].svec_ptr));
+																		 }
+#line 1298 "y.tab.c"
     break;
 
-  case 8: /* func: VOID NAME '(' ')' code_block  */
-#line 52 "frontend/part1.y"
-                                                  {(yyval.nptr) = createFunc((yyvsp[-3].idname), NULL, (yyvsp[0].nptr));
-													free((yyvsp[-3].idname));}
-#line 1317 "y.tab.c"
+  case 8: /* block_stmt: '{' stmts '}'  */
+#line 53 "ir_builder/grammar_shared/minic.y"
+                                                         { (yyval.nptr) = createBlock((yyvsp[-1].svec_ptr));}
+#line 1304 "y.tab.c"
     break;
 
-  case 9: /* code_block: '{' var_decls stmts '}'  */
-#line 57 "frontend/part1.y"
-                                        {
-											vector<astNode*>* new_vec = new vector<astNode*>();
-											new_vec->insert(new_vec->end(), (yyvsp[-2].svec_ptr)->begin(), (yyvsp[-2].svec_ptr)->end());
-											new_vec->insert(new_vec->end(), (yyvsp[-1].svec_ptr)->begin(), (yyvsp[-1].svec_ptr)->end());
-											(yyval.nptr) = createBlock(new_vec); 
-											delete((yyvsp[-2].svec_ptr));
-											delete((yyvsp[-1].svec_ptr));
-										}
-#line 1330 "y.tab.c"
+  case 9: /* var_decls: var_decls decl  */
+#line 55 "ir_builder/grammar_shared/minic.y"
+                                  { (yyval.svec_ptr) = (yyvsp[-1].svec_ptr);
+														  (yyval.svec_ptr)->push_back((yyvsp[0].nptr));}
+#line 1311 "y.tab.c"
     break;
 
-  case 10: /* code_block: '{' stmts '}'  */
-#line 65 "frontend/part1.y"
-                                                                {(yyval.nptr) = createBlock((yyvsp[-1].svec_ptr));}
-#line 1336 "y.tab.c"
+  case 10: /* var_decls: decl  */
+#line 57 "ir_builder/grammar_shared/minic.y"
+                                                { (yyval.svec_ptr) = new vector<astNode*>();
+									  (yyval.svec_ptr)->push_back((yyvsp[0].nptr));}
+#line 1318 "y.tab.c"
     break;
 
-  case 11: /* stmts: stmts stmt  */
-#line 68 "frontend/part1.y"
-                                                                {(yyval.svec_ptr) = (yyvsp[-1].svec_ptr); (yyval.svec_ptr)->push_back((yyvsp[0].nptr));}
-#line 1342 "y.tab.c"
+  case 11: /* decl: INT ID ';'  */
+#line 60 "ir_builder/grammar_shared/minic.y"
+                                      { (yyval.nptr) = createDecl((yyvsp[-1].idname)); free((yyvsp[-1].idname));}
+#line 1324 "y.tab.c"
     break;
 
-  case 12: /* stmts: stmt  */
-#line 69 "frontend/part1.y"
-                                                                        {(yyval.svec_ptr) = new vector<astNode*>(); (yyval.svec_ptr)->push_back((yyvsp[0].nptr));}
-#line 1348 "y.tab.c"
+  case 12: /* stmts: stmts stmt  */
+#line 62 "ir_builder/grammar_shared/minic.y"
+                                      { (yyval.svec_ptr) = (yyvsp[-1].svec_ptr);
+												  (yyval.svec_ptr)->push_back((yyvsp[0].nptr));}
+#line 1331 "y.tab.c"
     break;
 
-  case 13: /* stmt: assign_stmt  */
-#line 70 "frontend/part1.y"
-                                                                {(yyval.nptr) = (yyvsp[0].nptr);}
-#line 1354 "y.tab.c"
+  case 13: /* stmts: stmt  */
+#line 64 "ir_builder/grammar_shared/minic.y"
+                                                { (yyval.svec_ptr) = new vector<astNode*>();
+									  (yyval.svec_ptr)->push_back((yyvsp[0].nptr));}
+#line 1338 "y.tab.c"
     break;
 
-  case 14: /* stmt: call_func_stmt  */
-#line 71 "frontend/part1.y"
-                                                                {(yyval.nptr) = (yyvsp[0].nptr);}
-#line 1360 "y.tab.c"
+  case 14: /* stmt: ID '=' expr ';'  */
+#line 67 "ir_builder/grammar_shared/minic.y"
+                                           { astNode* vnptr = createVar((yyvsp[-3].idname));
+															 (yyval.nptr) = createAsgn(vnptr, (yyvsp[-1].nptr));
+															 free((yyvsp[-3].idname)); 
+														 }
+#line 1347 "y.tab.c"
     break;
 
-  case 15: /* stmt: return_stmt  */
-#line 72 "frontend/part1.y"
-                                                                {(yyval.nptr) = (yyvsp[0].nptr);}
-#line 1366 "y.tab.c"
+  case 16: /* stmt: WHILE '(' cond ')' stmt  */
+#line 72 "ir_builder/grammar_shared/minic.y"
+                                                                   { (yyval.nptr) = createWhile((yyvsp[-2].nptr), (yyvsp[0].nptr));}
+#line 1353 "y.tab.c"
     break;
 
-  case 16: /* stmt: condition_block  */
-#line 73 "frontend/part1.y"
-                                                                {(yyval.nptr) = (yyvsp[0].nptr);}
-#line 1372 "y.tab.c"
+  case 17: /* stmt: IF '(' cond ')' stmt ELSE stmt  */
+#line 73 "ir_builder/grammar_shared/minic.y"
+                                                                          { (yyval.nptr) = createIf((yyvsp[-4].nptr), (yyvsp[-2].nptr), (yyvsp[0].nptr));}
+#line 1359 "y.tab.c"
     break;
 
-  case 17: /* stmt: while_block  */
-#line 74 "frontend/part1.y"
-                                                                {(yyval.nptr) = (yyvsp[0].nptr);}
-#line 1378 "y.tab.c"
+  case 18: /* stmt: IF '(' cond ')' stmt  */
+#line 74 "ir_builder/grammar_shared/minic.y"
+                                                                             { (yyval.nptr) = createIf((yyvsp[-2].nptr), (yyvsp[0].nptr));}
+#line 1365 "y.tab.c"
     break;
 
-  case 18: /* stmt: code_block  */
-#line 75 "frontend/part1.y"
-                                                                {(yyval.nptr) = (yyvsp[0].nptr);}
-#line 1384 "y.tab.c"
+  case 19: /* stmt: PRINT '(' term ')' ';'  */
+#line 75 "ir_builder/grammar_shared/minic.y"
+                                                                  { (yyval.nptr) = createCall("print", (yyvsp[-2].nptr));}
+#line 1371 "y.tab.c"
     break;
 
-  case 19: /* condition_block: if_condition stmt  */
-#line 78 "frontend/part1.y"
-                                                                                        {(yyval.nptr) = createIf((yyvsp[-1].nptr), (yyvsp[0].nptr));}
-#line 1390 "y.tab.c"
+  case 20: /* stmt: RETURN '(' expr ')' ';'  */
+#line 76 "ir_builder/grammar_shared/minic.y"
+                                                                   { (yyval.nptr) = createRet((yyvsp[-2].nptr));}
+#line 1377 "y.tab.c"
     break;
 
-  case 20: /* condition_block: if_condition stmt else_condition  */
-#line 79 "frontend/part1.y"
-                                                                                                        {(yyval.nptr) = createIf((yyvsp[-2].nptr), (yyvsp[-1].nptr), (yyvsp[0].nptr));}
-#line 1396 "y.tab.c"
+  case 21: /* stmt: RETURN expr ';'  */
+#line 77 "ir_builder/grammar_shared/minic.y"
+                                                           { (yyval.nptr) = createRet((yyvsp[-1].nptr));}
+#line 1383 "y.tab.c"
     break;
 
-  case 21: /* if_condition: IF '(' bool_condition ')'  */
-#line 80 "frontend/part1.y"
-                                                        {(yyval.nptr) = (yyvsp[-1].nptr);}
-#line 1402 "y.tab.c"
+  case 22: /* cond: term GT term  */
+#line 80 "ir_builder/grammar_shared/minic.y"
+                                          { (yyval.nptr) = createRExpr((yyvsp[-2].nptr), (yyvsp[0].nptr), gt);}
+#line 1389 "y.tab.c"
     break;
 
-  case 22: /* else_condition: ELSE stmt  */
-#line 81 "frontend/part1.y"
-                                                                        {(yyval.nptr) = (yyvsp[0].nptr);}
-#line 1408 "y.tab.c"
+  case 23: /* cond: term LT term  */
+#line 81 "ir_builder/grammar_shared/minic.y"
+                                                          { (yyval.nptr) = createRExpr((yyvsp[-2].nptr), (yyvsp[0].nptr), lt);}
+#line 1395 "y.tab.c"
     break;
 
-  case 23: /* while_block: WHILE '(' bool_condition ')' stmt  */
-#line 84 "frontend/part1.y"
-                                                                        {(yyval.nptr) = createWhile((yyvsp[-2].nptr),(yyvsp[0].nptr));}
-#line 1414 "y.tab.c"
+  case 24: /* cond: term EQ term  */
+#line 82 "ir_builder/grammar_shared/minic.y"
+                                                          { (yyval.nptr) = createRExpr((yyvsp[-2].nptr), (yyvsp[0].nptr), eq);}
+#line 1401 "y.tab.c"
     break;
 
-  case 24: /* bool_condition: term '<' term  */
-#line 87 "frontend/part1.y"
-                                                        {(yyval.nptr) = createRExpr((yyvsp[-2].nptr), (yyvsp[0].nptr), lt);}
-#line 1420 "y.tab.c"
+  case 25: /* cond: term GE term  */
+#line 83 "ir_builder/grammar_shared/minic.y"
+                                                          { (yyval.nptr) = createRExpr((yyvsp[-2].nptr), (yyvsp[0].nptr), ge);}
+#line 1407 "y.tab.c"
     break;
 
-  case 25: /* bool_condition: term '>' term  */
-#line 88 "frontend/part1.y"
-                                                                        {(yyval.nptr) = createRExpr((yyvsp[-2].nptr), (yyvsp[0].nptr), gt);}
-#line 1426 "y.tab.c"
+  case 26: /* cond: term LE term  */
+#line 84 "ir_builder/grammar_shared/minic.y"
+                                                          { (yyval.nptr) = createRExpr((yyvsp[-2].nptr), (yyvsp[0].nptr), le);}
+#line 1413 "y.tab.c"
     break;
 
-  case 26: /* bool_condition: term LE term  */
-#line 89 "frontend/part1.y"
-                                                                        {(yyval.nptr) = createRExpr((yyvsp[-2].nptr), (yyvsp[0].nptr), le);}
-#line 1432 "y.tab.c"
+  case 27: /* cond: term NEQ term  */
+#line 85 "ir_builder/grammar_shared/minic.y"
+                                                          { (yyval.nptr) = createRExpr((yyvsp[-2].nptr), (yyvsp[0].nptr), neq);}
+#line 1419 "y.tab.c"
     break;
 
-  case 27: /* bool_condition: term GE term  */
-#line 90 "frontend/part1.y"
-                                                                        {(yyval.nptr) = createRExpr((yyvsp[-2].nptr), (yyvsp[0].nptr), ge);}
-#line 1438 "y.tab.c"
+  case 28: /* expr: term '+' term  */
+#line 88 "ir_builder/grammar_shared/minic.y"
+                                         { (yyval.nptr) = createBExpr((yyvsp[-2].nptr), (yyvsp[0].nptr), add);}
+#line 1425 "y.tab.c"
     break;
 
-  case 28: /* bool_condition: term EQ term  */
-#line 91 "frontend/part1.y"
-                                                                        {(yyval.nptr) = createRExpr((yyvsp[-2].nptr), (yyvsp[0].nptr), eq);}
-#line 1444 "y.tab.c"
+  case 29: /* expr: term '-' term  */
+#line 89 "ir_builder/grammar_shared/minic.y"
+                                                         { (yyval.nptr) = createBExpr((yyvsp[-2].nptr), (yyvsp[0].nptr), sub);}
+#line 1431 "y.tab.c"
     break;
 
-  case 29: /* bool_condition: term NEQ term  */
-#line 92 "frontend/part1.y"
-                                                                        {(yyval.nptr) = createRExpr((yyvsp[-2].nptr), (yyvsp[0].nptr), neq);}
-#line 1450 "y.tab.c"
+  case 30: /* expr: term '*' term  */
+#line 90 "ir_builder/grammar_shared/minic.y"
+                                                         { (yyval.nptr) = createBExpr((yyvsp[-2].nptr), (yyvsp[0].nptr), mul);}
+#line 1437 "y.tab.c"
     break;
 
-  case 30: /* assign_stmt: NAME '=' expr ';'  */
-#line 95 "frontend/part1.y"
-                                                                {(yyval.nptr) = createAsgn(createVar((yyvsp[-3].idname)), (yyvsp[-1].nptr));
-												free((yyvsp[-3].idname));}
-#line 1457 "y.tab.c"
+  case 31: /* expr: term '/' term  */
+#line 91 "ir_builder/grammar_shared/minic.y"
+                                                         { (yyval.nptr) = createBExpr((yyvsp[-2].nptr), (yyvsp[0].nptr), divide);}
+#line 1443 "y.tab.c"
     break;
 
-  case 31: /* assign_stmt: NAME '=' call_func_stmt  */
-#line 97 "frontend/part1.y"
-                                                                        {(yyval.nptr) = createAsgn(createVar((yyvsp[-2].idname)), (yyvsp[0].nptr));
-												free((yyvsp[-2].idname));}
-#line 1464 "y.tab.c"
+  case 32: /* expr: term  */
+#line 92 "ir_builder/grammar_shared/minic.y"
+                                                { (yyval.nptr) = (yyvsp[0].nptr);}
+#line 1449 "y.tab.c"
     break;
 
-  case 32: /* expr: term '+' term  */
-#line 99 "frontend/part1.y"
-                                                                        {(yyval.nptr) = createBExpr((yyvsp[-2].nptr), (yyvsp[0].nptr), add);}
-#line 1470 "y.tab.c"
+  case 33: /* expr: READ '(' ')'  */
+#line 93 "ir_builder/grammar_shared/minic.y"
+                                                        { (yyval.nptr) = createCall("read");}
+#line 1455 "y.tab.c"
     break;
 
-  case 33: /* expr: term '-' term  */
-#line 100 "frontend/part1.y"
-                                                                                {(yyval.nptr) = createBExpr((yyvsp[-2].nptr), (yyvsp[0].nptr), sub);}
-#line 1476 "y.tab.c"
+  case 34: /* term: NUM  */
+#line 95 "ir_builder/grammar_shared/minic.y"
+                               { (yyval.nptr) = createCnst((yyvsp[0].ival));}
+#line 1461 "y.tab.c"
     break;
 
-  case 34: /* expr: term '*' term  */
-#line 101 "frontend/part1.y"
-                                                                                {(yyval.nptr) = createBExpr((yyvsp[-2].nptr), (yyvsp[0].nptr), mul);}
-#line 1482 "y.tab.c"
+  case 35: /* term: ID  */
+#line 96 "ir_builder/grammar_shared/minic.y"
+                                              { (yyval.nptr) = createVar((yyvsp[0].idname)); free((yyvsp[0].idname));}
+#line 1467 "y.tab.c"
     break;
 
-  case 35: /* expr: term '/' term  */
-#line 102 "frontend/part1.y"
-                                                                                {(yyval.nptr) = createBExpr((yyvsp[-2].nptr), (yyvsp[0].nptr), divide);}
-#line 1488 "y.tab.c"
-    break;
-
-  case 36: /* expr: term  */
-#line 103 "frontend/part1.y"
-                                                                                        {(yyval.nptr) = (yyvsp[0].nptr);}
-#line 1494 "y.tab.c"
-    break;
-
-  case 37: /* term: NUM  */
-#line 106 "frontend/part1.y"
-                                                                                        {(yyval.nptr) = createCnst((yyvsp[0].ival));}
-#line 1500 "y.tab.c"
-    break;
-
-  case 38: /* term: NAME  */
-#line 107 "frontend/part1.y"
-                                                                                        {(yyval.nptr) = createVar((yyvsp[0].idname)); free((yyvsp[0].idname));}
-#line 1506 "y.tab.c"
-    break;
-
-  case 39: /* term: '-' term  */
-#line 108 "frontend/part1.y"
-                                                                                        {(yyval.nptr) = createUExpr((yyvsp[0].nptr), uminus);}
-#line 1512 "y.tab.c"
-    break;
-
-  case 40: /* var_decls: var_decls decl  */
-#line 111 "frontend/part1.y"
-                                                        {(yyval.svec_ptr) = (yyvsp[-1].svec_ptr); (yyval.svec_ptr)->push_back((yyvsp[0].nptr));}
-#line 1518 "y.tab.c"
-    break;
-
-  case 41: /* var_decls: decl  */
-#line 112 "frontend/part1.y"
-                                                                        {(yyval.svec_ptr) = new vector<astNode*>(); (yyval.svec_ptr)->push_back((yyvsp[0].nptr));}
-#line 1524 "y.tab.c"
-    break;
-
-  case 42: /* decl: INT NAME ';'  */
-#line 113 "frontend/part1.y"
-                                                                {(yyval.nptr) = createDecl((yyvsp[-1].idname));
-										free((yyvsp[-1].idname));}
-#line 1531 "y.tab.c"
-    break;
-
-  case 43: /* call_func_stmt: PRINT '(' NAME ')' ';'  */
-#line 117 "frontend/part1.y"
-                                        {(yyval.nptr) = createCall("print", createVar((yyvsp[-2].idname))); free((yyvsp[-2].idname));}
-#line 1537 "y.tab.c"
-    break;
-
-  case 44: /* call_func_stmt: READ '(' ')' ';'  */
-#line 118 "frontend/part1.y"
-                                                                {(yyval.nptr) = createCall("read");}
-#line 1543 "y.tab.c"
-    break;
-
-  case 45: /* return_stmt: RETURN '(' expr ')' ';'  */
-#line 121 "frontend/part1.y"
-                                                {(yyval.nptr) = createRet((yyvsp[-2].nptr));}
-#line 1549 "y.tab.c"
-    break;
-
-  case 46: /* return_stmt: RETURN expr ';'  */
-#line 122 "frontend/part1.y"
-                                                                        {(yyval.nptr) = createRet((yyvsp[-1].nptr));}
-#line 1555 "y.tab.c"
+  case 36: /* term: '-' term  */
+#line 97 "ir_builder/grammar_shared/minic.y"
+                                                    { (yyval.nptr) = createUExpr((yyvsp[0].nptr), uminus);}
+#line 1473 "y.tab.c"
     break;
 
 
-#line 1559 "y.tab.c"
+#line 1477 "y.tab.c"
 
       default: break;
     }
@@ -1748,11 +1666,11 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 123 "frontend/part1.y"
+#line 100 "ir_builder/grammar_shared/minic.y"
 
 
-int yyerror(char *s){
-	exit(1);
+void yyerror(const char *){
+	fprintf(stderr, "Syntax error\n");
 }
 
 astNode* ret_root(){
