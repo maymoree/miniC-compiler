@@ -24,6 +24,8 @@ extern astNode* ret_root();
 int main(int argc, char* argv[]){
     // PART 1 --------------------
     // takes the second argument for front end part
+
+    printf("\n------------------------------------ PART 1 !!!!!!! ------------------------------------\n");
     if (argc >= 2){
         yyin = fopen(argv[1], "r");
 
@@ -44,14 +46,15 @@ int main(int argc, char* argv[]){
         return 1;
     }
 
+
     // PART 2 --------------------
-    printf("\nPART 2 !!!!!!!\n");
+    printf("\n------------------------------------ PART 2 !!!!!!! ------------------------------------\n");
     LLVMModuleRef mod = ir_builder(root);
 
+
     // PART 3 ---------------------
-    if (argc >= 2){
-        main_optimization(argv[2]);
-    }
+    printf("\n------------------------------------ PART 3 !!!!!!! ------------------------------------\n");
+    main_optimization(mod);
 
     // clean up
     if (argc >= 2) fclose(yyin);
