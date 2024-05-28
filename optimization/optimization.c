@@ -33,7 +33,7 @@ bool delete_load(LLVMModuleRef module,
 bool local_constant_folding(LLVMModuleRef module);
 bool global_constant_propagation(LLVMModuleRef module);
 void optimize(LLVMModuleRef module);
-void main_optimization(char* file);
+void main_optimization(LLVMModuleRef module);
 
 /* This function reads the given llvm file and loads the LLVM IR into
 	 data-structures that we can works on for optimization phase.
@@ -821,7 +821,7 @@ void optimize(LLVMModuleRef module) {
 
 		// help_print_instructions(module);
 	}
-	help_print_instructions(module);
+	LLVMDumpModule(module);
 	printf("\n ------------------------- OPTIMIZED FIXED POINT ------------------------- \n");
 }
 
@@ -894,19 +894,19 @@ void print_vector(vector<LLVMValueRef>* elim_instruction) {
 }
 
 // call main_optimization in outside main
-void main_optimization(char* file) {
+void main_optimization(LLVMModuleRef module) {
 
-	LLVMModuleRef m;
+	// LLVMModuleRef m;
 
-	m = createLLVMModel(file);
+	// m = createLLVMModel(file);
 
-	if (m != NULL){
+	if (module != NULL){
 
-		optimize(m);
+		optimize(module);
 
-		LLVMPrintModuleToFile (m, "test.ll", NULL);
+		LLVMPrintModuleToFile (module, "pt3.ll", NULL);
 
-		LLVMDisposeModule(m);
+		LLVMDisposeModule(module);
 	}
 	else {
 	    fprintf(stderr, "m is NULL\n");

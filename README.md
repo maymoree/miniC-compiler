@@ -10,12 +10,9 @@
 Currently... have not created bash test files a nicely formatted output
 ### Part 1 and 2 output --> calls ./ir_builder/builder_test/p2.c
 - part 1: prints out the ast and runs semantic analysis
-- part 2: creats `pt2.ll` file containing module
-### Part 3 output --> calls ./optimization/optimizer_test_results/p4_const_prop.ll
-- creates test.ll file 
-- prints out the optimized instructions
-   - each block is marked by ***List of Instructions-------------***
-
+- part 2: creates `pt2.ll` file containing module
+### Part 3 output --> uses module created from part 2
+- creates `pt3.ll` file 
 
 ## Part 1 -- Frontend (frontend folder)
 

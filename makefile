@@ -36,7 +36,7 @@ y.tab.h y.tab.c : $(yacc)
 	yacc -d -v $<		
 
 test: $(cmplr).out
-	./$(cmplr).out ./ir_builder/builder_tests/p6.c ./optimization/optimizer_test_results/p4_const_prop.ll
+	./$(cmplr).out ./ir_builder/builder_tests/p2.c ./optimization/optimizer_test_results/p4_const_prop.ll
 
 valgrind: $(cmplr).out
 	$(VALGRIND) ./$(cmplr).out ./ir_builder/builder_tests/p2.c ./optimization/optimizer_test_results/p4_const_prop.ll
