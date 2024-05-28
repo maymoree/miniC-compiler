@@ -1,5 +1,5 @@
-extern int read();
 extern void print(int);
+extern int read();
 
 int func(int n){
 	int max;
