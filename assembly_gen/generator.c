@@ -22,6 +22,7 @@ LLVMValueRef find_spill(LLVMValueRef instruc, map<LLVMValueRef, int> &reg_map, m
 // map<LLVMValueRef, int> getOffsetMap(LLVMValueRef func, int* local_mem); // ???
 void generator(LLVMModuleRef mod); // ???
 vector<LLVMValueRef> sort_list(map<LLVMValueRef, pair<int, int>> &live_range);
+bool isInstructionWithoutResult(LLVMValueRef instruc);
 
 map<int, string> REGISTER_MAP = {
     {0, "ebx"},
@@ -56,15 +57,20 @@ map<LLVMValueRef, int> register_allocation(LLVMModuleRef mod, map<LLVMValueRef, 
             instruction; 
             instruction = LLVMGetNextInstruction(instruction)) {
 
+                LLVMDumpValue(instruction);
+                printf("\n");
+
                 LLVMOpcode instruc_opcode = LLVMGetInstructionOpcode(instruction);
 
                 // alloc instructions
                 if (instruc_opcode == LLVMAlloca) { // check if it's an alloc instruction
+                    printf("alloc\n");
                     continue;
                 }
 
-                if (instruc_opcode == LLVMStore || instruc_opcode == LLVMBr || instruc_opcode == LLVMCall) { // no result instructions
-                    
+                if (isInstructionWithoutResult(instruction)) { // no result instructions
+                    printf("no results\n");
+
                     // loop through instruc's operands to check if any of it has ended
                     int num_operands = LLVMGetNumOperands(instruction);
                     for (int i = 0; i < num_operands; i++) {
@@ -79,8 +85,10 @@ map<LLVMValueRef, int> register_allocation(LLVMModuleRef mod, map<LLVMValueRef, 
 
                 }
                 else { 
-                    if (instruc_opcode == LLVMAdd || instruc_opcode == LLVMSub || instruc_opcode == LLVMMul) { // if add sub or mul
+                    printf("good instruction\n");
 
+                    if (instruc_opcode == LLVMAdd || instruc_opcode == LLVMSub || instruc_opcode == LLVMMul) { // if add sub or mul
+                        printf("is add sub or mul\n");
                         LLVMValueRef first_op = LLVMGetOperand(instruction, 0);
 
                         // check if first op has physical register and it's liveness range ends at instruction
@@ -88,7 +96,6 @@ map<LLVMValueRef, int> register_allocation(LLVMModuleRef mod, map<LLVMValueRef, 
                             
                             // add free register to reg_map with instruction
                             int reg = reg_map.at(first_op);
-                            registers.erase(reg); // might be redundant
                             reg_map.insert(pair<LLVMValueRef, int> (instruction, reg));
 
                             // add free register from second operand to available registers
@@ -101,7 +108,7 @@ map<LLVMValueRef, int> register_allocation(LLVMModuleRef mod, map<LLVMValueRef, 
 
                     }
                     else if (!registers.empty()) { // if there are registers available
-
+                        printf("is not empty\n");
                         // get a register and add it to reg_map with current instruction
                         auto first_reg = registers.begin(); 
                         int reg = *first_reg;
@@ -122,6 +129,7 @@ map<LLVMValueRef, int> register_allocation(LLVMModuleRef mod, map<LLVMValueRef, 
 
                     }
                     else {
+                        printf("is empty\n");
                         vector<LLVMValueRef> sorted_list = sort_list(live_range);
                         LLVMValueRef spill = find_spill(instruction, reg_map, inst_index, sorted_list, live_range);
 
@@ -153,6 +161,20 @@ map<LLVMValueRef, int> register_allocation(LLVMModuleRef mod, map<LLVMValueRef, 
                 }
                 
             }
+
+            printf("\n available registers!!!\n");
+            for (int reg : registers) {
+                printf("reg: %d \n", reg);
+            }
+
+            printf("\nreg_map!!!\n");
+            for (const auto& itr : reg_map) {
+                LLVMValueRef instr = itr.first;
+                int reg = itr.second;
+                LLVMDumpValue(instr);
+                printf(" --> reg: %d \n", reg);
+            }
+
         }
 
     }
@@ -269,6 +291,25 @@ LLVMValueRef find_spill(LLVMValueRef instruc, map<LLVMValueRef, int> &reg_map, m
     }
 
     return NULL;
+}
+
+bool isInstructionWithoutResult(LLVMValueRef instruc) {
+
+    LLVMOpcode opcode = LLVMGetInstructionOpcode(instruc);
+
+    if (opcode == LLVMStore || opcode == LLVMBr || opcode == LLVMRet) {
+        return true;
+    }
+
+    if (opcode == LLVMCall) {
+        LLVMTypeRef call_type = LLVMGetCalledFunctionType(instruc);
+        LLVMTypeRef call_ret_type = LLVMGetReturnType(call_type);
+        if (call_ret_type && (LLVMGetTypeKind(call_ret_type) == LLVMVoidTypeKind)) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 void generator(LLVMModuleRef mod) {

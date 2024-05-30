@@ -7,6 +7,8 @@
 #include <set>
 #include <string>
 #include <iostream>
+#include <algorithm>
+
 
 using namespace std;
 
@@ -20,3 +22,4 @@ LLVMValueRef find_spill(LLVMValueRef instruc, map<LLVMValueRef, int> &reg_map, m
 // map<LLVMValueRef, int> getOffsetMap(LLVMValueRef func, int* local_mem); // ???
 void generator(LLVMModuleRef mod); // ???
 vector<LLVMValueRef> sort_list(map<LLVMValueRef, pair<int, int>> &live_range);
+bool isInstructionWithoutResult(LLVMValueRef instruc);
