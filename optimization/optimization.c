@@ -896,10 +896,6 @@ void print_vector(vector<LLVMValueRef>* elim_instruction) {
 // call main_optimization in outside main
 void main_optimization(LLVMModuleRef module) {
 
-	// LLVMModuleRef m;
-
-	// m = createLLVMModel(file);
-
 	if (module != NULL){
 
 		optimize(module);
