@@ -86,6 +86,11 @@ map<LLVMValueRef, int> register_allocation(LLVMModuleRef mod, map<LLVMValueRef, 
                 }
                 else { 
                     printf("good instruction\n");
+                    
+                    printf("\n available registers!!!\n");
+                    for (int reg : registers) {
+                        printf("reg: %d \n", reg);
+                    }
 
                     if (instruc_opcode == LLVMAdd || instruc_opcode == LLVMSub || instruc_opcode == LLVMMul) { // if add sub or mul
                         printf("is add sub or mul\n");
@@ -109,11 +114,12 @@ map<LLVMValueRef, int> register_allocation(LLVMModuleRef mod, map<LLVMValueRef, 
                     }
                     else if (!registers.empty()) { // if there are registers available
                         printf("is not empty\n");
+
                         // get a register and add it to reg_map with current instruction
                         auto first_reg = registers.begin(); 
                         int reg = *first_reg;
-                        reg_map.insert(pair<LLVMValueRef, int> (instruction, reg));
                         registers.erase(reg); 
+                        reg_map.insert(pair<LLVMValueRef, int> (instruction, reg));
 
                         // loop through instruc's operands to check if any of it has ended
                         int num_operands = LLVMGetNumOperands(instruction);
@@ -175,6 +181,9 @@ map<LLVMValueRef, int> register_allocation(LLVMModuleRef mod, map<LLVMValueRef, 
                 printf(" --> reg: %d \n", reg);
             }
 
+            inst_index.clear();
+            live_range.clear();
+
         }
 
     }
@@ -213,26 +222,29 @@ void compute_liveness(LLVMBasicBlockRef basicBlock, map<LLVMValueRef, int> &inst
             continue;
         }
 
-        // gets the first use of the instruction
         LLVMUseRef first_use = LLVMGetFirstUse(instruction);
-
+        
         if (first_use == NULL) { // there is no use of the instruction
             int use_idx = inst_index.at(instruction);
             pair<LLVMValueRef, pair<int, int>> use_pair(instruction, pair<int, int> (use_idx, use_idx));
             live_range.insert(use_pair);
         }
-        else { // there is use of the instruction
-            LLVMValueRef last_use_instruc = LLVMGetUser(first_use); // set last use instruc to the instruc of first use
+        else { // it if was used at least once
+            LLVMValueRef last_use_instruc = NULL;
 
-            // loops to next use until it becomes NULL
-            for (LLVMUseRef use = first_use; use != NULL; use = LLVMGetNextUse(use)) {
-                last_use_instruc = LLVMGetUser(use); // grabs instruction that uses it and update 
+            for (LLVMValueRef use_inst = LLVMGetUser(first_use); use_inst; use_inst = LLVMGetNextInstruction(use_inst)) {
+                int num_operands = LLVMGetNumOperands(use_inst);
+                for (int i = 0; i < num_operands; i++) {
+                    if (instruction == LLVMGetOperand(use_inst, i)) {
+                        last_use_instruc = use_inst;
+                    }
+                }
             }
-
-            pair<int, int> startEnd (inst_index.at(instruction), inst_index.at(last_use_instruc));
-            pair<LLVMValueRef, pair<int, int>> liveness (instruction, startEnd);
-            live_range.insert(liveness);
+            pair<int, int> range (inst_index.at(instruction), inst_index.at(last_use_instruc));
+            pair<LLVMValueRef, pair<int, int>> use_pair (instruction, range);
+            live_range.insert(use_pair);
         }
+
     }
 
     // check if liveness is correct
@@ -243,13 +255,13 @@ void compute_liveness(LLVMBasicBlockRef basicBlock, map<LLVMValueRef, int> &inst
     //     LLVMDumpValue(instr);
     //     printf(" --> index: %d\n", index);
     // }
-    // printf("\nlive ranges\n");
-    // for (const auto& entry : live_range) {
-    //     LLVMValueRef instr = entry.first;
-    //     pair<int, int> range = entry.second;
-    //     LLVMDumpValue(instr);
-    //     printf(" --> range: %d - %d \n", range.first, range.second);
-    // }
+    printf("\nlive ranges\n");
+    for (const auto& entry : live_range) {
+        LLVMValueRef instr = entry.first;
+        pair<int, int> range = entry.second;
+        LLVMDumpValue(instr);
+        printf(" --> range: %d - %d \n", range.first, range.second);
+    }
 
 }
 
