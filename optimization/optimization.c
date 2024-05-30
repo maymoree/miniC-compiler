@@ -902,7 +902,6 @@ void main_optimization(LLVMModuleRef module) {
 
 		LLVMPrintModuleToFile (module, "pt3.ll", NULL);
 
-		LLVMDisposeModule(module);
 	}
 	else {
 	    fprintf(stderr, "m is NULL\n");

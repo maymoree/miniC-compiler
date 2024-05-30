@@ -1,6 +1,7 @@
 lex = ./ir_builder/grammar_shared/minic.l
 yacc = ./ir_builder/grammar_shared/minic.y
 smta = ./frontend/smta
+gen = ./assembly_gen/generator
 ir = ./ir_builder/irbuilder
 opt = ./optimization/optimization
 ast = ./ast/ast
@@ -10,12 +11,15 @@ TEST = ./ir_builder/builder_tests/p6
 
 INC = ./ast/ast.c ./frontend/smta.c
 
-CFLAGS = -g -I ./ast -I ./frontend -I ./optimization -I ./ir_builder -I /usr/include/llvm-c-15/
+CFLAGS = -g -I ./ast -I ./frontend -I ./optimization -I ./ir_builder -I ./assembly_gen/ -I /usr/include/llvm-c-15/
 
 VALGRIND = valgrind --leak-check=full --show-leak-kinds=all
 
-$(cmplr).out: $(cmplr).c $(opt).o $(smta).o $(ir).o $(ast).o lex.yy.c y.tab.c
-	g++ $(CFLAGS) -o $@ $(cmplr).c lex.yy.c y.tab.c $(opt).o $(ir).o $(smta).o $(ast).o `llvm-config-15 --cxxflags --ldflags --libs core`
+$(cmplr).out: $(cmplr).c $(opt).o $(smta).o $(ir).o $(gen).o $(ast).o lex.yy.c y.tab.c
+	g++ $(CFLAGS) -o $@ $(cmplr).c lex.yy.c y.tab.c $(opt).o $(ir).o $(gen).o $(smta).o $(ast).o `llvm-config-15 --cxxflags --ldflags --libs core`
+
+$(gen).o: $(gen).c $(gen).h
+	g++ $(CFLAGS) -c $< -o $@
 
 $(ir).o: $(ir).c $(ir).h
 	g++ $(CFLAGS) -c $< -o $@
