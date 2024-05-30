@@ -2,6 +2,7 @@
 #include <smta.h>
 #include <optimization.h>
 #include <irbuilder.h>
+#include <generator.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -20,6 +21,9 @@ extern int yylex_destroy();
 extern FILE *yyin;
 
 extern astNode* ret_root();
+
+using namespace std;
+
 
 int main(int argc, char* argv[]){
     // PART 1 --------------------
@@ -56,9 +60,13 @@ int main(int argc, char* argv[]){
     printf("\n------------------------------------ PART 3 !!!!!!! ------------------------------------\n");
     main_optimization(mod);
 
+    printf("\n------------------------------------ PART 4 !!!!!!! ------------------------------------\n");
+    generator(mod);
+
     // clean up
     if (argc >= 2) fclose(yyin);
     yylex_destroy();
+    LLVMDisposeModule(mod); // ???
     freeNode(root);
     return 0;
 }

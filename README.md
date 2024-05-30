@@ -44,5 +44,5 @@ Currently... have not created bash test files a nicely formatted output
 
 ## To Dos:
 - [] add info to .h files
+- [] make .c files more organized
 - [] write test files in bash??
-- [x] restructure code to 1 main.c

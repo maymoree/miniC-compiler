@@ -10,6 +10,7 @@
 #include <cstring>
 #include <algorithm>
 #include <cassert>
+#include "irbuilder.h"
 
 using namespace std;
 
