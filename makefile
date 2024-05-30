@@ -7,7 +7,7 @@ opt = ./optimization/optimization
 ast = ./ast/ast
 cmplr = miniC_compiler
 
-TEST = ./ir_builder/builder_tests/p6
+TEST = ./assembly_gen/assembly_test
 
 INC = ./ast/ast.c ./frontend/smta.c
 
@@ -40,10 +40,10 @@ y.tab.h y.tab.c : $(yacc)
 	yacc -d -v $<		
 
 test: $(cmplr).out
-	./$(cmplr).out ./ir_builder/builder_tests/p5.c ./optimization/optimizer_test_results/p4_const_prop.ll
+	./$(cmplr).out ./assembly_gen/assembly_test.c ./optimization/optimizer_test_results/p4_const_prop.ll
 
 valgrind: $(cmplr).out
-	$(VALGRIND) ./$(cmplr).out ./ir_builder/builder_tests/p5.c ./optimization/optimizer_test_results/p4_const_prop.ll
+	$(VALGRIND) ./$(cmplr).out ./assembly_gen/assembly_test.c ./optimization/optimizer_test_results/p4_const_prop.ll
 
 llvm_file: $(TEST).c
 	clang -S -emit-llvm $(TEST).c -o $(TEST).s
