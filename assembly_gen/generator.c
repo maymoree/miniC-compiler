@@ -16,9 +16,9 @@ map<LLVMValueRef, int> register_allocation(LLVMModuleRef mod, map<LLVMValueRef, 
 void compute_liveness(LLVMBasicBlockRef basicBlock, map<LLVMValueRef, int> &inst_index, map<LLVMValueRef, pair<int, int>> &live_range);
 LLVMValueRef find_spill(LLVMValueRef instruc, map<LLVMValueRef, int> &reg_map, map<LLVMValueRef, int> &inst_index,
                         vector<LLVMValueRef> &sorted_list, map<LLVMValueRef, pair<int, int>> &live_range);
-// map<LLVMBasicBlockRef, char*> createBBLabels(LLVMValueRef func);
-// void printDirectives(LLVMModuleRef module, LLVMValueRef function, FILE* fp); // not sure yet
-// void printFunctionEnd(FILE* fp); // not sure...
+map<LLVMBasicBlockRef, string> createBBLabels(LLVMValueRef func);
+void printDirectives(LLVMModuleRef module, LLVMValueRef function, FILE* fp); // not sure yet
+void printFunctionEnd(FILE* fp); // not sure...
 // map<LLVMValueRef, int> getOffsetMap(LLVMValueRef func, int* local_mem); // ???
 void generator(LLVMModuleRef mod); // ???
 vector<LLVMValueRef> sort_list(map<LLVMValueRef, pair<int, int>> &live_range);
@@ -94,6 +94,7 @@ map<LLVMValueRef, int> register_allocation(LLVMModuleRef mod, map<LLVMValueRef, 
 
                     if (instruc_opcode == LLVMAdd || instruc_opcode == LLVMSub || instruc_opcode == LLVMMul) { // if add sub or mul
                         printf("is add sub or mul\n");
+
                         LLVMValueRef first_op = LLVMGetOperand(instruction, 0);
 
                         // check if first op has physical register and it's liveness range ends at instruction
@@ -108,11 +109,11 @@ map<LLVMValueRef, int> register_allocation(LLVMModuleRef mod, map<LLVMValueRef, 
                             if (reg_map.count(second_op) && reg_map.at(second_op) != -1 && live_range.at(second_op).second == inst_index.at(instruction)) {
                                 registers.insert(reg_map.at(second_op));
                             }
-
+                            continue; // if able to insert to reg_map, then move to next instruction
                         }
 
                     }
-                    else if (!registers.empty()) { // if there are registers available
+                    if (!registers.empty()) { // if there are registers available
                         printf("is not empty\n");
 
                         // get a register and add it to reg_map with current instruction
@@ -137,12 +138,20 @@ map<LLVMValueRef, int> register_allocation(LLVMModuleRef mod, map<LLVMValueRef, 
                     else {
                         printf("is empty\n");
                         vector<LLVMValueRef> sorted_list = sort_list(live_range);
+
+                        printf("\nSORTED LIST\n");
+                        for (const auto& valueRef : sorted_list) {
+                            LLVMDumpValue(valueRef);
+                            printf("end value: %d\n", live_range.at(valueRef).second);
+                            printf("\n");
+                        }
+
                         LLVMValueRef spill = find_spill(instruction, reg_map, inst_index, sorted_list, live_range);
 
                         // use liveness range to compare; if liveness range of instruc ends after that of V
                         if (live_range.at(spill).second < live_range.at(instruction).second) {
                             reg_map.insert(pair<LLVMValueRef, int> (instruction, -1));
-                        } else {
+                        } else { // choose the one that ends first!
                             int reg = reg_map.at(spill);
                             reg_map.insert(pair<LLVMValueRef, int> (instruction, reg));
                             
@@ -305,6 +314,12 @@ LLVMValueRef find_spill(LLVMValueRef instruc, map<LLVMValueRef, int> &reg_map, m
     return NULL;
 }
 
+
+
+
+
+// HELPER FUNCTION ---------------------------------------------------------------
+
 bool isInstructionWithoutResult(LLVMValueRef instruc) {
 
     LLVMOpcode opcode = LLVMGetInstructionOpcode(instruc);
@@ -323,6 +338,30 @@ bool isInstructionWithoutResult(LLVMValueRef instruc) {
 
     return false;
 }
+
+// void printDirectives(LLVMModuleRef module, LLVMValueRef function, FILE* fp) {
+//     //
+// }
+// void printFunctionEnd(FILE* fp);
+
+map<LLVMBasicBlockRef, string> createBBLabels(LLVMValueRef func) {
+
+    map<LLVMBasicBlockRef, string> labels;
+
+    int count = 0;
+    for (LLVMBasicBlockRef bb = LLVMGetFirstBasicBlock(func); bb; bb = LLVMGetNextBasicBlock(bb)) {
+        string label = ".BB" + to_string(count);
+        labels.insert(pair<LLVMBasicBlockRef, string> (bb, label));
+        count += 1;
+    }
+
+    return labels;
+
+
+}
+    //This function populates a map where the key is an LLVMBasicBlockRef and the associated value is a char *, 
+    // which you can use as a label when generating code.
+
 
 void generator(LLVMModuleRef mod) {
 
