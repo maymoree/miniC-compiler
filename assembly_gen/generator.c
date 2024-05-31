@@ -221,7 +221,7 @@ void compute_liveness(LLVMBasicBlockRef basicBlock, map<LLVMValueRef, int> &inst
 // GENERATOR ---------------------------------------------------------------------
 void generator(LLVMModuleRef mod) {
 
-    FILE* fp = fopen("part4.s", "w");
+    FILE* fp = fopen("pt4.s", "w");
 
     //---------------------------------------------------------------------
     // Register Allocation
@@ -232,6 +232,13 @@ void generator(LLVMModuleRef mod) {
     map<LLVMValueRef, pair<int, int>> live_range;
 
     map<LLVMValueRef, int> reg_map = register_allocation(mod, inst_index, live_range);
+
+    printf("\n Reg_Map \n");
+    for (auto &instruc : reg_map) {
+        LLVMDumpValue(instruc.first);
+        const char* reg = get_reg_name(instruc.second);
+        printf(" --> register: %d, %s\n", instruc.second, reg);
+    }
 
     //---------------------------------------------------------------------
     // Code Generation
