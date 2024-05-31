@@ -26,8 +26,6 @@ using namespace std;
 
 
 int main(int argc, char* argv[]){
-    // PART 1 --------------------
-    // takes the second argument for front end part
 
     printf("\n------------------------------------ PART 1 !!!!!!! ------------------------------------\n");
     if (argc >= 2){

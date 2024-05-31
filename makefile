@@ -40,16 +40,16 @@ y.tab.h y.tab.c : $(yacc)
 	yacc -d -v $<		
 
 test: $(cmplr).out
-	./$(cmplr).out ./assembly_gen/assembly_test.c ./optimization/optimizer_test_results/p4_const_prop.ll
+	./$(cmplr).out ./assembly_gen/assembly_test.c
 
 valgrind: $(cmplr).out
-	$(VALGRIND) ./$(cmplr).out ./assembly_gen/assembly_test.c ./optimization/optimizer_test_results/p4_const_prop.ll
+	$(VALGRIND) ./$(cmplr).out ./assembly_gen/assembly_test.c
 
 llvm_file: $(TEST).c
 	clang -S -emit-llvm $(TEST).c -o $(TEST).s
 
 clean :
 	rm -f *.o y.tab.c y.tab.h y.output lex.yy.c $(cmplr).out 
-	rm -f ./optimization/optimization.o ./ast/ast.o ./frontend/smta.o
+	rm -f ./optimization/optimization.o ./ast/ast.o ./frontend/smta.o ./ir_builder/irbuilder.o ./assembly_gen/generator.o
 	rm -f before llvm-ir.s llvm-ir.s-faster peda* .gdb_history
-	rm -f pt2.ll pt3.ll
+	rm -f pt2.ll pt3.ll pt4.s
